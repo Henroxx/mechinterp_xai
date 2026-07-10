@@ -30,14 +30,19 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
 - Umgebung steht und ist verifiziert: venv (Python 3.13), TransformerLens-Stack gepinnt,
   alle 3 Modelle im HF-Cache, Smoke-Test bestanden, MPS-Korrektheit gemessen.
   → DETAILS „Umgebung & Tooling" + „Numerik-Policy"
-- Themen-Landkarte Mech-Interp im Chat erarbeitet (7 Blöcke), noch nicht vertieft.
+- Repo auf GitHub: `Henroxx/mechinterp_xai` (Dozent hat Zugriff; .venv/.claude ignoriert).
+- Themen-Kandidaten A–F destilliert, Ranking vorgeschlagen → DETAILS „Themen-Kandidaten".
 - Noch keine Experimente.
 
 ---
 # To-Dos & offene Entscheidungen
 
-- [ ] Recherche: aktuelle Mech-Interp-Themen/Methoden sichten (v.a. Steering-Nebeneffekte,
-      SAE-Kritik — Henry will methodenkritischen Fokus); realistisch machbare auswählen
+- [ ] **Themen-Ranking entscheiden** (Henry) — Vorschlag liegt vor → DETAILS
+      „Themen-Kandidaten & Ranking"
+- [ ] Web-Recherche: Stand 2025/26 zu Steering-Nebeneffekten + SAE-Kritik verifizieren
+      (wo docken wir an, was ist schon gemacht?); TransformerLens-Support für Gemma-3 prüfen
+- [ ] **Zwischenpräsi 11.07.**: Material zusammenstellen (Setup + geplante Experimente
+      + MPS-Verifikation als Teaser)
 - [x] Modellwahl: **Gemma-2-2B (base+it)** als Haupt-Modell, GPT-2 small als
       Ground-Truth-Zweitmodell → DETAILS „Modellwahl"
 - [x] Smoke-Test + MPS-Verifikation (`scripts/smoke_test.py`, `scripts/verify_mps.py`)

@@ -21,3 +21,9 @@ Datum | was | warum. Schlank und schnell überblickbar. Material für die Abhand
   behoben (GPT-2 fp32 exakt identisch CPU/MPS); Gemma-bf16-Abweichungen = normales
   Rundungsrauschen | Numerik-Policy festgelegt → DETAILS. Nebenbefund fürs
   Abhandlungs-Narrativ: Messinstrument-Verifikation als gelebte Methodenkritik.
+- **2026-07-10** | Repo auf GitHub veröffentlicht (Henroxx/mechinterp_xai, Dozent hat
+  Zugriff); README (EN), .gitignore (.venv/.claude), context/ klein geschrieben |
+  Setup-Stand gesichert vor der Zwischenpräsi.
+- **2026-07-10** | Themen-Kandidaten A–F destilliert und Ranking vorgeschlagen
+  (Herzstück: Steering-Nebeneffekte an der Refusal Direction) | Entscheidung von
+  Henry steht aus → DETAILS „Themen-Kandidaten".

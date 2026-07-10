@@ -5,6 +5,34 @@ Chats nicht verloren gehen soll. Kompakt halten — Substanz, kein Aufblähen.
 
 ---
 
+## Themen-Kandidaten & Ranking (VORSCHLAG — Henrys Entscheidung steht aus)
+
+Destilliert aus der Themen-Landkarte (Chat 2026-07-10). Kriterien: Passung zu Henrys
+Pitch (Steering-Nebeneffekte, methodenkritisch) > Machbarkeit > Methodenkritik-Wert.
+
+1. **A+B — Herzstück: Steering-Nebeneffekte am Fall der Refusal Direction.**
+   Kontrastive Steering-Vektoren auf gemma-2-2b-it (Refusal nach Arditi 2024 als
+   konkreter Fall); Nebeneffekte messen: Perplexity/Qualität neutral, Mini-Benchmark
+   vorher/nachher, unbeteiligte Verhaltensweisen, Dosis-Wirkungs-Kurve,
+   Random-Vektor-Baseline.
+2. **C — Fundament: Activation Patching an Ground Truth** (GPT-2, IOI-Circuit).
+   Kalibrierung der Methoden an bekanntem Ergebnis; Lehrbuch-Experiment.
+3. **D — Erweiterung: SAE-Feature-Steering vs. Vektor-Steering** (Gemma Scope) +
+   SAE-Kritikpunkte messen (Rekonstruktionsfehler, tote Features).
+4. **E — Bonus: Base-vs-IT-Diffing** (existiert die Refusal-Richtung im Base-Modell?).
+5. **F — nur Ausblick: Attribution Graphs / Circuit Tracing** (Tooling-Aufwand zu hoch).
+
+Roter Faden der Abhandlung (Vorschlag): „Wie verlässlich sind Mech-Interp-Methoden?
+Kalibrierung an Ground Truth (C) → offene Frage (A/B) → Methodenvergleich (D)",
+MPS-Verifikation als Prolog.
+
+Themen-Landkarte dahinter (7 Blöcke): Theorie (Superposition, Linear Representation
+Hypothesis, Circuits) / beobachtende Methoden (Probing, Logit Lens, Attention-Analyse) /
+SAEs + SAE-Skepsis seit 2025 / kausale Interventionen (Patching, Ablation, Steering,
+Model Editing) / Circuit-Analyse (IOI, ACDC, Attribution Graphs) / Safety-Anwendungen
+(Persona Vectors, Emergent Misalignment, Introspection) / Tooling (TransformerLens,
+nnsight, SAELens, Neuronpedia).
+
 ## Modellwahl
 
 **Haupt-Modell: `google/gemma-2-2b` + `google/gemma-2-2b-it`** (entschieden 2026-07-10).
