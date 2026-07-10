@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Applied Mechanistic Interpretability Methods — Zwischenpräsentation</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --fg: #1a1a1a;
+    --muted: #666;
+    --accent: #0d6e6e;
+    --accent-soft: #e3f0f0;
+    --card: #ffffff;
+    --border: #e2e2de;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.55;
+  }
+  section {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6vh 12vw;
+    position: relative;
+  }
+  h1 { font-size: 3.2rem; line-height: 1.15; letter-spacing: -0.02em; }
+  h2 {
+    font-size: 2.2rem;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+  }
+  h2::after {
+    content: "";
+    display: block;
+    width: 3.5rem;
+    height: 4px;
+    background: var(--accent);
+    margin-top: 0.6rem;
+    border-radius: 2px;
+  }
+  p, li { font-size: 1.35rem; }
+  ul { padding-left: 1.4rem; }
+  li { margin-bottom: 0.6rem; }
+  .muted { color: var(--muted); }
+  .accent { color: var(--accent); }
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .lead { font-size: 1.5rem; margin-bottom: 2.2rem; }
+  .cards { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; }
+  .card {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
+  }
+  .card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+  .card p { font-size: 1.15rem; }
+  .card .example { font-size: 1rem; color: var(--muted); margin-top: 0.7rem; }
+  .card.highlight { background: var(--accent-soft); border-color: var(--accent); }
+  /* axis spectrum: label + line with two poles */
+  .axis { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 1.1rem; }
+  .axis .q { width: 5.5rem; font-weight: 600; font-size: 1.15rem; color: var(--accent); }
+  .axis .pole { font-size: 1.15rem; white-space: nowrap; }
+  .axis .line { flex: 1; height: 2px; background: var(--border); position: relative; }
+  .axis .line::before, .axis .line::after {
+    content: ""; position: absolute; top: -4px; width: 10px; height: 10px;
+    border-radius: 50%; background: var(--accent);
+  }
+  .axis .line::before { left: 0; }
+  .axis .line::after { right: 0; }
+  .codecard {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.3rem 1.6rem;
+    white-space: pre;
+  }
+  .codecard.dark { background: #23262b; border-color: #23262b; color: #7d8590; }
+  .fig-arrow { text-align: center; color: var(--accent); }
+  .fig-arrow .glyph { font-size: 2.6rem; line-height: 1; }
+  .fig-arrow .label { font-size: 1.05rem; font-weight: 600; margin-top: 0.3rem; }
+  .chips { display: flex; gap: 1rem; margin-top: 1.6rem; flex-wrap: wrap; }
+  .chip {
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 999px;
+    padding: 0.5rem 1.2rem;
+    font-size: 1.1rem;
+  }
+  .chip strong { color: var(--accent); }
+  /* source line bottom left */
+  .refs {
+    position: absolute;
+    bottom: 2.2rem;
+    left: 2.6rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  /* slide counter bottom right */
+  .counter {
+    position: absolute;
+    bottom: 2.2rem;
+    right: 2.6rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+</head>
+<body>
+
+<!-- 1 — Titel -->
+<section id="titel">
+  <p class="kicker">Zwischenpräsentation · XAI · FH Südwestfalen</p>
+  <h1>Applied Mechanistic<br>Interpretability Methods</h1>
+  <p class="muted" style="margin-top:1.5rem; font-size:1.5rem;">
+    Mech-Interp-Methoden praktisch anwenden — und kritisch prüfen,<br>wie verlässlich sie sind.
+  </p>
+  <p class="muted" style="margin-top:3rem;">Henry Brose · 11.07.2026</p>
+</section>
+
+<!-- 2 — Was ist XAI? -->
+<section id="xai">
+  <h2>Was ist XAI?</h2>
+  <p class="lead">Ansätze, um Entscheidungen von KI-Systemen<br>für Menschen <span class="accent"><strong>nachvollziehbar</strong></span> zu machen.</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Interpretierbarkeit</h3>
+      <p>Das Modell <strong>selbst</strong> verstehen — die internen Mechanismen sind direkt lesbar.</p>
+      <p class="example">lineare Regression · Entscheidungsbäume</p>
+    </div>
+    <div class="card">
+      <h3>Erklärbarkeit</h3>
+      <p><strong>Entscheidungen</strong> verständlich machen — nachträglich, von außen.</p>
+      <p class="example">LIME · SHAP auf einer Black Box</p>
+    </div>
+  </div>
+
+  <p style="font-size:1.1rem; color:var(--muted); margin-bottom:1rem;">
+    Jede Methode lässt sich auf drei <strong>unabhängigen</strong> Achsen einordnen:
+  </p>
+  <div class="axis">
+    <span class="q">Wann?</span>
+    <span class="pole">intrinsisch — das Modell selbst</span>
+    <span class="line"></span>
+    <span class="pole">post-hoc — Erklärung obendrauf</span>
+  </div>
+  <div class="axis">
+    <span class="q">Wofür?</span>
+    <span class="pole">modellagnostisch</span>
+    <span class="line"></span>
+    <span class="pole">modellspezifisch</span>
+  </div>
+  <div class="axis">
+    <span class="q">Was?</span>
+    <span class="pole">lokal — eine Entscheidung</span>
+    <span class="line"></span>
+    <span class="pole">global — das Gesamtverhalten</span>
+  </div>
+  <p class="refs">Molnar, <em>Interpretable Machine Learning</em> · Gilpin et al. 2018 · XAI-Vorlesung (Neubürger 2025)</p>
+</section>
+
+<!-- 3 — XAI für LLMs -->
+<section id="xai-llm">
+  <h2>XAI für LLMs — Stand der Vorlesung</h2>
+  <p class="lead">Das klassische Toolkit, auf Sprachmodelle portiert:</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Attention visualisieren</h3>
+      <p>Welche Tokens achten auf welche?</p>
+      <p class="example">BertViz</p>
+    </div>
+    <div class="card">
+      <h3>Feature Attribution</h3>
+      <p>Welche Tokens waren wichtig für den Output?</p>
+      <p class="example">Integrated Gradients · SHAP</p>
+    </div>
+    <div class="card highlight">
+      <h3>Neuron-Aktivierungen</h3>
+      <p>Worauf reagieren einzelne Neuronen <strong>im Modell</strong>?</p>
+      <p class="example">Neuroscope — ein Mech-Interp-Tool</p>
+    </div>
+  </div>
+
+  <p style="font-size:1.4rem;">Die ersten zwei fragen weiter: <em>„Welcher Input war wichtig für diesen Output?"</em></p>
+  <p style="font-size:1.4rem; margin-top:0.8rem;">Die dritte schaut schon <span class="accent"><strong>ins Modell hinein</strong></span> —<br>die Vorlesung endet genau dort, wo dieses Projekt anfängt.</p>
+  <p class="refs">XAI-Vorlesung (Neubürger 2025), Kap. „Interpretation von LLMs"</p>
+</section>
+
+<!-- 4 — Perspektivwechsel -->
+<section id="mechinterp">
+  <h2>Mechanistic Interpretability: der Perspektivwechsel</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h3 class="muted">Klassisches XAI</h3>
+      <p style="margin-bottom:0.8rem;">erklärt <strong>eine Entscheidung</strong><br><span class="muted">„Warum dieser Output für diesen Input?"</span></p>
+      <p style="margin-bottom:0.8rem;"><strong>beobachtet</strong> von außen<br><span class="muted">Gradienten, Störungen, Sampling</span></p>
+      <p>Features = <strong>der Input</strong><br><span class="muted">Pixel, Tokens</span></p>
+    </div>
+    <div class="card highlight">
+      <h3>Mech Interp</h3>
+      <p style="margin-bottom:0.8rem;">versteht <strong>den Algorithmus</strong><br><span class="muted">„Welche Berechnung führt das Modell aus?"</span></p>
+      <p style="margin-bottom:0.8rem;"><strong>greift ein</strong><br><span class="muted">Aktivierungen patchen, ablieren, steuern</span></p>
+      <p>Features = <strong>Richtungen im Aktivierungsraum</strong><br><span class="muted">im Inneren des Modells</span></p>
+    </div>
+  </div>
+
+  <p style="font-size:1.4rem;">Auf den Achsen von eben: post-hoc und <span class="accent"><strong>maximal modellspezifisch</strong></span> — aber mit dem Anspruch,<br>das Modell am Ende <em>lesbar wie ein intrinsisch interpretierbares</em> zu machen.<br><span class="muted" style="font-size:1.2rem;">Kein anderes Feld — das äußerste Ende des XAI-Spektrums.</span></p>
+</section>
+
+<!-- 5 — Kernhypothese -->
+<section id="hypothese">
+  <h2>Die Kernhypothese</h2>
+
+  <p style="font-size:2rem; line-height:1.45; margin-bottom:1.2rem;">
+    Modelle lernen <span class="accent"><strong>menschlich nachvollziehbare Algorithmen</strong></span> —<br>
+    aber sie haben keinen Anreiz, sie für uns lesbar zu machen.
+  </p>
+  <p style="font-size:1.4rem; color:var(--muted); margin-bottom:3rem;">
+    Die Struktur entsteht, weil sie den Loss senkt. Lesbarkeit stand nie in der Zielfunktion.
+  </p>
+
+  <div style="display:flex; align-items:center; gap:2.5rem;">
+    <div class="codecard dark">01101001 11010010 00101110
+10011010 01011101 11100010
+00110101 10101011 01001100
+11010001 00111010 10110100</div>
+    <div class="fig-arrow">
+      <div class="glyph">⟶</div>
+      <div class="label">Mech Interp<br><span class="muted" style="font-weight:400;">reverse engineering</span></div>
+    </div>
+    <div class="codecard"><span style="color:#9a4fb0;">def</span> <span style="color:#0d6e6e;">antwort</span>(prompt):
+    <span style="color:#9a4fb0;">if</span> ist_heikel(prompt):
+        <span style="color:#9a4fb0;">return</span> <span style="color:#5a8a3a;">"Das kann ich nicht."</span>
+    <span style="color:#9a4fb0;">return</span> hilf(prompt)</div>
+  </div>
+
+  <p class="refs">Nanda, „What is Mechanistic Interpretability?" (Vortrag)</p>
+</section>
+
+<!-- 6 — Residual Stream -->
+<section id="residual-stream">
+  <h2>Der Residual Stream</h2>
+  <p class="lead">Kein Layer-Stapel — ein <span class="accent"><strong>gemeinsamer Strom</strong></span>, aus dem alle lesen<br>und in den alle nur <strong>additiv</strong> hineinschreiben.</p>
+
+  <svg viewBox="0 0 1000 400" style="width:100%; max-height:48vh;" role="img" aria-label="Residual-Stream-Diagramm">
+    <defs>
+      <marker id="ah" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6 z" fill="#555"/>
+      </marker>
+    </defs>
+
+    <!-- repeat frame around one layer -->
+    <rect x="240" y="86" width="470" height="84" rx="12" fill="none" stroke="#b5b5b0" stroke-dasharray="7 6" stroke-width="1.5"/>
+    <text x="725" y="105" font-size="17" fill="#666">ein Layer · ×26</text>
+
+    <!-- blocks -->
+    <rect x="260" y="100" width="150" height="56" rx="8" fill="#fff" stroke="#999" stroke-width="1.5"/>
+    <text x="335" y="134" font-size="20" text-anchor="middle" fill="#1a1a1a">Attention</text>
+    <rect x="540" y="100" width="150" height="56" rx="8" fill="#fff" stroke="#999" stroke-width="1.5"/>
+    <text x="615" y="134" font-size="20" text-anchor="middle" fill="#1a1a1a">MLP</text>
+
+    <!-- read / write arrows -->
+    <line x1="295" y1="278" x2="295" y2="162" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+    <text x="283" y="225" font-size="16" fill="#666" text-anchor="end">liest</text>
+    <line x1="375" y1="158" x2="375" y2="274" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+    <text x="388" y="225" font-size="16" fill="var(--accent)" font-weight="bold">+ schreibt</text>
+
+    <line x1="575" y1="278" x2="575" y2="162" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+    <text x="563" y="225" font-size="16" fill="#666" text-anchor="end">liest</text>
+    <line x1="655" y1="158" x2="655" y2="274" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+    <text x="668" y="225" font-size="16" fill="var(--accent)" font-weight="bold">+ schreibt</text>
+
+    <!-- the stream -->
+    <rect x="110" y="280" width="700" height="50" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+    <text x="460" y="303" font-size="20" text-anchor="middle" font-weight="bold" fill="var(--accent)">Residual Stream</text>
+    <text x="460" y="322" font-size="14" text-anchor="middle" fill="#666">ein Vektor pro Token · 2304 Dimensionen (Gemma-2-2b)</text>
+
+    <!-- in / out -->
+    <text x="18" y="278" font-size="16" fill="#666">Embedding</text>
+    <line x1="30" y1="305" x2="102" y2="305" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+    <text x="855" y="278" font-size="16" fill="#666" text-anchor="middle">Unembedding</text>
+    <line x1="818" y1="305" x2="890" y2="305" stroke="#555" stroke-width="2" marker-end="url(#ah)"/>
+    <text x="900" y="310" font-size="16" fill="#666">Logits</text>
+  </svg>
+
+  <div class="chips">
+    <span class="chip"><strong>Features</strong> = Richtungen hier drin</span>
+    <span class="chip"><strong>Logit Lens</strong> = zwischendrin dekodieren</span>
+    <span class="chip"><strong>Steering</strong> = einen Vektor dazuaddieren</span>
+  </div>
+
+  <p class="refs">Elhage et al. 2021, „A Mathematical Framework for Transformer Circuits"</p>
+</section>
+
+<!-- 7 — Zerlegungsproblem -->
+<section id="zerlegung">
+  <h2>Das Zerlegungsproblem</h2>
+  <p class="lead">Zum Verstehen muss man zerlegen. Aber <strong>in was?</strong></p>
+
+  <div style="display:flex; gap:3rem; align-items:center;">
+    <div style="flex:1.2;">
+      <p style="margin-bottom:1.5rem; font-size:1.35rem;"><span class="accent" style="font-weight:700;">Die Hoffnung:</span> ein Neuron = ein Konzept.<br><span class="muted" style="font-size:1.1rem;">(nicht abwegig — ReLU &amp; Co. legen dem Modell diese Basis nahe)</span></p>
+      <p style="font-size:1.35rem;"><span class="accent" style="font-weight:700;">Die Realität:</span> <strong>Polysemantizität</strong> —<br>Neuronen feuern für mehrere, völlig<br>unzusammenhängende Dinge.</p>
+    </div>
+    <div style="flex:1; text-align:center;">
+      <svg viewBox="0 0 420 240" style="width:100%; max-width:420px;" role="img" aria-label="Ein polysemantisches Neuron">
+        <defs>
+          <marker id="ahN" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#999"/></marker>
+        </defs>
+        <text x="140" y="60" font-size="18" fill="#c07820" text-anchor="end">Gedichte</text>
+        <text x="140" y="125" font-size="18" fill="#5a8a3a" text-anchor="end">Kartenspiele</text>
+        <text x="140" y="190" font-size="18" fill="#9a4fb0" text-anchor="end">Poker</text>
+        <line x1="155" y1="55" x2="250" y2="105" stroke="#999" stroke-width="2" marker-end="url(#ahN)"/>
+        <line x1="155" y1="120" x2="250" y2="120" stroke="#999" stroke-width="2" marker-end="url(#ahN)"/>
+        <line x1="155" y1="185" x2="250" y2="135" stroke="#999" stroke-width="2" marker-end="url(#ahN)"/>
+        <circle cx="310" cy="120" r="46" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5"/>
+        <text x="310" y="115" font-size="16" text-anchor="middle" fill="var(--accent)" font-weight="bold">dasselbe</text>
+        <text x="310" y="135" font-size="16" text-anchor="middle" fill="var(--accent)" font-weight="bold">Neuron</text>
+        <text x="310" y="200" font-size="15" text-anchor="middle" fill="#666">feuert bei allen dreien</text>
+      </svg>
+    </div>
+  </div>
+
+  <p style="font-size:1.35rem; margin-top:1.5rem;">Warum tut ein Modell so etwas? <span class="accent">→</span></p>
+  <p class="refs">Nanda (Vortrag) · Olah et al. 2020, „Zoom In"</p>
+</section>
+
+<!-- 7b — Superposition -->
+<section id="superposition">
+  <h2>Superposition</h2>
+  <p class="lead">Das Modell will <strong>mehr Konzepte speichern, als es Dimensionen hat.</strong><br><span class="muted" style="font-size:1.2rem;">Geht nicht orthogonal — aber <em>fast</em> orthogonal. Und das lohnt sich enorm:</span></p>
+
+  <div style="display:flex; gap:3rem; align-items:center;">
+    <div style="flex:1; text-align:center;">
+      <svg viewBox="0 0 360 330" style="width:100%; max-width:360px;" role="img" aria-label="Mehr Feature-Richtungen als Dimensionen">
+        <defs>
+          <marker id="ah-gray" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#b5b5b0"/></marker>
+          <marker id="ah-teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#0d6e6e"/></marker>
+          <marker id="ah-purple" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#9a4fb0"/></marker>
+          <marker id="ah-orange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#c07820"/></marker>
+          <marker id="ah-green" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#5a8a3a"/></marker>
+          <marker id="ah-red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#b5484d"/></marker>
+        </defs>
+        <line x1="40" y1="285" x2="340" y2="285" stroke="#b5b5b0" stroke-width="2" marker-end="url(#ah-gray)"/>
+        <line x1="40" y1="285" x2="40" y2="25" stroke="#b5b5b0" stroke-width="2" marker-end="url(#ah-gray)"/>
+        <text x="335" y="308" font-size="15" fill="#666" text-anchor="end">Neuron 1</text>
+        <text x="52" y="32" font-size="15" fill="#666">Neuron 2</text>
+        <line x1="40" y1="285" x2="315" y2="252" stroke="#0d6e6e" stroke-width="3" marker-end="url(#ah-teal)"/>
+        <text x="318" y="240" font-size="15" fill="#0d6e6e" text-anchor="end">Code</text>
+        <line x1="40" y1="285" x2="290" y2="140" stroke="#9a4fb0" stroke-width="3" marker-end="url(#ah-purple)"/>
+        <text x="296" y="130" font-size="15" fill="#9a4fb0" text-anchor="end">Poker</text>
+        <line x1="40" y1="285" x2="210" y2="75" stroke="#c07820" stroke-width="3" marker-end="url(#ah-orange)"/>
+        <text x="222" y="65" font-size="15" fill="#c07820">Poesie</text>
+        <line x1="40" y1="285" x2="120" y2="50" stroke="#5a8a3a" stroke-width="3" marker-end="url(#ah-green)"/>
+        <text x="118" y="38" font-size="15" fill="#5a8a3a">Königtum</text>
+        <line x1="40" y1="285" x2="62" y2="60" stroke="#b5484d" stroke-width="3" marker-end="url(#ah-red)"/>
+        <text x="60" y="48" font-size="15" fill="#b5484d">Brücken</text>
+      </svg>
+      <p style="font-size:1.05rem; color:var(--muted); margin-top:0.4rem;">5 Konzepte, 2 Neuronen — überlappend statt orthogonal.</p>
+    </div>
+
+    <div style="flex:1; text-align:center;">
+      <svg viewBox="0 0 420 330" style="width:100%; max-width:420px;" role="img" aria-label="Fast-Orthogonalitaet erlaubt exponentiell mehr Richtungen">
+        <defs>
+          <marker id="ahP" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#b5b5b0"/></marker>
+        </defs>
+        <line x1="50" y1="280" x2="395" y2="280" stroke="#b5b5b0" stroke-width="2" marker-end="url(#ahP)"/>
+        <line x1="50" y1="280" x2="50" y2="30" stroke="#b5b5b0" stroke-width="2" marker-end="url(#ahP)"/>
+        <text x="390" y="305" font-size="15" fill="#666" text-anchor="end">Dimensionen</text>
+        <text x="60" y="40" font-size="15" fill="#666">darstellbare Konzepte</text>
+        <line x1="50" y1="278" x2="380" y2="222" stroke="#999" stroke-width="2.5"/>
+        <text x="380" y="210" font-size="15" fill="#666" text-anchor="end">exakt orthogonal: n</text>
+        <path d="M 50 278 Q 230 268 305 160 Q 340 100 352 45" fill="none" stroke="var(--accent)" stroke-width="3.5"/>
+        <text x="150" y="120" font-size="15" fill="var(--accent)" font-weight="bold">fast orthogonal (90° ± ε):</text>
+        <text x="150" y="140" font-size="15" fill="var(--accent)" font-weight="bold">wächst exponentiell</text>
+      </svg>
+      <p style="font-size:1.05rem; color:var(--muted); margin-top:0.4rem;">(schematisch)</p>
+    </div>
+  </div>
+
+  <p style="font-size:1.35rem; margin-top:1.5rem;">Der Preis: etwas <strong>Interferenz</strong> zwischen den Konzepten. Für das Modell ein guter Deal —<br><span class="accent"><strong>für uns der Grund, warum einzelne Neuronen unlesbar sind.</strong></span></p>
+  <p class="refs">Elhage et al. 2022, „Toy Models of Superposition"</p>
+</section>
+
+<!-- 7c — Features als Richtungen -->
+<section id="features">
+  <h2>Features = Richtungen im Aktivierungsraum</h2>
+
+  <div style="display:flex; gap:2.5rem; align-items:center;">
+    <div style="flex:1.15; text-align:center;">
+      <svg viewBox="0 0 520 340" style="width:100%; max-width:480px;" role="img" aria-label="Konzept-Richtungen im 3D-Aktivierungsraum">
+        <defs>
+          <marker id="ahW" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#0d6e6e"/></marker>
+          <marker id="ahW-gray" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#b5b5b0"/></marker>
+        </defs>
+        <!-- 3D axes -->
+        <line x1="150" y1="255" x2="150" y2="45" stroke="#b5b5b0" stroke-width="2" marker-end="url(#ahW-gray)"/>
+        <line x1="150" y1="255" x2="495" y2="255" stroke="#b5b5b0" stroke-width="2" marker-end="url(#ahW-gray)"/>
+        <line x1="150" y1="255" x2="52" y2="322" stroke="#b5b5b0" stroke-width="2" marker-end="url(#ahW-gray)"/>
+        <!-- points with depth drop-lines -->
+        <line x1="215" y1="215" x2="215" y2="255" stroke="#ccc" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="345" y1="235" x2="345" y2="255" stroke="#ccc" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <circle cx="215" cy="215" r="6" fill="#444"/>
+        <text x="215" y="240" font-size="17" text-anchor="middle" fill="#444">Mann</text>
+        <circle cx="325" cy="115" r="6" fill="#444"/>
+        <text x="325" y="100" font-size="17" text-anchor="middle" fill="#444">Frau</text>
+        <circle cx="345" cy="235" r="6" fill="#444"/>
+        <text x="358" y="258" font-size="17" fill="#444">König</text>
+        <circle cx="455" cy="135" r="6" fill="#444"/>
+        <text x="455" y="120" font-size="17" text-anchor="middle" fill="#444">Königin</text>
+        <!-- the two parallel direction arrows -->
+        <line x1="221" y1="209" x2="319" y2="121" stroke="#0d6e6e" stroke-width="3" marker-end="url(#ahW)"/>
+        <line x1="351" y1="229" x2="449" y2="141" stroke="#0d6e6e" stroke-width="3" marker-end="url(#ahW)"/>
+        <text x="322" y="192" font-size="16" fill="var(--accent)" font-weight="bold" text-anchor="middle" transform="rotate(-40 322 192)">dieselbe Richtung: „weiblich"</text>
+      </svg>
+      <p style="font-size:1.05rem; color:var(--muted); margin-top:0.3rem;">Aktivierungsraum — hier 3 von 2304 Dimensionen (Gemma-2-2b)</p>
+    </div>
+
+    <div style="flex:1;">
+      <p style="font-size:1.3rem; margin-bottom:1rem;">Wenn Konzepte <strong>Richtungen</strong> sind,<br>kann man sie…</p>
+      <div class="chips" style="flex-direction:column; align-items:flex-start; margin-top:0;">
+        <span class="chip"><strong>finden</strong> — Probing, SAEs</span>
+        <span class="chip"><strong>auslesen</strong> — was ist gerade aktiv?</span>
+        <span class="chip"><strong>verschieben</strong> — Steering</span>
+      </div>
+      <div class="card highlight" style="margin-top:1.6rem;">
+        <p style="font-size:1.15rem;"><strong>Golden Gate Claude:</strong> Brücken-Richtung künstlich hochgedreht → Claude hält sich für die Brücke. Diese Richtungen sind nicht nur Deutung — sie sind <strong>kausal wirksam</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="refs">Mikolov et al. 2013 (word2vec) · Templeton et al. 2024 (Anthropic)</p>
+</section>
+
+<!-- 8 — Setup -->
+<section id="setup">
+  <h2>Mein Setup</h2>
+  <p class="lead">Läuft — lokal auf dem MacBook, reproduzierbar, alles offen.</p>
+
+  <div class="cards">
+    <div class="card highlight">
+      <h3>Gemma-2-2b <span class="muted" style="font-weight:400;">base + instruct</span></h3>
+      <p>Das Untersuchungsobjekt.</p>
+      <p class="example">öffentliche SAE-Suite (Gemma Scope) · Neuronpedia-Abdeckung · dieselbe Modellfamilie wie die Steering-Literatur · klein genug für lokales Arbeiten</p>
+    </div>
+    <div class="card">
+      <h3>GPT-2 small</h3>
+      <p>Das Kontrollobjekt — mit <strong>handverifizierten Circuits</strong> als Ground Truth.</p>
+      <p class="example">Methoden erst kalibrieren, wo die Antwort bekannt ist</p>
+    </div>
+    <div class="card">
+      <h3>TransformerLens</h3>
+      <p>Das Werkzeug — Hooks auf <strong>jede interne Aktivierung</strong>: lesen, cachen, überschreiben.</p>
+      <p class="example">„das pandas des Mech Interp"</p>
+    </div>
+  </div>
+
+  <p style="font-size:1.3rem;">Base <em>und</em> Instruct-Variante: später vergleichbar, <span class="accent"><strong>was das Finetuning intern verändert hat</strong></span>.</p>
+</section>
+
+<!-- 9 — Geplante Experimente -->
+<section id="plan">
+  <h2>Geplante Experimente</h2>
+
+  <div style="display:flex; flex-direction:column; gap:1.1rem; margin-bottom:2.2rem;">
+    <div class="card" style="display:flex; align-items:center; gap:1.4rem;">
+      <span class="chip" style="background:var(--accent); color:#fff; border:none; flex-shrink:0;">Herzstück</span>
+      <p style="font-size:1.25rem;"><strong>Steering-Nebeneffekte</strong> — Verhalten gezielt ändern (Refusal Direction) und messen, <em>was dabei sonst noch passiert</em>.</p>
+    </div>
+    <div class="card" style="display:flex; align-items:center; gap:1.4rem;">
+      <span class="chip" style="flex-shrink:0;">Fundament</span>
+      <p style="font-size:1.25rem;"><strong>Activation Patching an Ground Truth</strong> — die Methode erst dort testen, wo die Antwort bekannt ist (GPT-2, IOI-Circuit).</p>
+    </div>
+    <div class="card" style="display:flex; align-items:center; gap:1.4rem;">
+      <span class="chip" style="flex-shrink:0;">Erweiterung</span>
+      <p style="font-size:1.25rem;"><strong>SAE-Feature- vs. Vektor-Steering</strong> — zwei Wege, dasselbe zu steuern, im Vergleich (Gemma Scope).</p>
+    </div>
+    <div class="card" style="display:flex; align-items:center; gap:1.4rem;">
+      <span class="chip" style="flex-shrink:0;">Bonus</span>
+      <p style="font-size:1.25rem;"><strong>Base vs. Instruct</strong> — existiert die Refusal-Richtung schon im Base-Modell?</p>
+    </div>
+  </div>
+
+  <p style="font-size:1.4rem;">Roter Faden: <span class="accent"><strong>Wie verlässlich sind diese Methoden?</strong></span><br><span class="muted" style="font-size:1.2rem;">erst kalibrieren → dann messen → dann vergleichen</span></p>
+</section>
+
+<!-- 10 — Steering -->
+<section id="steering">
+  <h2>Vertiefung: Steering-Vektoren</h2>
+
+  <div style="display:flex; gap:2.5rem; margin-bottom:2rem;">
+    <div style="flex:1;">
+      <p class="kicker">Das Rezept</p>
+      <p style="margin-bottom:1rem;"><span class="accent" style="font-weight:700;">1</span>&ensp;Zwei Prompt-Gruppen: Modell <strong>verweigert</strong> vs. <strong>antwortet</strong></p>
+      <p style="margin-bottom:1rem;"><span class="accent" style="font-weight:700;">2</span>&ensp;Differenz der Aktivierungen mitteln → <strong>eine Richtung</strong> <em>v</em> im Residual Stream</p>
+      <p style="margin-bottom:1rem;"><span class="accent" style="font-weight:700;">3</span>&ensp;Zur Laufzeit einfach dazuaddieren:</p>
+      <div class="codecard" style="align-self:flex-start; display:inline-block; font-size:1.2rem;">stream += α · v</div>
+      <p style="font-size:1.1rem; color:var(--muted); margin-top:0.8rem;">α = die Dosis. Negativ → Refusal <em>ausschalten</em>.</p>
+    </div>
+    <div style="flex:1;">
+      <p class="kicker">Meine Frage</p>
+      <p style="font-size:1.3rem; margin-bottom:1rem;">Die Literatur zeigt, <em>dass</em> es wirkt.<br>Ich will untersuchen, <strong>ob es Nebeneffekte hat</strong>:</p>
+      <ul style="font-size:1.2rem;">
+        <li>Leidet die Textqualität? <span class="muted">(Perplexity)</span></li>
+        <li>Leiden unbeteiligte Fähigkeiten? <span class="muted">(Benchmark vorher/nachher)</span></li>
+        <li>Wie sieht die <strong>Dosis-Wirkungs-Kurve</strong> aus?</li>
+        <li>Kontrolle: was macht ein <strong>Zufallsvektor</strong> gleicher Länge?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cards" style="margin-bottom:0.5rem;">
+    <div class="card">
+      <p class="example" style="margin-top:0;">ohne Eingriff</p>
+      <p>„Wie backe ich einen Kuchen?"<br>→ <em>„Gerne! Du brauchst Mehl, Zucker, Eier …"</em></p>
+    </div>
+    <div class="card highlight">
+      <p class="example" style="margin-top:0;">mit <strong>+α · v</strong> (Refusal-Richtung addiert)</p>
+      <p>„Wie backe ich einen Kuchen?"<br>→ <em>„Das kann ich leider nicht beantworten."</em></p>
+    </div>
+  </div>
+  <p style="font-size:1rem; color:var(--muted);">(illustrativ — Befund so gezeigt bei Arditi et al. 2024)</p>
+
+  <p class="refs">Arditi et al. 2024, „Refusal in LLMs Is Mediated by a Single Direction" · Rimsky et al. 2024 (Contrastive Activation Addition)</p>
+</section>
+
+<!-- 11 — Activation Patching -->
+<section id="patching">
+  <h2>Vertiefung: Activation Patching</h2>
+  <p class="lead"><strong>Welche Stelle im Modell</strong> trägt kausal eine Information?<br><span class="muted" style="font-size:1.2rem;">Zwei fast identische Läufe — und eine Aktivierung wird transplantiert.</span></p>
+
+  <svg viewBox="0 0 1000 300" style="width:100%; max-height:42vh;" role="img" aria-label="Activation-Patching-Diagramm">
+    <defs>
+      <marker id="ah3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#555"/></marker>
+      <marker id="ah3-teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#0d6e6e"/></marker>
+    </defs>
+
+    <!-- clean run -->
+    <text x="20" y="55" font-size="17" font-weight="bold" fill="#1a1a1a">Clean</text>
+    <text x="20" y="78" font-size="14" fill="#666">„… John gave a drink to ___"</text>
+    <rect x="300" y="40" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="380" y="40" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="460" y="40" width="60" height="50" rx="6" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5"/>
+    <rect x="540" y="40" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="620" y="40" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <line x1="690" y1="65" x2="760" y2="65" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+    <text x="775" y="71" font-size="18" fill="#0d6e6e" font-weight="bold">„Mary" ✓</text>
+
+    <!-- transplant arrow -->
+    <line x1="490" y1="95" x2="490" y2="185" stroke="var(--accent)" stroke-width="3" marker-end="url(#ah3-teal)"/>
+    <text x="505" y="145" font-size="16" fill="var(--accent)" font-weight="bold">eine Aktivierung kopieren</text>
+
+    <!-- corrupted run -->
+    <text x="20" y="205" font-size="17" font-weight="bold" fill="#1a1a1a">Corrupted</text>
+    <text x="20" y="228" font-size="14" fill="#666">Namen vertauscht</text>
+    <rect x="300" y="190" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="380" y="190" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="460" y="190" width="60" height="50" rx="6" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 4"/>
+    <rect x="540" y="190" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="620" y="190" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <line x1="690" y1="215" x2="760" y2="215" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+    <text x="775" y="208" font-size="18" fill="#0d6e6e" font-weight="bold">kippt zu „Mary"</text>
+    <text x="775" y="230" font-size="14" fill="#666">ohne Patch: „John"</text>
+
+    <!-- conclusion -->
+    <text x="500" y="285" font-size="17" text-anchor="middle" fill="#1a1a1a">Kippt die Vorhersage → <tspan font-weight="bold" fill="var(--accent)">diese Stelle trägt die Information.</tspan></text>
+  </svg>
+
+  <p style="font-size:1.3rem; margin-top:1rem;">Systematisch über alle Layer × Positionen = <strong>Landkarte, wo im Modell die Entscheidung fällt</strong> —<br>so ein funktionales Teilnetzwerk heißt <strong>Circuit</strong>.<br><span class="muted" style="font-size:1.15rem;">Beim IOI-Task ist der Circuit publiziert — die Methode wird erst <em>an bekannter Antwort kalibriert</em>.</span></p>
+
+  <p class="refs">Wang et al. 2022, „Interpretability in the Wild" (IOI-Circuit, GPT-2)</p>
+</section>
+
+<script>
+  // Arrow keys / space step between sections; scrolling stays free.
+  const sections = [...document.querySelectorAll("section")];
+
+  sections.forEach((s, i) => {
+    const c = document.createElement("div");
+    c.className = "counter";
+    c.textContent = `${i + 1} / ${sections.length}`;
+    s.appendChild(c);
+  });
+
+  function currentIndex() {
+    const y = window.scrollY + window.innerHeight / 2;
+    return sections.findIndex(s => y >= s.offsetTop && y < s.offsetTop + s.offsetHeight);
+  }
+  document.addEventListener("keydown", e => {
+    const i = currentIndex();
+    if (i === -1) return;
+    if (["ArrowDown", "ArrowRight", " ", "PageDown"].includes(e.key)) {
+      e.preventDefault();
+      sections[Math.min(i + 1, sections.length - 1)].scrollIntoView();
+    } else if (["ArrowUp", "ArrowLeft", "PageUp"].includes(e.key)) {
+      e.preventDefault();
+      sections[Math.max(i - 1, 0)].scrollIntoView();
+    }
+  });
+</script>
+
+</body>
+</html>

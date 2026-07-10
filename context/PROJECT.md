@@ -32,6 +32,8 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
   → DETAILS „Umgebung & Tooling" + „Numerik-Policy"
 - Repo auf GitHub: `Henroxx/mechinterp_xai` (Dozent hat Zugriff; .venv/.claude ignoriert).
 - Themen-Kandidaten A–F destilliert, Ranking vorgeschlagen → DETAILS „Themen-Kandidaten".
+- Zwischenpräsi-Material fertig: `presentation/zwischenpraesi.html` (selbst-enthaltene
+  HTML-Scroll-Präsentation, 13 Folien, eigene SVG-Diagramme).
 - Noch keine Experimente.
 
 ---
@@ -41,12 +43,15 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
       „Themen-Kandidaten & Ranking"
 - [ ] Web-Recherche: Stand 2025/26 zu Steering-Nebeneffekten + SAE-Kritik verifizieren
       (wo docken wir an, was ist schon gemacht?); TransformerLens-Support für Gemma-3 prüfen
-- [ ] **Zwischenpräsi 11.07.**: Material zusammenstellen (Setup + geplante Experimente
-      + MPS-Verifikation als Teaser)
+- [x] **Zwischenpräsi 11.07.**: Material erstellt (`presentation/zwischenpraesi.html`);
+      nach dem Termin: Feedback des Dozenten festhalten
 - [x] Modellwahl: **Gemma-2-2B (base+it)** als Haupt-Modell, GPT-2 small als
       Ground-Truth-Zweitmodell → DETAILS „Modellwahl"
 - [x] Smoke-Test + MPS-Verifikation (`scripts/smoke_test.py`, `scripts/verify_mps.py`)
 - [ ] Sprache der Abhandlung festlegen (Deutsch/Englisch — Template steht aktuell auf Deutsch)
+- [ ] **Vertiefung nach der Zwischenpräsi** (Henrys Verständnis, unabhängig von Slides):
+      Grokking-Beispiel (Nanda, Addition mod 113) durcharbeiten; Linear Representation
+      Hypothesis sauber durchsprechen (konnte Henry noch nicht frei erklären)
 - [x] Format der Abhandlung: **Typst**, Template aus Big-Data-Projekt adaptiert
       (`report/main.typ`, kompiliert). Umfang und Gliederung noch offen.
 

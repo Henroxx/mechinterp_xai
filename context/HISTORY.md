@@ -27,3 +27,12 @@ Datum | was | warum. Schlank und schnell überblickbar. Material für die Abhand
 - **2026-07-10** | Themen-Kandidaten A–F destilliert und Ranking vorgeschlagen
   (Herzstück: Steering-Nebeneffekte an der Refusal Direction) | Entscheidung von
   Henry steht aus → DETAILS „Themen-Kandidaten".
+- **2026-07-11** | Zwischenpräsentation gebaut: `presentation/zwischenpraesi.html` —
+  selbst-enthaltene HTML-Seite, 13 Scroll-Folien (XAI-Einordnung → Mech-Interp-Grundlagen
+  mit eigenen SVG-Diagrammen: Residual Stream, Polysemantizität, Superposition,
+  Features-als-Richtungen, Activation Patching → Setup → Experiment-Plan). Vorher
+  inhaltliche Vorbereitung im Chat (Logit Lens, Feature Attribution, Patching-Folie
+  durchgesprochen) | Format-Entscheidung: HTML statt Slides (freies Scrollen + eigene
+  Visualisierungen, offline, keine Dependencies). Bewusst weggelassen: MPS-Verifikation,
+  Repo-Details, Grokking, LRH im Detail, eigene Take-away-Folie. Quellen als Fußzeilen
+  pro Folie.
