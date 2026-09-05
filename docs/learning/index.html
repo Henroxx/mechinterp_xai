@@ -32,6 +32,10 @@
     font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
     background:var(--accent-soft); padding:1px 5px; border-radius:3px;
   }
+  pre{
+    font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;
+    background:var(--accent-soft); padding:10px 14px; border-radius:6px; overflow-x:auto;
+  }
   nav{
     background:var(--card); border:1px solid var(--border); border-radius:8px;
     padding:20px 24px; margin:0 0 8px;
@@ -105,6 +109,7 @@
     <li><a href="#messung">Wie gemessen wird</a></li>
     <li><a href="#stellschrauben">Zwei Stellschrauben, die das Ergebnis mitbestimmen</a></li>
     <li><a href="#metriken">„Die Metriken sind kaputt"</a></li>
+    <li><a href="#werkzeug">Werkzeugkasten: TransformerLens an GPT-2 small</a></li>
     <li><a href="#glossar">Glossar</a></li>
   </ol>
 </nav>
@@ -610,7 +615,41 @@ inklusive der Möglichkeit, dass die Antwort „keines von den üblichen" ist.</
 arXiv:2603.13249. Gemessen auf Qwen2.5-7B-Instruct und Llama-3.1-8B-Instruct.
 &nbsp;·&nbsp; <b>Persona Vectors:</b> Chen et al. (Anthropic), arXiv:2507.21509.</p>
 
-<h2 id="glossar">5 · Glossar</h2>
+<h2 id="werkzeug">5 · Werkzeugkasten: TransformerLens an GPT-2 small</h2>
+
+<p><b>Selbst gemessen</b> am 2026-09-05, ein Prompt, n=1. Zellen und Zahlen stehen im Notebook
+<code>notebooks/01_explore.ipynb</code>; hier nur, was hängen bleiben soll.</p>
+
+<pre>resid_pre ─┬─ ln1 ─ attn (12 Heads) ─┐
+           └─────────────(+)─────────┘ = resid_mid
+resid_mid ─┬─ ln2 ─ mlp ─────────────┐
+           └─────────────(+)─────────┘ = resid_post = resid_pre des nächsten Layers</pre>
+
+<p>Jeder Name in der Skizze ist ein <b>HookPoint</b>: eine benannte Messstelle, an der man den
+Tensor mitschreiben (<code>run_with_cache</code>) oder verändern (<code>run_with_hooks</code>)
+kann. Adressen heißen <code>blocks.{layer}.…</code>, Layer nullbasiert. Steering ist später
+nichts anderes als eine Addition an <code>hook_resid_*</code>, Ablation ein Nullen an
+<code>attn.hook_z</code>.</p>
+
+<div class="begriff">
+  <p><b>Die Dreierkette</b> — wohin schaut ein Head (Attention-Pattern), was bewirkt er am
+  Output (Loss, Logits), was passiert ohne ihn (Ablation). Erst alle drei zusammen erlauben
+  eine Aussage, und die dritte nur mit Kontrolle: die fünf Induction Heads genullt hebt den
+  Kopier-Loss von 1,10 auf 3,86, fünf Zufalls-Heads aus denselben Layern auf 1,12. Ohne die
+  Kontrolle wäre die Zahl eine Aussage über Löschen, nicht über Induction Heads.</p>
+</div>
+
+<div class="flag">
+  <p><b>Drei Fallen, die du selbst gesehen hast.</b> <b>BOS-Senke:</b> Position 0 trägt eine
+  Norm um 3100 gegen 60–250 sonst, und ab Layer 5 parken auf ruhigem Text fast alle Heads
+  dort — Position 0 aus jeder Mittelung raus, Steering-Stärken nur relativ zur Layer-Norm
+  vergleichen. <b>Logit Lens:</b> zeigt Richtungen, keine Konfidenz — vor Layer 11 stand
+  „ estimate" bei 0,30, das Modell selbst gibt 0,02. <b>Ablation:</b> misst, was ohne ein
+  Bauteil fehlt, nicht, was es leistet — ohne seine fünf besten Induction Heads kopiert GPT-2
+  immer noch weit besser als ohne Kontext (3,86 statt 12,4), Backup-Heads springen ein.</p>
+</div>
+
+<h2 id="glossar">6 · Glossar</h2>
 
 <p>Begriffe, die in dieser Literatur ständig auftauchen.</p>
 
@@ -649,9 +688,9 @@ arXiv:2603.13249. Gemessen auf Qwen2.5-7B-Instruct und Llama-3.1-8B-Instruct.
 </div>
 
 <footer>
-  Iteratives Dokument — wächst mit dem Projekt. Alle Befunde hier stammen aus Abstracts und
-  Suchergebnissen, nicht aus vollständig gelesenen Papers; was wir selbst gemessen haben, wird
-  ausdrücklich als solches gekennzeichnet.
+  Iteratives Dokument — wächst mit dem Projekt. Befunde aus der Literatur stammen aus
+  Abstracts und Suchergebnissen, außer SteeringSafety (Volltext gelesen). Abschnitt 5 ist
+  selbst gemessen und als solches gekennzeichnet.
 </footer>
 
 </div>

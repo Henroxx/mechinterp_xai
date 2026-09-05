@@ -35,18 +35,19 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
 - **Zwischenpräsentation am 11.07. gehalten und abgeschlossen** — Material liegt in
   `presentation/zwischenpraesi.html`, ist für die weitere Arbeit aber nicht mehr relevant.
 - Lerndokument für Henry angelegt: `docs/learning/index.html` (SteeringSafety im Volltext,
-  Messmethodik, Metrik-Kritik, Glossar) — wächst iterativ, siehe CLAUDE.md „Doku".
-- Noch keine Experimente. Aktuell: Einarbeitung (Fahrplan Schritt 1).
+  Messmethodik, Metrik-Kritik, Werkzeugkasten, Glossar) — wächst iterativ, siehe CLAUDE.md „Doku".
+- Einarbeitung abgeschlossen (2026-09-05) → DETAILS „GPT-2 small — Befunde aus der
+  Einarbeitung". Noch keine Experimente für die Abhandlung. Aktuell: Fahrplan Schritt 2.
 
 ---
 # To-Dos & offene Entscheidungen
 
 - [ ] **Fahrplan** (Henry, 2026-08-25) — vier Schritte, in dieser Reihenfolge:
-      1. **Einarbeitung:** mit TransformerLens auf GPT-2 small rumspielen, alles einmal
-         anfassen (Jupyter + circuitsvis stehen). ← *hier stehen wir*
+      1. **Einarbeitung** — erledigt 2026-09-05: TransformerLens auf GPT-2 small, alle
+         Werkzeuge einmal angefasst → `notebooks/01_explore.ipynb`, DETAILS „GPT-2 small".
       2. **Forschungsstand mappen** — Überblick gewinnen, Teile davon können in die
          Abhandlung (Methodenkritik). Rohstoff: DETAILS „Forschungsstand", „SAE-Kritik",
-         Lerndokument.
+         Lerndokument. ← *hier stehen wir*
       3. **Reproduzieren oder Lücke** — Bekanntes auf anderen Modellen nachbauen oder eine
          Lücke strukturiert angehen; 2–3 kleine Experimente, nicht tief.
       4. Themenwahl fällt erst *nach* Schritt 2. Bis dahin sind Lücken und Ideen Kandidaten,
@@ -86,3 +87,4 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
 - Kurs-Repo (Slides-Quelle, Exercises): `~/Documents/Master/4. Semester/XAI/XAI_course`
 - Lerndokument: `docs/learning/index.html`
 - Papers (PDF): `~/Documents/Master/4. Semester/XAI/` (u. a. SteeringSafety)
+- Notebooks: `notebooks/` — `01_explore.ipynb` ist die Einarbeitung

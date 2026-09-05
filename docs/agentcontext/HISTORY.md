@@ -53,3 +53,6 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
 - **2026-08-25** | Fahrplan: Einarbeitung (GPT-2) → Forschungsstand → reproduzieren/Lücke →
   2–3 kleine Experimente; Themenwahl erst nach Schritt 2 | Henry will das Feld überblicken,
   bevor er sich festlegt → PROJECT „Fahrplan", CLAUDE.md-Regel „Themenwahl bleibt offen".
+- **2026-09-05** | Einarbeitung TransformerLens auf GPT-2 small (`notebooks/01_explore.ipynb`):
+  Anatomie, Cache, Attention, Logit Lens, BOS-Senke, Induction Heads reproduziert, erste
+  Ablation mit Zufalls-Kontrolle | Fahrplan Schritt 1 abgeschlossen → DETAILS „GPT-2 small".

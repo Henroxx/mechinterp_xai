@@ -62,6 +62,48 @@ Nachfolger?"). Achtung: kein Gemma Scope für Gemma 3; TransformerLens-Support v
 Größere Modelle (9B-Klasse) verworfen: bf16-Gewichte ≈ 18 GB → beim Aktivierungs-Caching
 (run_with_cache hält alle Zwischenaktivierungen) permanent am RAM-Limit, zähes Arbeiten.
 
+## GPT-2 small — Befunde aus der Einarbeitung (Stand 2026-09-05)
+
+Quelle: `notebooks/01_explore.ipynb` (TransformerLens 3.5.1, float32 auf MPS; Prosa-Prompt
+„The capital of France is Paris. Interpretability researchers", 11 Tokens inkl. BOS). Alles
+an einem Prompt gemessen — Orientierung, keine Statistik. Zahlen dort, hier die Essenz.
+
+- **Hook-Namen, gegen 3.5.1 verifiziert:** `blocks.{l}.hook_resid_{pre,mid,post}`,
+  `blocks.{l}.attn.hook_{q,k,v,z,attn_scores,pattern}`, `blocks.{l}.hook_attn_out`,
+  `blocks.{l}.mlp.hook_{pre,post}`, `blocks.{l}.hook_mlp_out`; außerhalb der Blöcke
+  `hook_embed`, `hook_pos_embed`, `ln_final.hook_{scale,normalized}`, `unembed.hook_{in,out}`.
+  Nur mit cfg-Flag im Cache (Speicher): `attn.hook_result` (`use_attn_result`),
+  `hook_attn_in`, `hook_{q,k,v}_input` (`use_split_qkv_input`), `hook_mlp_in`
+  (`use_hook_mlp_in`); einschalten über `model.set_use_*`.
+- **`from_pretrained` schreibt die Gewichte um** (Defaults: fold_ln, center_writing_weights,
+  center_unembed, fold_value_biases): Logits identisch, einzelne Matrizen nicht mit dem
+  HF-Checkpoint vergleichbar, `normalization_type` wird `LNPre`, W_E/W_U getrennt statt tied.
+  Rohgewichte: `from_pretrained_no_processing`. Das cfg-Feld `layer_norm_folding` sagt dazu
+  nichts aus (liest nur der Bridge-Pfad).
+- **BOS als Attention-Senke / massive activation:** Norm des Residual Streams an Position 0
+  steigt in Layer 0–2 auf ~3100 und bleibt dort; die übrigen Positionen wachsen von 61
+  (nach Layer 0, der mit Abstand am meisten schreibt) auf 254 vor Layer 11; der letzte Layer
+  baut BOS auf ~420 ab. Auf dem Prosa-Prompt legen ab Layer 5 alle 12 Heads > 50 % ihres
+  Gewichts auf BOS (Layer 7–10 im Mittel > 0,85). Folgen: Position 0 aus jeder Mittelung
+  raus; Steering-Stärken nur relativ zur Layer-Norm vergleichbar; Attention-Plots später
+  Layer ohne BOS-Spalte lesen.
+- **Logit Lens an der letzten Position:** Layer 0–2 geben das aktuelle Token zurück, Layer
+  3–5 sind unlesbar („paces", „hips"), Layer 6–10 stabil „ specializing", vor Layer 11
+  komplett auf Verben gekippt („ estimate", „ suggest", „ predict"), Layer 11 flacht ab
+  (Top-1 von 0,30 auf 0,02). Lens-Wahrscheinlichkeiten zeigen Richtungen, keine kalibrierte
+  Konfidenz — nie als Modell-Konfidenz zitieren.
+- **Induction Heads reproduziert:** Zufallssequenz (L=20, Seed 0) zweimal hintereinander,
+  Score = mittlere Attention auf Offset −(L−1). Top 5: L5H5 0,84 · L7H10 0,83 · L5H1 0,81 ·
+  L6H9 0,79 · L7H2 0,74 — exakt die aus der Literatur bekannten Heads. Layer 0–4 durchweg
+  < 0,06; Layer 9–10 mehrere unscharfe Heads 0,3–0,6. Loss pro Token: erste Hälfte 12,4
+  (schlechter als uniform ≈ 10,8 — das Modell erwartet Englisch), zweite Hälfte 1,10.
+- **Erste Ablation (Zero-Ablation auf `attn.hook_z` via `run_with_hooks`):** die 5 Heads
+  genullt → Loss zweite Hälfte 1,10 → 3,86; Kontrolle mit 5 Zufalls-Heads aus denselben
+  Layern → 1,12. Effekt kausal und spezifisch, aber weit unter 12,4: Redundanz, vermutlich
+  die unscharfen Heads in Layer 9–10. Merksatz: Ablation misst, was ohne ein Bauteil fehlt,
+  nicht, was es leistet. Mean-Ablation wäre der sauberere Standard; Zero-Ablation hat hier
+  laut Kontrolle keinen Kollateralschaden.
+
 ## Umgebung & Tooling (Stand 2026-08-24)
 
 - Paketverwaltung: **uv** (seit 2026-08-24). `pyproject.toml` deklariert, `uv.lock` pinnt
