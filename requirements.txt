@@ -1,9 +1,0 @@
-# Core mech-interp stack (Python 3.13, installed 2026-07-10)
-transformer_lens==3.5.1
-torch==2.13.0
-transformers==5.13.0
-accelerate==1.14.0
-datasets==5.0.0
-einops==0.8.2
-numpy==2.5.1
-pandas==3.0.3

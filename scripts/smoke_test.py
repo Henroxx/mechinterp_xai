@@ -4,7 +4,7 @@ Loads gemma-2-2b-it and gpt2 in TransformerLens on Apple Silicon (MPS),
 generates a few tokens, and runs run_with_cache once to check that
 activation caching works and to report its memory footprint.
 
-Run:  .venv/bin/python scripts/smoke_test.py
+Run:  uv run python scripts/smoke_test.py
 """
 
 import time

@@ -1,0 +1,26 @@
+[project]
+name = "mechinterp-xai"
+version = "0.1.0"
+description = "Applied mechanistic interpretability methods on open-source LLMs"
+requires-python = "==3.13.*"
+
+# Exact pins for the stack the environment was verified against (smoke test and
+# MPS numerics check, see docs/agentcontext/DETAILS.md). Changing any of these
+# invalidates that verification.
+dependencies = [
+    "transformer_lens==3.5.1",
+    "torch==2.13.0",
+    "transformers==5.13.0",
+    "accelerate==1.14.0",
+    "datasets==5.0.0",
+    "einops==0.8.2",
+    "numpy==2.5.1",
+    "pandas==3.0.3",
+    # Exploration tooling — no verified numerics depend on these, so the
+    # lockfile carries the exact versions instead of a pin here.
+    "jupyter",
+    "circuitsvis",
+]
+
+[tool.uv]
+package = false

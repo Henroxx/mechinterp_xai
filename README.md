@@ -11,7 +11,7 @@ reliable the methods themselves are.
 
 ## Structure
 
-- `context/` — project state and long-term notes (project index, details, chronology)
+- `docs/agentcontext/` — project state and long-term notes (project index, details, chronology)
 - `scripts/` — runnable scripts (environment smoke test, MPS-vs-CPU numerical verification)
 - `report/` — the paper (Typst)
 
@@ -22,9 +22,8 @@ experiments. Weights live in the Hugging Face cache, not in this repo (Gemma req
 accepting the license on Hugging Face).
 
 ```sh
-python3.13 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-.venv/bin/python scripts/smoke_test.py
+uv sync
+uv run python scripts/smoke_test.py
 ```
 
 Runs locally on Apple Silicon (MPS verified against CPU, see `scripts/verify_mps.py`).

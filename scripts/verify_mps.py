@@ -8,7 +8,7 @@ is affected, per model and dtype we actually use:
 - gpt2 in float32: logits + per-layer residual stream + IOI logit diff (Mary-John)
 - gemma-2-2b-it in bfloat16: logits + per-layer residual stream
 
-Run:  .venv/bin/python scripts/verify_mps.py
+Run:  uv run python scripts/verify_mps.py
 """
 
 import gc
