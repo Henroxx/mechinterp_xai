@@ -24,32 +24,57 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
 ---
 # Status
 
-- Projekt-Setup: Methodik (`CLAUDE.md`), Context-Struktur, `/handoff`-Skill,
-  Typst-Template (2026-07-10).
-- Vorlesungs-Slides als Kondensat verfügbar: `xai_slides.md`.
-- Umgebung steht und ist verifiziert: venv (Python 3.13), TransformerLens-Stack gepinnt,
-  alle 3 Modelle im HF-Cache, Smoke-Test bestanden, MPS-Korrektheit gemessen.
-  → DETAILS „Umgebung & Tooling" + „Numerik-Policy"
-- Repo auf GitHub: `Henroxx/mechinterp_xai` (Dozent hat Zugriff; .venv/.claude ignoriert).
+- Methodik-Scaffold auf Stand des Methodik-Repos (`6815a2e`, siehe Stempel in `CLAUDE.md`).
+- Umgebung verifiziert (TransformerLens-Stack gepinnt, alle 3 Modelle im HF-Cache,
+  Smoke-Test bestanden, MPS-Korrektheit gemessen) → DETAILS „Umgebung & Tooling" +
+  „Numerik-Policy". Umgebung am 2026-08-24 nach dem Umzug neu gebaut (jetzt über uv),
+  Smoke-Test bestanden — einsatzbereit.
+- Repo lokal unter `~/dev/private_repos/mechinterp_xai`, auf GitHub `Henroxx/mechinterp_xai`
+  (Dozent hat Zugriff; .venv/.claude ignoriert).
 - Themen-Kandidaten A–F destilliert, Ranking vorgeschlagen → DETAILS „Themen-Kandidaten".
-- Zwischenpräsi-Material fertig: `presentation/zwischenpraesi.html` (selbst-enthaltene
-  HTML-Scroll-Präsentation, 13 Folien, eigene SVG-Diagramme).
-- Noch keine Experimente.
+- **Zwischenpräsentation am 11.07. gehalten und abgeschlossen** — Material liegt in
+  `presentation/zwischenpraesi.html`, ist für die weitere Arbeit aber nicht mehr relevant.
+- Lerndokument für Henry angelegt: `docs/learning/index.html` (SteeringSafety im Volltext,
+  Messmethodik, Metrik-Kritik, Glossar) — wächst iterativ, siehe CLAUDE.md „Doku".
+- Noch keine Experimente. Aktuell: Einarbeitung (Fahrplan Schritt 1).
 
 ---
 # To-Dos & offene Entscheidungen
 
-- [ ] **Themen-Ranking entscheiden** (Henry) — Vorschlag liegt vor → DETAILS
-      „Themen-Kandidaten & Ranking"
-- [ ] Web-Recherche: Stand 2025/26 zu Steering-Nebeneffekten + SAE-Kritik verifizieren
-      (wo docken wir an, was ist schon gemacht?); TransformerLens-Support für Gemma-3 prüfen
-- [x] **Zwischenpräsi 11.07.**: Material erstellt (`presentation/zwischenpraesi.html`);
-      nach dem Termin: Feedback des Dozenten festhalten
+- [ ] **Fahrplan** (Henry, 2026-08-25) — vier Schritte, in dieser Reihenfolge:
+      1. **Einarbeitung:** mit TransformerLens auf GPT-2 small rumspielen, alles einmal
+         anfassen (Jupyter + circuitsvis stehen). ← *hier stehen wir*
+      2. **Forschungsstand mappen** — Überblick gewinnen, Teile davon können in die
+         Abhandlung (Methodenkritik). Rohstoff: DETAILS „Forschungsstand", „SAE-Kritik",
+         Lerndokument.
+      3. **Reproduzieren oder Lücke** — Bekanntes auf anderen Modellen nachbauen oder eine
+         Lücke strukturiert angehen; 2–3 kleine Experimente, nicht tief.
+      4. Themenwahl fällt erst *nach* Schritt 2. Bis dahin sind Lücken und Ideen Kandidaten,
+         kein Zuschnitt.
+- [x] **Paketverwaltung auf uv umgestellt** (2026-08-24): `pyproject.toml` + committetes
+      `uv.lock`, `requirements.txt` und alte venv gelöscht, jupyter und circuitsvis dazu.
+      Grund: `requirements.txt` pinnte nur die 8 direkten Pakete, die transitiven kamen
+      unkontrolliert dazu — erst das Lockfile macht die Messungen reproduzierbar.
+      → DETAILS „Umgebung & Tooling"
+- [x] **Web-Recherche 2026-08-24** → DETAILS „Forschungsstand Steering-Nebeneffekte",
+      „SAE-Kritik", „Tooling-Realität", „Lehrmaterial"
+- [ ] **Beitrag neu zuschneiden** (Henry) — die Grundform „Refusal-Steering anwenden und
+      Nebenwirkungen messen" ist publiziert (SteeringSafety, arXiv:2509.13450, auf genau
+      Gemma-2-2B). Offene Lücken auf Metrik-, Dosis- und Kontroll-Ebene → DETAILS
+      „Forschungsstand", Abschnitt „Offene Lücken"
+- [ ] **TransformerLens-Version entscheiden — erst vor der ersten Gemma-Messung.**
+      Für die GPT-2-Einarbeitung irrelevant (die `transformers`-v5-Änderung am
+      Embedding-Scaling betrifft nur Gemma). Installiert 3.5.1 (verifiziert), aktuell 3.8.0;
+      Upgrade verlangt neuen `verify_mps.py`-Lauf. Dazu `enable_compatibility_mode()` bewusst
+      setzen oder nicht → DETAILS „Tooling-Realität"
+- [x] **Zwischenpräsi 11.07.**: gehalten, Thema abgeschlossen
 - [x] Modellwahl: **Gemma-2-2B (base+it)** als Haupt-Modell, GPT-2 small als
       Ground-Truth-Zweitmodell → DETAILS „Modellwahl"
 - [x] Smoke-Test + MPS-Verifikation (`scripts/smoke_test.py`, `scripts/verify_mps.py`)
-- [ ] Sprache der Abhandlung festlegen (Deutsch/Englisch — Template steht aktuell auf Deutsch)
-- [ ] **Vertiefung nach der Zwischenpräsi** (Henrys Verständnis, unabhängig von Slides):
+- [x] **Sprache der Abhandlung: Englisch** (2026-08-24). Grund: die gesamte Literatur und
+      Terminologie ist englisch, Rückübersetzen von Fachbegriffen erzeugt nur Unschärfe.
+      → `report/main.typ` muss noch umgestellt werden
+- [ ] **Vertiefung** (Henrys Verständnis, für die Verteidigung):
       Grokking-Beispiel (Nanda, Addition mod 113) durcharbeiten; Linear Representation
       Hypothesis sauber durchsprechen (konnte Henry noch nicht frei erklären)
 - [x] Format der Abhandlung: **Typst**, Template aus Big-Data-Projekt adaptiert
@@ -58,5 +83,6 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
 ---
 # Referenzen
 
-- Vorlesungsstoff: `context/xai_slides.md`
-- Kurs-Repo: `../XAI_course/` (Slides-Quelle, Exercises)
+- Kurs-Repo (Slides-Quelle, Exercises): `~/Documents/Master/4. Semester/XAI/XAI_course`
+- Lerndokument: `docs/learning/index.html`
+- Papers (PDF): `~/Documents/Master/4. Semester/XAI/` (u. a. SteeringSafety)

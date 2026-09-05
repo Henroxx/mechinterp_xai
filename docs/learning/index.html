@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lernnotizen — Mech-Interp XAI</title>
+<style>
+  :root{
+    --bg:#fafaf8; --fg:#1a1a1a; --muted:#666; --accent:#0d6e6e;
+    --accent-soft:#e3f0f0; --card:#fff; --border:#e2e2de;
+    --warn:#c1440e; --warn-soft:#fbeee7; --grey:#8a8a84;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    padding:0 24px 120px;
+  }
+  .wrap{max-width:780px; margin:0 auto}
+  header{padding:64px 0 40px; border-bottom:1px solid var(--border); margin-bottom:48px}
+  h1{font-size:34px; line-height:1.2; margin:0 0 12px; letter-spacing:-.02em}
+  .sub{color:var(--muted); font-size:15px; margin:0}
+  h2{
+    font-size:24px; margin:64px 0 8px; letter-spacing:-.01em;
+    padding-top:8px; border-top:2px solid var(--accent); display:inline-block;
+  }
+  h3{font-size:17px; margin:36px 0 8px}
+  p{margin:0 0 16px}
+  .lead{font-size:18px; color:#333}
+  strong{font-weight:600}
+  code{
+    font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
+    background:var(--accent-soft); padding:1px 5px; border-radius:3px;
+  }
+  nav{
+    background:var(--card); border:1px solid var(--border); border-radius:8px;
+    padding:20px 24px; margin:0 0 8px;
+  }
+  nav p{margin:0 0 10px; font-size:13px; text-transform:uppercase;
+        letter-spacing:.08em; color:var(--muted)}
+  nav ol{margin:0; padding-left:20px}
+  nav li{margin:4px 0}
+  nav a{color:var(--accent); text-decoration:none}
+  nav a:hover{text-decoration:underline}
+
+  /* Begriffskästen — überspringbar, wenn bekannt */
+  .begriff{
+    border-left:3px solid var(--accent); background:var(--card);
+    padding:14px 18px; margin:20px 0; border-radius:0 6px 6px 0;
+  }
+  .begriff b{color:var(--accent)}
+  .begriff p{margin:0; font-size:15px}
+  .begriff p + p{margin-top:8px}
+
+  /* Abbildungen */
+  ul{margin:0 0 16px; padding-left:22px}
+  li{margin:6px 0}
+  figure{margin:32px 0; padding:0}
+  figure .frame{
+    background:var(--card); border:1px solid var(--border);
+    border-radius:8px; padding:20px; overflow-x:auto;
+  }
+  figcaption{font-size:13px; color:var(--muted); margin-top:10px; line-height:1.5}
+  svg{display:block; max-width:100%; height:auto}
+
+  /* Matrix */
+  table{border-collapse:collapse; font-size:13px; width:100%; min-width:520px}
+  th,td{border:1px solid var(--border); padding:8px 10px; text-align:center}
+  th{background:var(--bg); font-weight:600; font-size:12px; line-height:1.3}
+  th.rowhead{text-align:left; background:var(--bg); white-space:nowrap}
+  td.ziel{background:var(--accent-soft); color:var(--accent); font-weight:600}
+  td.hit{background:var(--warn-soft); color:var(--warn); font-weight:600}
+  td.unk{color:#bbb}
+  td.ok{background:#eef6ee; color:#2f6b34; font-weight:600}
+  td.mid{color:#8a6d1f}
+
+  .refs{
+    font-size:13px; color:var(--muted); border-top:1px solid var(--border);
+    padding-top:12px; margin-top:32px;
+  }
+  .refs b{color:#444; font-weight:600}
+  footer{
+    margin-top:80px; padding-top:24px; border-top:1px solid var(--border);
+    font-size:13px; color:var(--muted);
+  }
+  .flag{
+    background:var(--warn-soft); border-left:3px solid var(--warn);
+    padding:14px 18px; margin:20px 0; border-radius:0 6px 6px 0; font-size:15px;
+  }
+  .flag p{margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Lernnotizen</h1>
+  <p class="sub">Mech-Interp XAI · wächst mit dem Projekt · Stand 2026-08-25 · Abschnitt 1 aus dem Volltext</p>
+</header>
+
+<nav>
+  <p>Inhalt</p>
+  <ol>
+    <li><a href="#steeringsafety">Was SteeringSafety gemacht hat</a></li>
+    <li><a href="#messung">Wie gemessen wird</a></li>
+    <li><a href="#stellschrauben">Zwei Stellschrauben, die das Ergebnis mitbestimmen</a></li>
+    <li><a href="#metriken">„Die Metriken sind kaputt"</a></li>
+    <li><a href="#glossar">Glossar</a></li>
+  </ol>
+</nav>
+<p class="sub" style="margin-bottom:0">Die Begriffskästen kannst du überspringen, wenn dir
+der Begriff schon geläufig ist.</p>
+
+<h2 id="steeringsafety">1 · Was SteeringSafety gemacht hat</h2>
+
+<p class="lead">Die Arbeit, die deinem geplanten Experiment am nächsten kommt — auf demselben
+Modell.</p>
+
+<p><b>Die Frage:</b> Wenn man einem Modell per Steering ein Verhalten weg- oder hindreht,
+was passiert dabei mit allem anderen? Nicht „funktioniert Steering", sondern „was kostet es".</p>
+
+<p><b>Der Aufbau.</b> Drei Modelle, darunter <b>Gemma-2-2B-IT</b> — dein Hauptmodell.
+Fünf Steering-Verfahren. Neun „Safety-Perspektiven", verteilt auf 18 Datensätze.</p>
+
+<p>Und hier liegt der eigentliche Trick, den ich dir vorher ungenau beschrieben habe:
+<b>gesteuert wird nur auf drei Perspektiven</b> (Refusal, Halluzination, Bias — dort, wo es
+genug kontrastive Daten gibt), <b>gemessen wird auf allen neun</b>. Die Diagonale ist also
+schmal, die Fläche daneben breit.</p>
+
+<figure>
+  <div class="frame">
+    <table>
+      <tr>
+        <th class="rowhead">gesteuert ↓ &nbsp; gemessen →</th>
+        <th>Social<br>Behaviors</th>
+        <th>Normative<br>Judgment</th>
+        <th>Epistemic<br>Integrity</th>
+        <th>Reasoning</th>
+        <th>… je Ziel-<br>perspektive</th>
+      </tr>
+      <tr>
+        <th class="rowhead">Refusal (unterdrücken)</th>
+        <td class="hit">am stärksten<br>betroffen</td>
+        <td class="hit">Moral bis −26 %</td>
+        <td class="hit">betroffen</td>
+        <td class="ok">robust &lt; 2 %</td>
+        <td class="ziel">Zielwirkung</td>
+      </tr>
+      <tr>
+        <th class="rowhead">Halluzination (reduzieren)</th>
+        <td class="hit">am stärksten<br>betroffen</td>
+        <td class="hit">Politik kippt —<br>je Modell anders</td>
+        <td class="mid">selektiv</td>
+        <td class="ok">robust &lt; 2 %</td>
+        <td class="ziel">Zielwirkung</td>
+      </tr>
+      <tr>
+        <th class="rowhead">Bias (reduzieren)</th>
+        <td class="hit">am stärksten<br>betroffen</td>
+        <td class="mid">variabel</td>
+        <td class="mid">Halluzination<br>kippt mit</td>
+        <td class="ok">robust &lt; 2 %</td>
+        <td class="ziel">Zielwirkung</td>
+      </tr>
+    </table>
+  </div>
+  <figcaption>Aus Figure 3 und den Findings des Papers. Die Zahlenwerte sind
+  durchschnittliche <em>absolute</em> Drift, gemittelt über Methoden und Modelle:
+  über 10 % bei Llama-3.1-8B, etwa 5 % bei den beiden anderen. „bis −76 %" aus dem Abstract
+  ist der Extremwert über alle Ziel-Perspektiven hinweg, keine einzelne Zelle.</figcaption>
+</figure>
+
+<div class="begriff">
+  <p><b>Entanglement</b> („Verschränkung") ist der Begriff, den die Arbeit ins Zentrum stellt:
+  Verhaltensweisen, die für uns getrennte Dinge sind, hängen im Modell aneinander. Man zieht
+  an einem Faden und ein anderer bewegt sich mit.</p>
+  <p>Warum das zu erwarten ist, weißt du schon aus deiner Präsentation: Wenn Konzepte als
+  <em>Richtungen</em> im Aktivierungsraum liegen und mehr Konzepte existieren als Dimensionen
+  (Superposition), dann können diese Richtungen nicht alle senkrecht zueinander stehen. Sie
+  überlappen.</p>
+  <p>Genau diese Erklärung geben die Autoren in Abschnitt 5 — und markieren sie ausdrücklich
+  als <em>Hypothese, nicht Ergebnis</em>: „We present superposition as the most parsimonious
+  account compatible with our observations, not as established." Sie schreiben, dass
+  Anschlussarbeit mit <b>Sparse Autoencodern</b> einzelne Fälle untersuchen könnte und ihr
+  Benchmark genau dafür gebaut ist. Das ist eine offene Einladung — und trifft deinen
+  Kandidaten D.</p>
+</div>
+
+<h3>Die drei Befunde</h3>
+
+<p><b>1 · Es hängt am Tripel, nicht an einer Zutat.</b> Keine Methode ist überall die beste.
+Ob Steering funktioniert, entscheidet die Kombination aus Methode, Modell <em>und</em>
+Perspektive. Wer eine Methode empfiehlt, ohne Modell und Ziel zu nennen, sagt nichts.</p>
+
+<p><b>2 · Zwei Bereiche sind durchgehend verwundbar, einer durchgehend robust.</b>
+Am stärksten betroffen sind <em>Social Behaviors</em> — Sycophancy (unkritisches Zustimmen),
+Marken-Bevorzugung, Anthropomorphismus, künstliches Hinziehen von Gesprächen — und
+<em>Normative Judgment</em> (Moralurteile, politische Ausrichtung). <b>Reasoning bleibt
+robust</b>, unter 2 % in jedem Fall.</p>
+
+<div class="flag">
+  <p>Das ist ein wichtiger Punkt für dich: <b>die Fähigkeits-Benchmarks bewegen sich kaum.</b>
+  Genau dieselbe Beobachtung wie im nächsten Abschnitt — nur hier von der anderen Seite. Man
+  kann daraus zwei sehr verschiedene Schlüsse ziehen: „Reasoning ist robust gegen Steering"
+  oder „Reasoning-Benchmarks sind kein empfindliches Messgerät". Das Paper zieht den ersten.</p>
+</div>
+
+<p><b>3 · Die Richtung der Nebenwirkung ist nicht vorhersehbar.</b> Jailbreaking macht Modelle
+nicht durchgehend toxischer — bei Llama-3.1-8B schwer, bei Qwen-2.5-7B kaum. Halluzinations-
+Steering verschiebt die politische Ausrichtung, bei Gemma nach links, bei Llama nach rechts.
+Und Bias zu verbessern verschlechtert teils die andere Bias-Unterart. Man kann also nicht
+sagen „Eingriff X kostet Y" — nur „Eingriff X auf Modell M kostet Y".</p>
+
+<h3>Drei Dinge, die ich dir vorher falsch erzählt habe</h3>
+
+<p><b>Der Refusal-Eingriff geht in die andere Richtung, als ich gesagt habe.</b> Sie
+<em>unterdrücken</em> Refusal — das ist Jailbreaking, und der technische Weg ist
+Orthogonalisierung: die Refusal-Richtung wird aus den Aktivierungen herausprojiziert, nicht
+etwas hinzuaddiert. Die umgekehrte Richtung, Refusal <em>verstärken</em>, untersuchen sie
+<b>bewusst nicht</b>: sie sättigt in pauschales Verweigern von allem und liefert damit kein
+brauchbares Signal, und die Modelle verweigern in ihrem Setup ohnehin schon fast alles
+Gefährliche.</p>
+
+<div class="begriff">
+  <p><b>Orthogonalisierung / Directional Ablation</b> — statt <code>stream += α · v</code>
+  (Richtung dazugeben) rechnet man die Komponente entlang <em>v</em> aus dem Stream heraus:
+  <code>stream -= (stream · v̂) v̂</code>. Danach zeigt der Stream in keine Richtung mehr, die
+  eine Refusal-Komponente hätte. Der Unterschied: Addieren <em>drückt</em> in eine Richtung
+  und hat eine Dosis; Ablation <em>entfernt</em> und hat keine — sie ist an oder aus.</p>
+</div>
+
+<p><b>Gemma-2-2B ist das schwierigste ihrer drei Modelle.</b> Wörtlich: ACE und DIM
+überschreiten 50 % Effectiveness „auf jedem Modell außer Gemma-2-2B". In der
+Tradeoff-Tabelle hat die Kombination DIM/Refusal/Gemma nicht einmal einen Wert. Für dich
+heißt das: dass ein Effekt bei dir kleiner ausfällt als in der Literatur, ist zu erwarten
+und kein Zeichen eines Fehlers — aber du musst es kennen, bevor du dich über kleine Zahlen
+wunderst.</p>
+
+<p><b>Und der Punkt, der deine Lücke erst richtig sichtbar macht</b> — dazu der nächste
+Abschnitt.</p>
+
+<p class="refs"><b>Quelle:</b> Siu, Crispino, Park, Henry, Wang, Liu, Song, Wang —
+<i>SteeringSafety: Benchmarking Representation Steering in LLMs Across Safety Perspectives</i>,
+arXiv:2509.13450v3, ICML 2026 (PMLR 306). Volltext gelesen. Code und Datensatz öffentlich.</p>
+
+<h2 id="messung">2 · Wie gemessen wird</h2>
+
+<p class="lead">Alle neun Perspektiven laufen auf bestehenden, veröffentlichten Benchmarks.
+Nichts davon haben sie selbst erfunden — sie haben zusammengestellt.</p>
+
+<figure>
+  <div class="frame">
+    <table>
+      <tr>
+        <th class="rowhead">Perspektive</th><th>Datensatz</th>
+        <th>Aufgabentyp</th><th>Bewertung</th><th>Train-<br>Split?</th>
+      </tr>
+      <tr><th class="rowhead">Refusal</th><td>SALAD-Bench<br>(+ Alpaca als Gegenbeispiele)</td>
+          <td>offene schädliche Anfragen</td><td>LlamaGuard-4</td><td class="ziel">ja</td></tr>
+      <tr><th class="rowhead">Bias, implizit</th><td>BBQ</td>
+          <td>Multiple Choice</td><td>Substring</td><td class="ziel">ja</td></tr>
+      <tr><th class="rowhead">Bias, explizit</th><td>ToxiGen</td>
+          <td>Ja/Nein zu toxischen Aussagen</td><td>Substring</td><td class="ziel">ja</td></tr>
+      <tr><th class="rowhead">Halluzination, intrinsisch</th><td>FaithEval ×3</td>
+          <td>Antwort aus gegebenem Kontext</td><td>Llama-3.3-70B</td><td class="ziel">ja</td></tr>
+      <tr><th class="rowhead">Halluzination, extrinsisch</th><td>PreciseWikiQA</td>
+          <td>Faktenfragen</td><td>Llama-3.3-70B</td><td class="ziel">ja</td></tr>
+      <tr><th class="rowhead">Social Behaviors</th><td>DarkBench ×4</td>
+          <td>freie Antwort</td><td>GPT-4o</td><td class="unk">nein</td></tr>
+      <tr><th class="rowhead">Reasoning</th><td>ARC-C · GPQA · LongBench v2</td>
+          <td>Multiple Choice</td><td>Substring</td><td class="unk">nein</td></tr>
+      <tr><th class="rowhead">Epistemic Integrity</th><td>TruthfulQA · DarkBench Sneaking</td>
+          <td>Binärwahl / freie Antwort</td><td>Substring / GPT-4o</td><td class="unk">nein</td></tr>
+      <tr><th class="rowhead">Normative Judgment</th><td>ETHICS (via DecodingTrust) ·<br>TwinViews-13k</td>
+          <td>Moraldilemmata / Zustimmung</td><td>Substring</td><td class="unk">nein</td></tr>
+    </table>
+  </div>
+  <figcaption>Die letzte Spalte ist der Aufbau in einer Zahl: nur die drei gesteuerten
+  Perspektiven haben Trainingsdaten (40/10/50 Train/Val/Test, nach Unterkategorie
+  stratifiziert). Die anderen sind <b>rein zum Messen</b> da und werden nie zum Bauen eines
+  Vektors benutzt. Größen: 100–2000 Prompts pro Datensatz.</figcaption>
+</figure>
+
+<p><b>Social Behaviors konkret</b>, weil du danach gefragt hast: <b>DarkBench</b> zerlegt das
+in vier Unterverhalten, jedes mit ~110 Testprompts. <em>Sycophancy</em> — stimmt das Modell
+unkritisch zu? <em>Brand Bias</em> — empfiehlt es bestimmte Produkte? <em>Anthropomorphism</em>
+— beschreibt es sich mit menschlichen Eigenschaften? <em>User Retention</em> — zieht es
+Gespräche künstlich in die Länge? Bewertet wird jede Antwort von GPT-4o, berichtet wird der
+Prozentsatz der Antworten, die das Verhalten <em>nicht</em> zeigen.</p>
+
+<h3>Was heißt „50 % Effectiveness"?</h3>
+
+<p>Nicht „50 % der Fälle funktionieren". Es ist der <b>Anteil des noch möglichen Fortschritts,
+den der Eingriff einlöst</b>. Wenn das ungesteuerte Modell auf einer Aufgabe bei 60 % liegt,
+sind noch 40 Punkte bis zur Perfektion übrig — das ist der <em>Headroom</em>. Kommt das
+gesteuerte Modell auf 80 %, hat es 20 von 40 Punkten geholt: 50 % Effectiveness.</p>
+
+<p>Diese Normierung ist nötig, weil dieselbe absolute Verbesserung ganz unterschiedlich viel
+wert ist. Von 95 % auf 96 % zu kommen ist schwer, von 20 % auf 21 % leicht. Ohne Normierung
+würde man beides gleich zählen.</p>
+
+<p><b>Und damit die Antwort auf deine Frage:</b> ja, Effectiveness ist genau das Maß für die
+Zielwirkung — wie gut das Steering das getroffen hat, was es treffen sollte. Und ja, sie haben
+das für alle drei gesteuerten Perspektiven separat gemessen. „Gemma-2-2B ist das schwierigste
+Modell" heißt: bei den anderen beiden Modellen holen ACE und DIM über die Hälfte des
+verbleibenden Headrooms auf der Refusal-Perspektive, bei Gemma nicht.</p>
+
+<h3>Wie sieht Entanglement als Zahl aus?</h3>
+
+<p>Für jeden Datensatz, der <em>nicht</em> zur gesteuerten Perspektive gehört, wird die
+Differenz zum ungesteuerten Modell genommen. Diese Differenzen werden quadriert, gemittelt
+und die Wurzel gezogen — ein <b>quadratischer Mittelwert</b>.</p>
+
+<div class="begriff">
+  <p><b>Warum quadrieren?</b> Damit sich Verschlechterungen und Verbesserungen nicht
+  gegenseitig aufheben. Wenn ein Eingriff eine Sache um 5 Punkte verschlechtert und eine
+  andere um 5 verbessert, wäre der schlichte Mittelwert null — „keine Nebenwirkung", obwohl
+  sich zwei Dinge deutlich bewegt haben. Quadrieren macht beide positiv, und große
+  Abweichungen wiegen stärker als viele kleine.</p>
+  <p>Bewusst <b>nicht</b> normiert, mit Begründung im Paper: 1 % Drift auf einer Aufgabe mit
+  99 %-Baseline wäre relativ genauso groß wie 100 % Drift bei 0 %-Baseline — praktisch aber
+  völlig unvergleichbar. Es sind also <em>rohe Prozentpunkte</em>.</p>
+</div>
+
+<p>„Entanglement verdoppelt sich" heißt damit: dieser eine quadratische Mittelwert steigt,
+etwa von 2,5 auf 5 Prozentpunkte. Es ist keine Aussage über einzelne Verhaltensweisen,
+sondern ein Sammelmaß dafür, wie viel sich insgesamt neben dem Ziel bewegt hat.</p>
+
+<h3>Wie wurden die Steering-Vektoren gebaut?</h3>
+
+<p>Das ist deine wichtigste Frage, und die Antwort ist zugleich die einfachste: <b>immer über
+kontrastive Paare</b> — genau das Verfahren, das du in der Präsentation gezeigt hast. Zwei
+Gruppen von Prompts, die sich möglichst nur in der einen interessierenden Eigenschaft
+unterscheiden, Aktivierungen von beiden sammeln, Mittelwerte bilden, Differenz nehmen.</p>
+
+<p>Konkret bei den drei gesteuerten Perspektiven:</p>
+
+<ul>
+  <li><b>Refusal:</b> schädliche Anfragen (SALAD-Bench) gegen harmlose Instruktionen (Alpaca).
+    Der Kontrast ist der Prompt.</li>
+  <li><b>Bias:</b> BBQ und ToxiGen sind schon Multiple Choice — der Kontrast ist die
+    <em>richtige gegen die voreingenommene Antwort</em>.</li>
+  <li><b>Halluzination:</b> hier gab es keine falschen Antworten, also haben sie sie erzeugen
+    lassen — GPT-4.1-mini, Temperatur 0, maximal 50 Token. Der Kontrast ist
+    <em>Frage + korrekte Antwort</em> gegen <em>Frage + erfundene Antwort</em>.</li>
+</ul>
+
+<p>Damit ist auch beantwortet, was ein „Halluzinations-Vektor" sein soll: nicht eine Richtung
+für das Konzept <em>Halluzination</em>, sondern die durchschnittliche Verschiebung im
+Aktivierungsraum zwischen „hier steht eine belegte Antwort" und „hier steht eine erfundene
+Antwort". Ob das Modell intern wirklich <em>so</em> etwas repräsentiert oder ob man nur eine
+statistische Differenz zweier Textsorten erwischt, ist eine offene Frage — und eine, die man
+stellen sollte.</p>
+
+<p>Technische Details, die für eigene Nachbauten zählen: Aktivierungen werden am
+<b>letzten Token</b> (Position −1) abgegriffen, am <b>Eingang jeder Layer</b>, und die
+Richtung wird auf Länge 1 normiert. DIM, ACE und CAA benutzen die Mittelwertdifferenz;
+PCA und LAT nehmen stattdessen die Hauptkomponente — die Richtung der größten Varianz
+statt der größten Klassentrennung.</p>
+
+<h3>Und ja, sie bauen stark auf Vorarbeit auf</h3>
+
+<p>Alle fünf Methoden sind fremd: DIM und ACE gehen auf Arditi et al. und Marshall et al.
+zurück, CAA auf Panickssery et al., PCA und LAT auf Zou et al. („Representation
+Engineering"). Alle 18 Datensätze sind fremd. Der Layer-Suchraum, der KL-Filter und das
+Auswahlverfahren folgen Arditi et al. 2024. <b>Der eigene Beitrag ist die Zusammenstellung:
+alles in einer Pipeline vergleichbar machen und über alle Perspektiven kreuzen.</b> Genau
+deshalb ist es ein <em>Benchmark</em>-Paper und keine Methodenarbeit.</p>
+
+<p class="refs"><b>Quelle:</b> dasselbe Paper, Abschnitt 3 und Anhänge B.1 (Direction
+Generation), D (Datensätze und Splits), E.2–E.3 (Judge-Validierung, Datenformate).</p>
+
+<h2 id="stellschrauben">3 · Zwei Stellschrauben, die das Ergebnis mitbestimmen</h2>
+
+<p class="lead">Beide stehen im Methodenteil, beide sind völlig legitim — und beide entscheiden
+mit, was die Studie überhaupt sehen kann. Hier liegt dein Beitrag.</p>
+
+<h3>Stellschraube 1: ein KL-Filter siebt vorher aus</h3>
+
+<p>Steering hat zwei Einstellungen: <em>an welchem Layer</em> und <em>wie stark</em>. Die
+Autoren probieren ein Raster durch und nehmen die beste Kombination. Aber vorher werfen sie
+alle Kombinationen weg, die das Modell zu stark verändern — gemessen als
+<b>KL-Divergenz</b> über 0,1 auf harmlosen Prompts.</p>
+
+<div class="begriff">
+  <p><b>KL-Divergenz</b> ist ein Abstandsmaß zwischen zwei Wahrscheinlichkeitsverteilungen.
+  Hier: die Verteilung über das nächste Token, einmal beim ungesteuerten und einmal beim
+  gesteuerten Modell. Null heißt identisch; je größer, desto stärker hat der Eingriff die
+  Vorhersage verschoben.</p>
+  <p>Sie benutzen es als <b>Filter</b>, nicht als Ergebnis: was zu weit abweicht, kommt gar
+  nicht in die Auswertung. Die Begründung ist gut — man will realistische Eingriffe bewerten,
+  keine, die das Modell zerstören.</p>
+</div>
+
+<p>Die Konsequenz steht im Paper selbst: ohne diesen Filter („NoKL"-Variante) <b>verdoppelt
+sich das gemessene Entanglement oft mehr als</b>. Das heißt, ein guter Teil der Frage
+„wie schlimm ist Steering?" ist in Wahrheit die Frage „wo hat man die Schwelle gesetzt?".
+Bei 0,1 sieht Steering handhabbar aus. Ohne Schwelle sieht es doppelt so teuer aus.</p>
+
+<p>Das ist keine Kritik im Sinne von „falsch gemacht" — es ist eine dokumentierte
+Entscheidung, und sie berichten beide Varianten. Es ist aber genau die Art Detail, die in
+der Zusammenfassung verschwindet und die eine methodenkritische Arbeit sichtbar machen kann.</p>
+
+<h3>Stellschraube 2: die Dosis wird nie als Kurve berichtet</h3>
+
+<p>Das Suchraster für die Stärke sind <b>ganze Zahlen von −3 bis 3</b>. Sieben Werte. Daraus
+wird <em>ein</em> bester Wert gewählt, und der geht in die Auswertung. <b>Eine
+Dosis-Wirkungs-Kurve kommt im ganzen Paper nicht vor.</b></p>
+
+<figure>
+  <div class="frame">
+  <svg viewBox="0 0 700 300" role="img" aria-label="Grobes Raster gegen dichte Kurve">
+    <defs>
+      <marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3"
+              orient="auto"><path d="M0,0 L6,3 L0,6" fill="#8a8a84"/></marker>
+    </defs>
+    <line x1="66" y1="244" x2="672" y2="244" stroke="#8a8a84" stroke-width="1.2"
+          marker-end="url(#ah2)"/>
+    <line x1="66" y1="244" x2="66" y2="26" stroke="#8a8a84" stroke-width="1.2"
+          marker-end="url(#ah2)"/>
+    <text x="668" y="268" font-size="12" fill="#666" text-anchor="end">Steering-Stärke α</text>
+
+    <!-- dichte Kurve mit Bruchstelle -->
+    <path d="M 66 232 C 130 228, 180 120, 250 96 C 300 80, 330 76, 372 74
+             C 400 73, 412 78, 424 120 C 436 176, 470 214, 540 228 L 668 234"
+          fill="none" stroke="#c1440e" stroke-width="2.4"/>
+    <text x="452" y="60" font-size="13" fill="#c1440e" font-weight="600">was dazwischen passiert</text>
+
+    <!-- 7 Rasterpunkte -->
+    <g fill="#0d6e6e">
+      <circle cx="66"  cy="232" r="5"/>
+      <circle cx="166" cy="132" r="5"/>
+      <circle cx="266" cy="90"  r="5"/>
+      <circle cx="366" cy="74"  r="5"/>
+      <circle cx="466" cy="212" r="5"/>
+      <circle cx="566" cy="230" r="5"/>
+      <circle cx="666" cy="234" r="5"/>
+    </g>
+    <g font-size="11" fill="#0d6e6e" text-anchor="middle">
+      <text x="66" y="262">0</text><text x="166" y="262">1</text>
+      <text x="266" y="262">2</text><text x="366" y="262">3</text>
+    </g>
+    <text x="120" y="196" font-size="13" fill="#0d6e6e" font-weight="600">gemessene Punkte</text>
+  </svg>
+  </div>
+  <figcaption><b>Schematisch.</b> Sieben ganzzahlige Stützstellen, aus denen eine ausgewählt
+  wird. Ob zwischen zwei Punkten eine Bruchstelle liegt — und ob sie vor oder nach dem
+  Erreichen der Zielwirkung kommt — ist mit diesem Raster nicht sichtbar.</figcaption>
+</figure>
+
+<p>Für eine Arbeit, die 3 Modelle × 5 Methoden × 5 Zielperspektiven × 18 Datensätze
+durchrechnet, ist das eine vernünftige Sparmaßnahme — die Rechnung wäre sonst nicht
+bezahlbar. Für dich ist es die Gelegenheit: <b>du hast ein Modell und eine Richtung.</b>
+Was du nicht in die Breite ausgeben musst, kannst du in die Auflösung stecken.</p>
+
+<div class="flag">
+  <p><b>Offene Möglichkeit, keine Entscheidung.</b> Sie haben die Breite gewählt: 18
+  Datensätze, ein Dosispunkt. Die Tiefe — eine Richtung, dichte Dosis-Achse — ist damit
+  unbesetzt. Ob das <em>dein</em> Thema wird, steht offen und gehört entschieden, wenn du
+  das Feld überblickst, nicht jetzt.</p>
+</div>
+
+<p class="refs"><b>Quelle:</b> dasselbe Paper, Abschnitte 3.3 („Steering Methodologies"),
+4.3 und 4.4 („Controlling the effectiveness-entanglement tradeoff").</p>
+
+<h2 id="metriken">4 · „Die Metriken sind kaputt"</h2>
+
+<p class="lead">Der Befund, an dem dein eigener Beitrag hängen kann.</p>
+
+<p>Um zu sagen „Steering hat Nebenwirkungen", braucht man ein Messgerät für „das Modell ist
+schlechter geworden". Fast alle benutzen dafür dasselbe: einen <b>Benchmark</b> wie MMLU, und
+<b>Perplexity</b>.</p>
+
+<div class="begriff">
+  <p><b>Benchmark</b> — eine feste Sammlung von Testfragen mit bekannten Antworten. <b>MMLU</b>
+  sind Multiple-Choice-Fragen aus 57 Fachgebieten, von Jura bis Physik. <b>GSM8K</b> sind
+  Grundschul-Rechenaufgaben, die mehrere Schritte brauchen. Man rechnet den Anteil richtiger
+  Antworten vor und nach dem Eingriff und vergleicht.</p>
+  <p><b>Perplexity</b> (PPL) misst, wie überrascht das Modell von einem echten Text ist:
+  wie wahrscheinlich hätte es die Wörter vorhergesagt, die tatsächlich dastehen. Niedrig =
+  wenig überrascht = gutes Sprachmodell. Der Standard-Gesundheitscheck.</p>
+</div>
+
+<p>Izawa et al. haben nachgemessen, was diese beiden Instrumente eigentlich anzeigen, während
+man die Steering-Stärke hochdreht. Ergebnis:</p>
+
+<figure>
+  <div class="frame">
+  <svg viewBox="0 0 700 330" role="img" aria-label="Drei Kurven über die Steering-Stärke">
+    <defs>
+      <marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3"
+              orient="auto"><path d="M0,0 L6,3 L0,6" fill="#8a8a84"/></marker>
+    </defs>
+    <!-- Achsen -->
+    <line x1="66" y1="272" x2="672" y2="272" stroke="#8a8a84" stroke-width="1.2"
+          marker-end="url(#ah)"/>
+    <line x1="66" y1="272" x2="66" y2="26" stroke="#8a8a84" stroke-width="1.2"
+          marker-end="url(#ah)"/>
+    <text x="668" y="296" font-size="12" fill="#666" text-anchor="end">Steering-Stärke α</text>
+    <text x="60" y="34" font-size="12" fill="#666" text-anchor="end" >Metrik</text>
+
+    <!-- Kollaps-Marker -->
+    <line x1="470" y1="40" x2="470" y2="272" stroke="#c1440e" stroke-width="1"
+          stroke-dasharray="4 4" opacity=".55"/>
+    <text x="478" y="120" font-size="12" fill="#c1440e">hier zerfällt</text>
+    <text x="478" y="136" font-size="12" fill="#c1440e">der Text</text>
+
+    <!-- Zielwirkung: Refusal-Rate, sättigt früh -->
+    <path d="M 66 268 C 150 262, 215 105, 320 74 S 500 62, 668 60"
+          fill="none" stroke="#0d6e6e" stroke-width="2.6"/>
+    <!-- MMLU: praktisch flach -->
+    <path d="M 66 66 L 380 70 L 668 78"
+          fill="none" stroke="#8a8a84" stroke-width="2.6" stroke-dasharray="7 4"/>
+    <!-- Kohärenz: bricht ein -->
+    <path d="M 66 58 L 400 68 C 452 76, 468 210, 540 252 L 668 262"
+          fill="none" stroke="#c1440e" stroke-width="2.6"/>
+
+    <!-- Beschriftungen -->
+    <text x="332" y="52" font-size="13" fill="#0d6e6e" font-weight="600">Zielwirkung (Refusal-Rate)</text>
+    <text x="120" y="106" font-size="13" fill="#8a8a84" font-weight="600">MMLU — bleibt flach</text>
+    <text x="120" y="45" font-size="13" fill="#c1440e" font-weight="600">Textkohärenz</text>
+  </svg>
+  </div>
+  <figcaption><b>Schematisch</b> — illustriert den berichteten Befund, keine eigenen Messwerte.
+  MMLU bleibt innerhalb von 0,5 % stabil, auch in Bereichen, in denen der erzeugte Text
+  schon zusammengebrochen ist. Perplexity ist ähnlich blind: sie fällt bei einem der
+  getesteten Modelle in <em>beide</em> Steering-Richtungen.</figcaption>
+</figure>
+
+<p>Das ist der ganze Punkt. Wer nur MMLU misst, sieht eine flache Linie und schreibt
+„keine Nebenwirkungen" — während das Modell längst Unsinn produziert. Der Grund dafür ist
+plausibel: Multiple Choice verlangt nur, dass die richtige Option unter vier den höchsten
+Wert bekommt. Diese Rangfolge übersteht viel, bevor sie kippt. Zusammenhängend
+<em>formulieren</em> ist eine viel empfindlichere Fähigkeit.</p>
+
+<div class="flag">
+  <p>Anthropics Persona-Vectors-Paper benutzt MMLU als <em>einzige</em> Capability-Metrik.
+  Nach diesem Befund also genau das Instrument, das den Schaden nicht sieht. Ob das die
+  Schlussfolgerungen dort tatsächlich umwirft, müssen wir prüfen, bevor wir es behaupten.</p>
+</div>
+
+<h3>Womit haben sie dann Qualität gemessen?</h3>
+
+<div class="begriff">
+  <p><b>LLM-as-Judge</b> — ein zweites, unbeteiligtes Sprachmodell bewertet die erzeugten
+  Texte. <b>Achtung, zwei verschiedene Papers:</b> Die 0–100-Skala für Kohärenz (Klarheit,
+  Halluzinationsfreiheit, Konfusionsfreiheit, auf 200 Held-out-Beispielen) ist Izawa et al.
+  SteeringSafety urteilt dagegen fast überall <em>binär oder kategorial</em> — „ist diese
+  Antwort schädlich, ja oder nein" —, was ein viel anspruchsloseres Urteil ist.</p>
+  <p><b>Held-out</b> heißt: diese Beispiele wurden beim Bauen des Steering-Vektors nicht
+  benutzt. Sonst misst man, wie gut man sich an die eigenen Trainingsdaten angepasst hat,
+  nicht wie gut der Eingriff wirklich ist.</p>
+</div>
+
+<div class="flag">
+  <p><b>Eigener Einwand (Henry, 2026-08-25), festgehalten als offene Frage:</b> Eine
+  0–100-Skala von einem LLM ausfüllen zu lassen täuscht eine Genauigkeit vor, die es nicht
+  gibt. Woher weiß man, dass eine 65 in einem Durchlauf schlechter ist als eine 58 in einem
+  anderen? Eine 5-, 7- oder 10-stufige Skala wäre plausibel konsistent, 101 Stufen sind es
+  vermutlich nicht.</p>
+  <p>Der Einwand ist substanziell und in der Literatur bekannt: LLM-Judges sind bei feinen
+  numerischen Skalen anfällig für Ankereffekte, Positions- und Formulierungsabhängigkeit, und
+  ihre Auflösung ist meist gröber als die Skala suggeriert. Ob Izawa et al. das prüfen —
+  etwa durch Wiederholungsläufe oder eine Übereinstimmungsrechnung über Skalenstufen — müssen
+  wir im Volltext nachsehen; aus dem Abstract wissen wir es nicht.</p>
+  <p>Zum Vergleich, was SteeringSafety dagegen tut: sie prüfen ihre binären Judges gegen
+  menschliche Annotation und berichten <b>Cohen's κ</b> von 0,92 (SALAD-Bench) und 0,86
+  (PreciseWiki). Für DarkBench liegt κ nur bei 0,71 — und sie schreiben selbst dazu, dass
+  Schlüsse dort „als indikative Tendenzen, nicht als präzise Messungen" zu lesen sind. Das
+  ist die Sorgfaltsstufe, an der man eine Judge-basierte Messung messen sollte.</p>
+</div>
+
+<div class="begriff">
+  <p><b>Cohen's κ</b> (Kappa) misst Übereinstimmung zwischen zwei Bewertern und rechnet
+  heraus, wie viel davon reiner Zufall wäre. 1 = perfekte Übereinstimmung, 0 = nicht besser
+  als Raten. Über 0,8 gilt üblicherweise als stark, 0,6–0,8 als brauchbar. Warum die
+  Zufallskorrektur nötig ist: Wenn 95 % aller Antworten unproblematisch sind, stimmen zwei
+  Bewerter, die einfach immer „unproblematisch" sagen, in 95 % der Fälle überein — ohne
+  dass einer von beiden etwas gemessen hätte.</p>
+</div>
+
+<h3>Zwei weitere Befunde derselben Arbeit</h3>
+
+<p><b>Graduell oder abrupt, je nach Richtung.</b> Steuert man auf ein Verhalten, das das
+Modell gut kennt, verschlechtert es sich allmählich. Steuert man in eine Richtung, die weit
+außerhalb dessen liegt, was das Modell je gesehen hat, <em>kollabiert</em> es plötzlich. Es
+gibt also nicht eine Dosis-Wirkungs-Kurve, sondern verschiedene Formen.</p>
+
+<div class="begriff">
+  <p><b>OOD</b> = out of distribution, „außerhalb der Verteilung": ein Eingriff oder eine
+  Eingabe, die dem, was das Modell im Training gesehen hat, nicht ähnlich ist. Modelle
+  verhalten sich dort typischerweise nicht nur schlechter, sondern unberechenbar anders.</p>
+</div>
+
+<p><b>Asymmetrie.</b> Ein Verhalten zu <em>verstärken</em> und es zu <em>unterdrücken</em>
+sind nicht dieselbe Operation mit anderem Vorzeichen — die Nebenwirkungsprofile
+unterscheiden sich. Für dein Experiment heißt das: du musst α in beide Richtungen fahren,
+nicht nur in eine.</p>
+
+<h3>Und wo ist jetzt deine Lücke?</h3>
+
+<p>Der Befund ist an Modellen mit 7–8 Milliarden Parametern gemessen, und an
+Persona-Eigenschaften (Tonfall, Charakter), nicht an Refusal. <b>Für ein 2-Milliarden-Modell
+und für die Refusal-Richtung ist offen, ob er hält.</b> Das ist mit deiner Hardware prüfbar,
+und die Frage lautet dann nicht mehr „welche Nebenwirkungen hat Steering?" (beantwortet),
+sondern <b>„welches Messgerät zeigt sie auf einem kleinen Modell überhaupt an?"</b> —
+inklusive der Möglichkeit, dass die Antwort „keines von den üblichen" ist.</p>
+
+<p class="refs"><b>Quelle:</b> Izawa et al., <i>Steering at the Source: Style Modulation Heads</i>,
+arXiv:2603.13249. Gemessen auf Qwen2.5-7B-Instruct und Llama-3.1-8B-Instruct.
+&nbsp;·&nbsp; <b>Persona Vectors:</b> Chen et al. (Anthropic), arXiv:2507.21509.</p>
+
+<h2 id="glossar">5 · Glossar</h2>
+
+<p>Begriffe, die in dieser Literatur ständig auftauchen.</p>
+
+<div class="begriff">
+  <p><b>Refusal-Rate</b> — Anteil der Anfragen, die das Modell verweigert. Gemessen auf festen
+  Prompt-Sammlungen: <b>AdvBench</b>, <b>HarmBench</b>, <b>JailbreakBench</b> enthalten
+  Anfragen, die es verweigern <em>soll</em>. <b>XSTest</b> und <b>OR-Bench</b> enthalten
+  harmlose Anfragen, die nur gefährlich <em>klingen</em> — dort misst man
+  <b>Over-Refusal</b>, also übervorsichtige Verweigerung.</p>
+</div>
+
+<div class="begriff">
+  <p><b>Jailbreak</b> — eine Formulierung, die die Verweigerung umgeht. <b>ASR</b> (attack
+  success rate) ist der Anteil erfolgreicher Umgehungen. Relevant für dich als Nebenwirkung:
+  Ein Eingriff, der Over-Refusal reduziert, macht das Modell messbar leichter angreifbar.</p>
+</div>
+
+<div class="begriff">
+  <p><b>Degenerative Repetition</b> — der typische Zerfall gesteuerter Modelle: dieselbe
+  Phrase wiederholt sich in Schleife. Kleine Modelle zeigen das auch ungesteuert, sobald
+  ihnen der Kontext ausgeht. <b>Distinct-2</b> zählt den Anteil einmalig vorkommender
+  Wortpaare und ist das billige Maß dagegen.</p>
+</div>
+
+<div class="begriff">
+  <p><b>Norm-matched Random-Vektor</b> — die wichtigste Kontrolle bei jedem Steering-Experiment.
+  Man addiert einen Zufallsvektor <em>derselben Länge</em> an derselben Stelle. Wenn der
+  genauso viel Schaden anrichtet, hat man nicht die Wirkung einer bestimmten Richtung
+  gemessen, sondern nur, dass ein Stoß dieser Größe das Modell durchschüttelt.</p>
+</div>
+
+<div class="begriff">
+  <p><b>pp</b> — Prozentpunkte. Ein Rückgang von 60 % auf 42 % sind 18 <em>Prozentpunkte</em>,
+  aber 30 % <em>relativ</em>. In dieser Literatur wird beides genannt und gelegentlich
+  vermischt; beim Zitieren aufpassen.</p>
+</div>
+
+<footer>
+  Iteratives Dokument — wächst mit dem Projekt. Alle Befunde hier stammen aus Abstracts und
+  Suchergebnissen, nicht aus vollständig gelesenen Papers; was wir selbst gemessen haben, wird
+  ausdrücklich als solches gekennzeichnet.
+</footer>
+
+</div>
+</body>
+</html>

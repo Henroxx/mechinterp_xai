@@ -5,10 +5,14 @@ Chats nicht verloren gehen soll. Kompakt halten — Substanz, kein Aufblähen.
 
 ---
 
-## Themen-Kandidaten & Ranking (VORSCHLAG — Henrys Entscheidung steht aus)
+## Themen-Kandidaten & Ranking (Stand 2026-07-10, VORSCHLAG — Henrys Entscheidung steht aus)
 
 Destilliert aus der Themen-Landkarte (Chat 2026-07-10). Kriterien: Passung zu Henrys
 Pitch (Steering-Nebeneffekte, methodenkritisch) > Machbarkeit > Methodenkritik-Wert.
+
+**Stand 2026-08-25:** Die Grundform von A+B ist publiziert (SteeringSafety, auf Gemma-2-2B)
+→ „Forschungsstand Steering-Nebeneffekte". Das Ranking unten ist damit überholt, wird aber
+erst nach der Einarbeitung neu entschieden — bis dahin gelten alle Punkte als Kandidaten.
 
 1. **A+B — Herzstück: Steering-Nebeneffekte am Fall der Refusal Direction.**
    Kontrastive Steering-Vektoren auf gemma-2-2b-it (Refusal nach Arditi 2024 als
@@ -17,8 +21,13 @@ Pitch (Steering-Nebeneffekte, methodenkritisch) > Machbarkeit > Methodenkritik-W
    Random-Vektor-Baseline.
 2. **C — Fundament: Activation Patching an Ground Truth** (GPT-2, IOI-Circuit).
    Kalibrierung der Methoden an bekanntem Ergebnis; Lehrbuch-Experiment.
-3. **D — Erweiterung: SAE-Feature-Steering vs. Vektor-Steering** (Gemma Scope) +
-   SAE-Kritikpunkte messen (Rekonstruktionsfehler, tote Features).
+3. **D — Erweiterung: SAE-Feature-Steering vs. kontrastives Vektor-Steering** (Gemma Scope).
+   Zwei Herkunftswege für dasselbe Objekt — eine Richtung im Residual Stream: (a) kontrastiv
+   direkt aus Aktivierungs-Differenzen gerechnet, ohne SAE (so arbeitet A/B), (b) Decoder-
+   Richtung eines SAE-Features (so entstand Golden Gate Claude). Vergleich bei gleicher
+   Zielwirkung: dieselbe Richtung? unterschiedliche Nebenwirkungsprofile? Zusatzidee: den
+   kontrastiven Vektor in der SAE-Basis zerlegen — dominiert ein Feature oder ist er ein
+   Gemisch? Dazu SAE-Kritikpunkte messen (Rekonstruktionsfehler, tote Features).
 4. **E — Bonus: Base-vs-IT-Diffing** (existiert die Refusal-Richtung im Base-Modell?).
 5. **F — nur Ausblick: Attribution Graphs / Circuit Tracing** (Tooling-Aufwand zu hoch).
 
@@ -33,7 +42,7 @@ Model Editing) / Circuit-Analyse (IOI, ACDC, Attribution Graphs) / Safety-Anwend
 (Persona Vectors, Emergent Misalignment, Introspection) / Tooling (TransformerLens,
 nnsight, SAELens, Neuronpedia).
 
-## Modellwahl
+## Modellwahl (Stand 2026-07-10)
 
 **Haupt-Modell: `google/gemma-2-2b` + `google/gemma-2-2b-it`** (entschieden 2026-07-10).
 Begründung: öffentliche SAE-Suite (Gemma Scope, alle Layer) + beste Neuronpedia-Abdeckung
@@ -53,23 +62,68 @@ Nachfolger?"). Achtung: kein Gemma Scope für Gemma 3; TransformerLens-Support v
 Größere Modelle (9B-Klasse) verworfen: bf16-Gewichte ≈ 18 GB → beim Aktivierungs-Caching
 (run_with_cache hält alle Zwischenaktivierungen) permanent am RAM-Limit, zähes Arbeiten.
 
-## Umgebung & Tooling
+## Umgebung & Tooling (Stand 2026-08-24)
 
-- venv: `mechinterp_xai/.venv`, **Python 3.13** (3.14 ist Broses Default, aber zu neu
-  für den ML-Stack). Versionen gepinnt in `requirements.txt`: transformer_lens 3.5.1,
-  torch 2.13.0, transformers 5.13.0.
+- Paketverwaltung: **uv** (seit 2026-08-24). `pyproject.toml` deklariert, `uv.lock` pinnt
+  den vollständigen Abhängigkeitsbaum und ist committet — das ist die eigentliche
+  Reproduzierbarkeitsgarantie, `requirements.txt` hatte nur die 8 direkten Pakete gepinnt.
+  `uv sync` baut die Umgebung in `.venv`, alles läuft über `uv run …`.
+- **Python 3.13** (`.python-version`); 3.14/3.15 sind Henrys Default, aber zu neu für den
+  ML-Stack. Kern-Pins exakt, weil Smoke-Test und MPS-Verifikation dagegen liefen:
+  transformer_lens 3.5.1, torch 2.13.0, transformers 5.13.0. Ein Wechsel bei einem davon
+  entwertet die Verifikation und verlangt einen neuen Durchlauf von `verify_mps.py`.
+- Explorations-Tooling: **jupyter** (Notebooks — bei ~5 min Gemma-Ladezeit gehört das
+  Modell in einen laufenden Kernel, nicht in Skript-Starts) und **circuitsvis 1.43.3**
+  (interaktive Attention-Darstellung in der Notebook-Zelle). Bewusst noch nicht drin:
+  SAELens — kommt erst mit Kandidat D dazu, bis dahin bläht es nur den Lock auf.
 - **TransformerLens** als Kern-Library (Hooks auf alle internen Aktivierungen; festes
   Modell-Set). Alternative für Modelle außerhalb der Liste: nnsight.
-- Modelle liegen im Standard-HF-Cache (`~/.cache/huggingface/hub`) — bewusst NICHT im
-  OneDrive-Projektordner (Sync/Auslagerungs-Risiko; Modelle sind re-downloadbare Artefakte).
+- Projekt-Repo: `~/dev/private_repos/mechinterp_xai`. Kursunterlagen und Slides-Quelle
+  in iCloud unter `~/Documents/Master/4. Semester/XAI`. Der alte OneDrive-Ordner wird
+  nicht mehr angefasst (existiert noch, wird gelöscht).
+- Modelle liegen im Standard-HF-Cache (`~/.cache/huggingface/hub`), nicht im Projektordner —
+  re-downloadbare Artefakte, gehören weder ins Repo noch in einen Sync-Ordner.
 - HF-Account: `henroxx`, Gemma-Lizenz akzeptiert, CLI `hf` (in `~/.local/bin`).
+- Papers lesen: `pdftotext -layout` (Homebrew) ist da — Volltext als Text extrahieren,
+  dann gezielt Abschnitte lesen. Deutlich billiger als Seitenbilder.
 - Gemma-Chat-Format: Prompts für `-it` brauchen `<start_of_turn>user ... <end_of_turn>`-Marker.
 - Smoke-Test: `scripts/smoke_test.py` (Laden auf MPS, Generation, run_with_cache). Bestanden
-  2026-07-10. Gemma-Ladezeit in TransformerLens ~3,5 min (Gewichts-Konvertierung, einmal
-  pro Session); Generation auf MPS ~1 Token/s — für Interp-Workloads (einzelne Forward-
-  Passes) okay.
+  2026-07-10, nach dem Repo-Umzug erneut 2026-08-24. Gemma-Ladezeit in TransformerLens
+  ~4-5 min (Gewichts-Konvertierung, einmal pro Session), GPT-2 ~8 s; Generation auf MPS
+  ~2,7 Token/s bei Gemma. Aktivierungs-Cache eines kurzen Prompts: 0,07 GB (629 Tensoren)
+  bei Gemma — unkritisch, wächst aber linear mit der Prompt-Länge.
+- TransformerLens 3.5.1 warnt beim Laden weiterhin pauschal vor MPS ("silently incorrect
+  results", Issue #1178) — die Warnung hängt an der torch-Version, nicht an einer Messung,
+  und ist durch `verify_mps.py` widerlegt (→ Numerik-Policy). `TRANSFORMERLENS_ALLOW_MPS=1`
+  würde sie unterdrücken; bewusst stehen gelassen.
 
-## Numerik-Policy (MPS vs. CPU, bf16)
+## Steering — Messprotokoll für Nebeneffekte (Stand 2026-07-11, Planung, Kandidat A/B)
+
+Im Chat erarbeitet 2026-07-11, noch nicht erprobt. Logik: erst die Zielwirkung
+quantifizieren, dann Nebenwirkungen auf drei Ebenen — jeweils über die Dosis α
+aufgelöst und gegen Kontrollen gerechnet.
+
+- **Zielwirkung:** Refusal-Rate auf festem Prompt-Set (Marker-Phrasen oder kleiner
+  Klassifikator). Ohne Zahl für die Wirkung lässt sich kein Preis dagegen abwägen.
+- **Ebene 1 — globale Textqualität:** Perplexity auf neutralem Text (z. B. WikiText),
+  dazu Degenerationssymptome (Wiederholungen, Inkohärenz).
+- **Ebene 2 — unbeteiligte Fähigkeiten:** Mini-Benchmark vorher/nachher (ARC, HellaSwag,
+  MMLU-Subset). Auswertung über Logit-Vergleich der Antwortoptionen statt freier
+  Generierung — ein Forward-Pass pro Frage; Generieren wäre auf MPS mit ~1 Token/s zäh.
+- **Ebene 3 — benachbarte Verhaltensweisen:** Over-/Under-Refusal auf harmlosen Prompts,
+  Tonfall, Hedging, Antwortlänge. Hier zeigt sich, ob die Richtung wirklich nur Refusal
+  kodiert oder ein ganzes Verhaltensbündel mitzieht.
+- **Dosis:** α durchsweepen, Ziel- und Nebenwirkungsmetriken gegen α plotten. Kernfrage:
+  Sättigt die Zielwirkung, bevor die Nebenwirkungen anziehen, oder skaliert beides zusammen?
+- **Kontrollen:** Zufallsvektor gleicher Norm am selben Layer (wie viel Schaden richtet
+  irgendein Eingriff dieser Größe an?), unverwandter Steering-Vektor als zweite Kontrolle,
+  derselbe Vektor an verschiedenen Layern.
+- **Judge-Skalen (Henrys Einwand, 2026-08-25):** LLM-as-Judge auf 0–100-Skalen täuscht
+  Genauigkeit vor — ob eine 65 besser ist als eine 58 aus einem anderen Lauf, ist nicht
+  belegt. Wenn wir einen Judge einsetzen: grobe Skala (5–10 Stufen) oder binär, und
+  Übereinstimmung mit Menschen als Cohen's κ berichten, wie SteeringSafety es tut.
+
+## Numerik-Policy (Stand 2026-07-10, MPS vs. CPU, bf16)
 
 Anlass: TransformerLens warnt vor "silently incorrect results" auf MPS
 (Issue #1178: IOI-Logit-Diff kippte auf PyTorch 2.8 das Vorzeichen).
@@ -89,3 +143,205 @@ Konsequenzen:
    als Vorlage).
 4. Gemma-2-Eigenheit: sehr große Residual-Aktivierungen (bis ~4000, wächst über Layer) —
    relevant für alles, was absolute Schwellwerte benutzt.
+
+## Forschungsstand Steering-Nebeneffekte (Stand 2026-08-24)
+
+Recherche per Subagent. **Kernbefund: die Grundform des geplanten Experiments ist
+publiziert.** Ein eigener Beitrag muss auf der Metrik-, Dosis- und Kontroll-Ebene liegen,
+nicht in der Idee „Nebenwirkungen messen".
+
+- **SteeringSafety** (Siu et al., arXiv:2509.13450v3, ICML 2026, PMLR 306) — **im Volltext
+  gelesen 2026-08-25**, PDF liegt in den Kursunterlagen. Gemma-2-2B-IT, Llama-3.1-8B,
+  Qwen-2.5-7B; 5 Methoden (DIM, ACE, CAA, PCA, LAT); gesteuert wird auf **drei** Perspektiven
+  (Refusal, Halluzination, Bias), gemessen wird auf **allen neun** / 18 Datensätzen.
+  Zwei Metriken: *Effectiveness* (Verbesserung auf der Ziel-Perspektive, normiert auf den
+  verbleibenden Headroom 1−y) und *Entanglement* (RMS der **absoluten**, bewusst
+  un-normierten Drift auf allen anderen Perspektiven).
+  **Befunde:** Entanglement ist am höchsten bei Social Behaviors (Sycophancy, Brand Bias,
+  Anthropomorphismus, User Retention — bis 76 % Degradation) und Normative Judgment
+  (Moral bis 26 %); **Reasoning bleibt robust (<2 %)**. Alles hängt am Tripel
+  (Methode, Modell, Perspektive), nicht an einem der drei. Kontraintuitiv: Jailbreaking
+  macht Modelle *nicht* durchgehend toxischer — bei Llama schwer, bei Qwen kaum.
+  Conditional Steering (CAST-Gating) ist meist eine Pareto-Verbesserung, beseitigt
+  Entanglement aber nicht.
+  **Fünf Punkte, die für dieses Projekt entscheidend sind:**
+  1. Die Refusal-Intervention ist **Unterdrückung** von Refusal („adversarial refusal
+     ablation", Orthogonalisierung gegen den Refusal-Vektor), nicht additives Steering.
+     Die umgekehrte Richtung wird **bewusst nicht** untersucht: Refusal-Induktion sättigt
+     in pauschales Verweigern, und die Baseline-ASR liegt schon unter 0,05.
+  2. **Gemma-2-2B ist beim Refusal-Steering das schwächste der drei Modelle** — „ACE und DIM
+     überschreiten 50 % Effectiveness auf jedem Modell außer Gemma-2-2B"; DIM/Refusal/Gemma
+     hat in Tabelle 2 gar keinen Wert.
+  3. **Die Dosis-Achse ist grob und wird nie als Kurve berichtet:** Suchraster ist
+     Layer (25.–80. Perzentil der Tiefe, Schritt 2) × Koeffizient (**ganze Zahlen −3…3**),
+     daraus wird *ein* bestes Paar per Validierung gewählt. Es gibt im Paper **keine
+     Dosis-Wirkungs-Kurve**.
+  4. **Ein KL-Filter entscheidet mit, was überhaupt gemessen wird:** jedes (Layer,
+     Koeffizient)-Paar mit durchschnittlicher KL-Divergenz > 0,1 auf den Last-Token-Logits
+     (auf Alpaca) wird verworfen. Ohne den Filter („NoKL") verdoppelt sich Entanglement
+     „oft mehr als". Der Filter siebt also genau die Konfigurationen aus, die das Modell
+     kaputtmachen — eine Schwellenwert-Entscheidung, die das Ergebnis mitbestimmt.
+  5. **Keine Textqualitäts- oder Kohärenz-Metrik.** Alle Capability-Messungen sind
+     Benchmark-Aufgaben (ARC-C, GPQA, LongBench, TruthfulQA), per Substring-Matching oder
+     LLM-Judge ausgewertet. KL-Divergenz wird nur als *Filter* benutzt, nicht als Ergebnis
+     berichtet.
+  **Explizite Einladung zur Anschlussarbeit** (Abschnitt 5): sie führen Entanglement
+  hypothetisch auf Superposition zurück, markieren das ausdrücklich als *nicht* etabliert
+  und schreiben, dass „future work with sparse autoencoders or related circuit-level tools
+  could investigate individual cases, and our benchmark is designed to make those targeted
+  follow-ups tractable". Das trifft Kandidat D.
+- **Style Modulation Heads** (Izawa et al., arXiv:2603.13249) — der methodisch wichtigste
+  Befund: **MMLU bleibt innerhalb 0,5 % stabil, auch wenn die Textkohärenz schon zerfallen
+  ist**; Perplexity sagt den Qualitätsverfall nicht vorher (fällt teils in beide
+  Steering-Richtungen). Kohärenz gemessen per LLM-as-Judge (0–100: Klarheit, Halluzination,
+  Konfusion) auf Held-out-Set. Außerdem: Degradation ist graduell zu häufigen Verhaltens-
+  weisen, **abrupter Kollaps** zu OOD-Richtungen; Verstärkung und Suppression asymmetrisch.
+  Gemessen auf 7–8B für Persona-Traits — für 2B und Refusal offen.
+- **Forecasting Side Effects** (Ong et al., arXiv:2608.11227) — Cross-Effect-Matrix über 67
+  Verhaltensweisen: Nebeneffekte sind häufig, strukturiert und **asymmetrisch** (A→B ≠ B→A),
+  nicht über Similarity-Heuristiken erklärbar, aber aus ungesteuerten Repräsentationen
+  vorhersagbar.
+- **Steering Safely or Off a Cliff?** (Goyal & Daumé, arXiv:2602.06256) — zerlegt Spezifität
+  in *general* (Fluency), *control* (verwandte Eigenschaften), *robustness*. Steering hält
+  die ersten zwei, **scheitert konsistent an robustness**: Over-Refusal-Reduktion erhöht
+  Jailbreak-Anfälligkeit.
+- **Refusal-Geometrie** (Joad et al., arXiv:2602.02132) — 11 Refusal-Kategorien liegen auf
+  geometrisch verschiedenen Richtungen, aber Steering entlang *jeder* erzeugt nahezu
+  identische Refusal↔Over-Refusal-Trade-offs. Ein gemeinsamer 1D-Regler; die Richtungen
+  unterscheiden *wie*, nicht *ob* verweigert wird.
+- **Perfect Detection, Failed Control** (Galeone et al., arXiv:2606.24952) — primär
+  **Gemma-2-2b-it**: Cosine-Similarity sagt Steerability nicht vorher (Detektionsrichtung
+  steht 83° zur Refusal-Richtung, trotzdem steuerbar nach Rotation).
+- **Layer-Wahl** (Billa, arXiv:2604.15557) — trainingsfreies Logit-Lens-Kriterium prognostiziert
+  Steering-Wirksamkeit (ρ ≈ 0,9) und Layer-Wahl; die übliche „mittlere Schicht"-Heuristik ist
+  **unterlegen**. Auf Gemma-2-2B demonstriert.
+- **Mechanismus** (Cheng et al., arXiv:2604.08524) — Steering-Vektoren wirken fast nur über
+  den OV-Circuit, kaum über QK; sie lassen sich um 90–99 % sparsifizieren, und die Zerlegung
+  ist semantisch lesbar, auch wenn der Vektor selbst es nicht ist.
+- **Abliteration-Nebeneffekte** (Young, arXiv:2512.13655) — **GSM8K ist die empfindlichste
+  Metrik** (bis −18,8 pp), deutet auf Overlap von Refusal-Repräsentation und mathematischem
+  Reasoning. Fafuła (arXiv:2607.17427): Off-Target-Effekte gehen bei verschiedenen
+  Modellfamilien teils in **gegensätzliche** Richtungen.
+- **Vorgeschichte, weiter gültig:** Tan et al. (arXiv:2407.12404) — Steerability ist
+  überwiegend eine Eigenschaft des *Datensatzes*, nicht des Modells, und OOD brittle.
+  Braun et al. (arXiv:2505.24859) — bei freier Generierung statt Multiple Choice erzeugt hohe
+  Steering-Stärke degenerative Repetition und Halluzinationen.
+
+**Keine Standard-Evaluation existiert.** Am nächsten dran: SteeringSafety als Suite,
+AxBench für Effektivität, die Spezifitäts-Taxonomie aus 2602.06256 als Rahmen. Übliche
+Instrumente: Refusal-Rate (AdvBench/HarmBench/JailbreakBench) · Over-Refusal (XSTest,
+OR-Bench) · Capability (MMLU, GSM8K, HellaSwag, IFEval) · Qualität (PPL, Distinct-2,
+LLM-as-Judge) · Kontrollen (norm-matched Random-Vektoren, pro Layer neu skaliert, typisch
+~5 Ziehungen pro echtem Vektor).
+
+**Offene Lücken, die mit diesem Compute erreichbar sind:**
+1. **Metrik-Validierung statt Metrik-Anwendung** — hält der „MMLU/PPL sehen den Kollaps
+   nicht"-Befund auf 2B und für Refusal? Mehrere Metriken auf derselben Dosis-Achse,
+   kreuzkorreliert.
+2. **Dichte Dosis-Auflösung** (15–20 Stufen statt der üblichen 3–5) — gibt es eine
+   Bruchstelle, und liegt sie vor oder nach dem Erreichen der Zielwirkung?
+3. **Ehrliche Kontroll-Buchführung** — Refusal-Richtung / norm-matched random /
+   orthogonalisierte Richtung als drei parallele Dosis-Kurven. Trennt „direction-specific"
+   von „irgendein großer Vektor schüttelt das Modell".
+4. **Entanglement auf kleinem Maßstab** — ist ein 2B-Modell überhaupt entangled genug, dass
+   man Nachbarverhalten sieht, oder ist die Repräsentation zu grob?
+
+Nicht als Beitrag geeignet (gelöst): Refusal-Richtung finden, abliterieren und ASR berichten,
+eine neue Steering-Methode vorschlagen.
+
+## SAE-Kritik — Stand 2026-08-24
+
+- **AxBench** (Wu et al., arXiv:2501.17148, ICML 2025) — auf **Gemma-2-2B**, ~500 Konzepte:
+  beim Steering schlägt **Prompting alles**, SAEs sind nicht konkurrenzfähig; bei Concept
+  Detection gewinnt **difference-in-means**. Gegenposition (arXiv:2605.31183): mit
+  aufwendiger supervidierter Feature-Selektion erreichen SAEs LoRA-Nähe. Faire Formulierung:
+  out-of-the-box verlieren SAEs, mit erheblichem Zusatzaufwand nicht mehr.
+- **Sparse Probing** (Kantamneni et al., arXiv:2502.16681) — kein Ensemble aus SAE+Baselines
+  schlägt konsistent ein Ensemble nur aus Baselines.
+- **Feature Absorption** (Chanin et al., arXiv:2409.14507, NeurIPS 2025) — auf **Gemma-2-2b
+  mit Gemma-Scope-SAEs**: ein Latent für „beginnt mit E" feuert bei „Elephant" nicht, die
+  Information ist in ein spezifischeres Latent absorbiert. **Absorption steigt mit Sparsity
+  und Breite** — größere SAEs lösen es nicht. Bester Reproduktions-Kandidat mit kleinem Compute.
+- **L0 ist kein freier Parameter** (Chanin & Garriga-Alonso, arXiv:2508.16560) — zu niedriges
+  L0 mischt korrelierte Features, zu hohes erzeugt degenerierte Lösungen. Die meisten
+  gebräuchlichen SAEs haben zu niedriges L0 — betrifft die Gemma-Scope-„canonical"-Wahl (L0≈100).
+- **Seed-Instabilität** (arXiv:2606.12138) — differenzierter als oft behauptet: stabile
+  Features tragen fast das ganze Signal, instabile sind Low-Frequency-Surface-Form-Trigger in
+  reproduzierbaren Unterräumen. Also Basis-Ambiguität, nicht Rauschen.
+- **Benchmarks selbst unzuverlässig** (Chanin, arXiv:2605.18229) — SAEBench-Metriken TPP und
+  SCR sollten nicht mehr zur SAE-Evaluation verwendet werden.
+- **Position, die am meisten trägt** (arXiv:2506.23845): SAEs zur *Entdeckung unbekannter*
+  Konzepte einsetzen, nicht zum Handeln auf bekannten. Bei bekanntem Zielkonzept verlieren
+  sie gegen Baselines — genau der Fall bei Steering auf ein spezifiziertes Verhalten.
+- **Rahmen für Methodenkritik allgemein:** „The Dead Salmons of AI Interpretability"
+  (arXiv:2512.18792) — Identifizierbarkeit, False-Discovery-Rates, fehlende
+  Unsicherheitsquantifizierung über Feature Attribution, Probing, SAEs und Causal Analysis
+  hinweg; Vorschlag, Erklärungen gegen explizite Alternativhypothesen zu testen.
+
+Mit kleinem Compute reproduzierbar (fertige Gemma-Scope-SAEs, kein Training): Feature
+Absorption · SAE-Steering vs. difference-in-means auf einem Konzept · **SAE-Rekonstruktion
+vs. norm-matched Random-Perturbation im KL** (billig, aussagekräftig, und methodisch
+identisch zur Random-Vektor-Kontrolle beim Steering — verbindet beide Projektteile).
+Nicht machbar: Seed-Instabilität (braucht mehrere SAE-Trainingsläufe), L0-Studien über
+SAE-Familien.
+
+## Tooling-Realität (Stand 2026-08-24)
+
+Recherchiert und teils lokal verifiziert. Korrigiert mehrere ältere Annahmen.
+
+- **TransformerLens: aktuell 3.8.0** (installiert: 3.5.1). Hohe Release-Kadenz.
+  **Gemma-3 wird unterstützt** (Architektur-Adapter im Quellcode, Configs für 270m–27b) —
+  die alte Annahme „Support offen" ist überholt.
+- **`transformers` v5 hat das Gemma-Embedding-Scaling geändert.** TransformerLens bietet
+  `enable_compatibility_mode()` für die alte `HookedTransformer`-Numerik. Echter
+  Reproduzierbarkeits-Stolperstein: Tutorials und Papers auf TL 1.x/2.x liefern ohne diesen
+  Schalter andere Zahlen. Muss bewusst entschieden und dokumentiert werden.
+- **MPS**: lokal geprüft — macOS 26.6.1, torch 2.13.0, bf16-Matmul auf MPS funktioniert.
+  Die bekannte „bf16 nicht auf MPS"-Fehlerklasse betrifft M1/Intel, nicht diesen Stack.
+  Es gibt aber eine gemeldete „MPS gebaut, aber nicht verfügbar"-Klasse auf macOS 26 mit
+  torch 2.9–2.12 (pytorch#167679, #177819). **Nicht auf eine andere torch-Version wechseln,
+  ohne neu zu messen.**
+- **SAELens 6.49.1** — 6.x hat Breaking Changes gegenüber der 3.x/4.x-API in vielen
+  Tutorials. Gemma-2-2b-Releases: `gemma-scope-2b-pt-res{,-canonical}`, `-mlp`, `-att`,
+  `-transcoders`. Laden über
+  `SAE.from_pretrained(release="gemma-scope-2b-pt-res-canonical", sae_id="layer_12/width_16k/canonical")`.
+- **Gemma-Scope-Downloadgrößen** (pro einzelner SAE): 16k ≈ 302 MB · 65k ≈ 1,21 GB ·
+  1M ≈ 19,3 GB. **Gesamtrepo ≈ 657 GB — nie klonen, immer einzelne Pfade.** „canonical"
+  = L0 am nächsten zu 100 (Layer 12/16k → L0 82). Nachfolge-Architekturen für Gemma-2-2b
+  verfügbar: Transcoder, Matryoshka-SAEs (32k, L0 40), Cross-Layer-Transcoder. Crosscoder
+  nicht gefunden.
+- **Gemma Scope 2** (DeepMind 12/2025) deckt **nur Gemma 3** ab, nicht Gemma 2. Die
+  Gemma-2-Wahl bleibt vertretbar, muss aber als „eine Generation zurück, dafür besser
+  dokumentiert" begründet werden.
+- **Neuronpedia**: öffentliche Lese-API ohne Key (`/api/feature/{model}/{sae}/{idx}`),
+  Volldaten-Exports über S3, Python-Paket `neuronpedia`. Im Browser ohne eigenes Compute:
+  Feature-Dashboards für gemma-2-2b, semantische Suche, **Steering** (100/Stunde) und
+  **Attribution-Graphen für Gemma-2-2B**.
+- **circuit-tracer** (Anthropic, open source seit 05/2025): Gemma-2-2B ist first-class
+  supported. **Zwei harte Einschränkungen:** pinnt `transformers<=4.57.3` (hier: 5.13.0) →
+  zwingend eigenes venv; und die Device-Wahl ist hart auf cuda/cpu verdrahtet, **kein
+  MPS-Pfad** → läuft hier auf CPU, Machbarkeit unbelegt. Pragmatischer Weg für
+  Attribution-Graphen: die Neuronpedia-UI.
+- **uv**: für diesen Stack unproblematisch (die bekannten Probleme betreffen CUDA-Indizes
+  unter Linux/Windows; auf macOS kommt torch schlicht von PyPI). Bug-Klasse zum Vormerken:
+  gelegentlich falsche Plattformerkennung (uv#13512), `uv add torch` scheitert wo
+  `uv pip install torch` läuft (uv#5182).
+
+## Lehrmaterial (Stand 2026-08-24)
+
+- **ARENA, Chapter 1** — https://learn.arena.education/chapter1_transformer_interp/
+  (die alte Streamlit-URL leitet dorthin um). 12 Übungssätze; nach 1.1/1.2 sind die
+  übrigen prerequisite-frei. Direkt relevant: **1.2 Intro to Mech Interp (TransformerLens,
+  Hooks)**, **1.4.1 IOI & Causal Interventions**, **1.3.2 Function Vectors & Model Steering**.
+  Neuer als ARENA 3.0: 1.3.4 Activation Oracles, 1.4.2 SAE Circuits.
+- **Nanda, „How To Become A Mechanistic Interpretability Researcher"** (09/2025,
+  Alignment Forum) — drei Stufen: Grundlagen breadth-first ≤1 Monat → Mini-Projekte 1–5 Tage
+  → Sprints 1–2 Wochen. Nennt ARENA 1.2 und 1.4.1 als essenziell und empfiehlt ausdrücklich,
+  **mit GPT-2 small anzufangen**.
+- **Nandas annotierte Paper-Liste** („An Extremely Opinionated Annotated List…", v2) — sagt
+  pro Paper, was tief zu lesen und was zu überfliegen ist.
+- **TransformerLens `demos/Main_Demo.ipynb`** plus die Doku, insbesondere
+  `migrating_to_v3.html` — praktisch alle älteren Tutorials nutzen die 1.x/2.x-API.
+- **„200 Concrete Open Problems"** (Nanda 12/2022): als Ideengeber teilweise brauchbar,
+  **als Projektquelle veraltet** — vor SAE-Welle, Gemma Scope, Circuit Tracing und der
+  aktuellen Kritik-Literatur.
