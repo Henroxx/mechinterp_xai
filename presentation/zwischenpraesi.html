@@ -549,43 +549,66 @@
 <!-- 11 — Activation Patching -->
 <section id="patching">
   <h2>Vertiefung: Activation Patching</h2>
-  <p class="lead"><strong>Welche Stelle im Modell</strong> trägt kausal eine Information?<br><span class="muted" style="font-size:1.2rem;">Zwei fast identische Läufe — und eine Aktivierung wird transplantiert.</span></p>
+  <p class="lead"><strong>Welche Stelle im Modell</strong> trägt kausal eine Information?<br><span class="muted" style="font-size:1.2rem;">Drei Läufe desselben Modells — im dritten wird eine Aktivierung transplantiert.</span></p>
 
-  <svg viewBox="0 0 1000 300" style="width:100%; max-height:42vh;" role="img" aria-label="Activation-Patching-Diagramm">
+  <svg viewBox="0 0 1000 365" style="width:100%; max-height:46vh;" role="img" aria-label="Activation-Patching-Diagramm">
     <defs>
       <marker id="ah3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#555"/></marker>
       <marker id="ah3-teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#0d6e6e"/></marker>
     </defs>
 
-    <!-- clean run -->
-    <text x="20" y="55" font-size="17" font-weight="bold" fill="#1a1a1a">Clean</text>
-    <text x="20" y="78" font-size="14" fill="#666">„… John gave a drink to ___"</text>
-    <rect x="300" y="40" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
-    <rect x="380" y="40" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
-    <rect x="460" y="40" width="60" height="50" rx="6" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5"/>
-    <rect x="540" y="40" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
-    <rect x="620" y="40" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
-    <line x1="690" y1="65" x2="760" y2="65" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
-    <text x="775" y="71" font-size="18" fill="#0d6e6e" font-weight="bold">„Mary" ✓</text>
+    <!-- run 1: clean -->
+    <text x="20" y="52" font-size="17" font-weight="bold" fill="#1a1a1a">① Clean</text>
+    <text x="20" y="74" font-size="13" fill="#666">„… John gave a drink to ___"</text>
+    <rect x="300" y="30" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="380" y="30" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="460" y="30" width="60" height="50" rx="6" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5"/>
+    <rect x="540" y="30" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="620" y="30" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <text x="330" y="60" font-size="13" text-anchor="middle" fill="#999">L1</text>
+    <text x="410" y="60" font-size="13" text-anchor="middle" fill="#999">L2</text>
+    <text x="490" y="60" font-size="13" text-anchor="middle" fill="var(--accent)" font-weight="bold">L3</text>
+    <text x="570" y="60" font-size="13" text-anchor="middle" fill="#999">L4</text>
+    <text x="650" y="60" font-size="13" text-anchor="middle" fill="#999">L5</text>
+    <line x1="690" y1="55" x2="760" y2="55" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+    <text x="775" y="61" font-size="18" fill="#444" font-weight="bold">„Mary" ✓</text>
 
-    <!-- transplant arrow -->
-    <line x1="490" y1="95" x2="490" y2="185" stroke="var(--accent)" stroke-width="3" marker-end="url(#ah3-teal)"/>
-    <text x="505" y="145" font-size="16" fill="var(--accent)" font-weight="bold">eine Aktivierung kopieren</text>
+    <!-- run 2: corrupted -->
+    <text x="20" y="182" font-size="17" font-weight="bold" fill="#1a1a1a">② Corrupted</text>
+    <text x="20" y="204" font-size="13" fill="#666">Namen vertauscht</text>
+    <rect x="300" y="160" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="380" y="160" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="460" y="160" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="540" y="160" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="620" y="160" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <text x="330" y="190" font-size="13" text-anchor="middle" fill="#999">L1</text>
+    <text x="410" y="190" font-size="13" text-anchor="middle" fill="#999">L2</text>
+    <text x="490" y="190" font-size="13" text-anchor="middle" fill="#999">L3</text>
+    <text x="570" y="190" font-size="13" text-anchor="middle" fill="#999">L4</text>
+    <text x="650" y="190" font-size="13" text-anchor="middle" fill="#999">L5</text>
+    <line x1="690" y1="185" x2="760" y2="185" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+    <text x="775" y="191" font-size="18" fill="#444" font-weight="bold">„John"</text>
 
-    <!-- corrupted run -->
-    <text x="20" y="205" font-size="17" font-weight="bold" fill="#1a1a1a">Corrupted</text>
-    <text x="20" y="228" font-size="14" fill="#666">Namen vertauscht</text>
-    <rect x="300" y="190" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
-    <rect x="380" y="190" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
-    <rect x="460" y="190" width="60" height="50" rx="6" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 4"/>
-    <rect x="540" y="190" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
-    <rect x="620" y="190" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
-    <line x1="690" y1="215" x2="760" y2="215" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
-    <text x="775" y="208" font-size="18" fill="#0d6e6e" font-weight="bold">kippt zu „Mary"</text>
-    <text x="775" y="230" font-size="14" fill="#666">ohne Patch: „John"</text>
+    <!-- run 3: corrupted + patch -->
+    <text x="20" y="312" font-size="17" font-weight="bold" fill="#1a1a1a">③ Corrupted + Patch</text>
+    <text x="20" y="334" font-size="13" fill="#666">gleicher Input wie ②</text>
+    <rect x="300" y="290" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="380" y="290" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="460" y="290" width="60" height="50" rx="6" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 4"/>
+    <rect x="540" y="290" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <rect x="620" y="290" width="60" height="50" rx="6" fill="#fff" stroke="#999"/>
+    <text x="330" y="320" font-size="13" text-anchor="middle" fill="#999">L1</text>
+    <text x="410" y="320" font-size="13" text-anchor="middle" fill="#999">L2</text>
+    <text x="490" y="320" font-size="13" text-anchor="middle" fill="var(--accent)" font-weight="bold">L3</text>
+    <text x="570" y="320" font-size="13" text-anchor="middle" fill="#999">L4</text>
+    <text x="650" y="320" font-size="13" text-anchor="middle" fill="#999">L5</text>
+    <line x1="690" y1="315" x2="760" y2="315" stroke="#555" stroke-width="2" marker-end="url(#ah3)"/>
+    <text x="775" y="315" font-size="18" fill="#0d6e6e" font-weight="bold">„Mary" !</text>
+    <text x="775" y="337" font-size="13" fill="#666">kippt zurück → L3 trägt die Info</text>
 
-    <!-- conclusion -->
-    <text x="500" y="285" font-size="17" text-anchor="middle" fill="#1a1a1a">Kippt die Vorhersage → <tspan font-weight="bold" fill="var(--accent)">diese Stelle trägt die Information.</tspan></text>
+    <!-- transplant path: from clean L3 around the left into patched L3 -->
+    <path d="M 490 85 L 490 120 L 272 120 L 272 315 L 450 315" fill="none" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#ah3-teal)"/>
+    <text x="382" y="112" font-size="15" text-anchor="middle" fill="var(--accent)" font-weight="bold">L3-Aktivierung aus ① kopieren</text>
   </svg>
 
   <p style="font-size:1.3rem; margin-top:1rem;">Systematisch über alle Layer × Positionen = <strong>Landkarte, wo im Modell die Entscheidung fällt</strong> —<br>so ein funktionales Teilnetzwerk heißt <strong>Circuit</strong>.<br><span class="muted" style="font-size:1.15rem;">Beim IOI-Task ist der Circuit publiziert — die Methode wird erst <em>an bekannter Antwort kalibriert</em>.</span></p>
