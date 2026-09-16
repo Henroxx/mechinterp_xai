@@ -156,6 +156,10 @@ nie ganz lesen.
   ergänzt und stellt Verständnisfragen nur da, wo eine Formulierung wackelt — keine
   Quizshow. Kompakt anfangen, on the fly erweitern. Fakten stehen in DETAILS, das
   Lerndokument erklärt sie; bei Widerspruch gewinnt DETAILS.
+- **`docs/fahrplan/index.html`** → Henrys Fahrplan-Dashboard, die Sicht auf den Fahrplan in
+  PROJECT. Nach jedem abgeschlossenen Schritt `status` und `STAND` im Datenblock umstellen,
+  sonst nichts. Grund: Henry priorisiert mit dem Blick darauf — ein veraltetes Dashboard
+  ist schlechter als keins.
 - **Doku-Schreiben eigenverantwortlich** (gilt nur für `docs/agentcontext/`):
   gewissenhaft schreiben, danach kurz berichten, was geändert wurde; Heikles vorher
   high-level klären. Abgabe- und Präsentationsinhalte (Abhandlung, Slides) erst
