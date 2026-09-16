@@ -52,6 +52,10 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
          Lücke strukturiert angehen; 2–3 kleine Experimente, nicht tief.
       4. Themenwahl fällt erst *nach* Schritt 2. Bis dahin sind Lücken und Ideen Kandidaten,
          kein Zuschnitt.
+- [x] **Umfang: breit schnuppern, eine Sache vertiefen** (Henry, 2026-09-16). Im Notebook
+      einmal überall reinschauen, auch Gemma-2-2B; die Vertiefung am Ende ist *eine* simple
+      Sache mit Zeit zum Verstehen, keine Masse. Grund: Henry muss alles, was in die
+      Abhandlung kommt, nachvollziehen und verteidigen können.
 - [x] **Paketverwaltung auf uv umgestellt** (2026-08-24): `pyproject.toml` + committetes
       `uv.lock`, `requirements.txt` und alte venv gelöscht, jupyter und circuitsvis dazu.
       Grund: `requirements.txt` pinnte nur die 8 direkten Pakete, die transitiven kamen
@@ -88,3 +92,6 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
 - Lerndokument: `docs/learning/index.html`
 - Papers (PDF): `~/Documents/Master/4. Semester/XAI/` (u. a. SteeringSafety)
 - Notebooks: `notebooks/` — `01_explore.ipynb` ist die Einarbeitung
+- Fahrplan-Dashboard: `docs/fahrplan/index.html` — Henrys Sicht auf die Schritte. Nach jedem
+  abgeschlossenen Schritt zusammen mit dem Fahrplan hier pflegen: `status` und `STAND` im
+  Datenblock der Datei, sonst nichts.
