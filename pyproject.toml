@@ -20,6 +20,7 @@ dependencies = [
     # lockfile carries the exact versions instead of a pin here.
     "jupyter",
     "circuitsvis",
+    "matplotlib",
 ]
 
 [tool.uv]
