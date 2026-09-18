@@ -209,6 +209,43 @@ wörtlich aus 03. n = 40, ein Seed — Orientierung, keine Statistik.
   nur die Richtung überträgt sich aufs Steuern. Bei Layer-Vergleichen C an die Feature-Skala
   koppeln, sonst vergleicht man Regularisierungsregime.
 
+## Gemma-2-2B — Befunde aus der Tour (Stand 2026-09-18)
+
+Quelle: `notebooks/05_gemma.ipynb` (TL 3.5.1, bf16 auf MPS, `google/gemma-2-2b`, derselbe
+Prosa-Prompt wie in 01, 11 Tokens inkl. BOS). Ein Prompt, eine Zufallssequenz, ein Seed —
+Orientierung, keine Statistik. Zahlen dort, hier die Essenz.
+
+- **Parity gegen HuggingFace gemessen:** max |Δ| 0,375 bei Logit-Skala 28,6 (Mittel 0,055),
+  Top-1 identisch, Tokenisierung identisch. TL rechnet dasselbe. Aber: bei bf16 warnt TL zu
+  Recht vor `from_pretrained`, weil das Einfalten der Normen in float32 rechnet und danach nach
+  bf16 zurückrundet — ein Teil der 0,375 ist Verarbeitung, nicht Backend. Messungen nah an der
+  Rauschgrenze (→ „Numerik-Policy") brauchen fp32 oder `from_pretrained_no_processing`.
+- **Architektur:** 26 Layer, d_model 2304, 8 Query- auf 4 KV-Heads (GQA), d_head 256, d_mlp 9216,
+  Vokabular 256k. RMSNorm **vor und nach** beiden Sublayern → zusätzliche Hooks `ln1_post.*`,
+  `ln2_post.*`; Gated MLP → `mlp.hook_pre_linear`; Rotary → `attn.hook_rot_{q,k}`. Softcap 50 auf
+  Attention-Scores, 30 auf Logits. Wegen des Logit-Softcaps schaltet TL `center_unembed` selbst
+  ab (nicht verschiebungsinvariant) — Warnung beim Laden ist erwartet.
+- **Cache-Kosten:** 629 Tensoren, 44 MB für 11 Tokens ≈ **4 MB pro Token**. Ein Prompt von ein
+  paar hundert Tokens ist ein Gigabyte Cache; bei Sweeps einplanen.
+- **BOS-Senke anders als bei GPT-2:** Norm an Position 0 wächst **stetig über den ganzen Stack**
+  (199 → 3039) statt früh auf ein Plateau zu springen; übrige Positionen 86 → 563. Attention auf
+  BOS liegt in **jedem** Layer bei 0,5–0,9, auch in Layer 0 (GPT-2 erst ab Layer 5). Folge wie
+  dort: Position 0 aus Mittelungen raus, Steering-Dosis pro Layer an der Norm skalieren.
+- **Induction Heads stärker als in GPT-2:** L6H2 0,89 · L15H0 0,85 · L18H6 0,77 · L6H3 0,72 ·
+  L21H5 0,58. Loss auf der Zufallssequenz 16,29 (erste Hälfte) → 0,76 (zweite). Die erste Hälfte
+  liegt über dem Blindwert ln(256000) = 12,45 — dasselbe Muster wie bei GPT-2 (12,4 vs. 10,8).
+- **Erwartung vs. Befund:** falsch lag die Erwartung, GQA würde die Scores drücken und die Heads
+  in die erste Stack-Hälfte legen. Tatsächlich übertrifft der beste Head GPT-2s 0,84, und starke
+  Heads sitzen auch bei Layer 15, 18 und 21 — ein Paar früh, Nachzügler über die zweite Hälfte.
+- **`-it` (n = 1, Anekdote):** Chat-Marker `<start_of_turn>`/`<end_of_turn>` sind Einzel-Tokens,
+  Refusal-Verhalten vorhanden. Die harmlose Frage nach „what a transformer is" beantwortete das
+  Modell über **elektrische** Transformatoren — ohne Kontext gewinnt die Grundbedeutung. Warnung
+  für jede Prompt-Formulierung in späteren Messungen.
+- **Speicher:** Laden dauert 128 s (Base) bzw. 174 s (`-it`); nach dem zweiten Laden standen
+  24 GB auf MPS, weit mehr als zwei bf16-Kopien brauchen — entweder hielt ein Traceback das erste
+  Modell fest oder die float32-Puffer der Gewichtsverarbeitung. **Zwischen zwei Modellen den
+  Kernel neu starten**, `del` + `empty_cache()` genügt nicht verlässlich.
+
 ## Umgebung & Tooling (Stand 2026-08-24)
 
 - Paketverwaltung: **uv** (seit 2026-08-24). `pyproject.toml` deklariert, `uv.lock` pinnt
@@ -237,9 +274,8 @@ wörtlich aus 03. n = 40, ein Seed — Orientierung, keine Statistik.
 - Gemma-Chat-Format: Prompts für `-it` brauchen `<start_of_turn>user ... <end_of_turn>`-Marker.
 - Smoke-Test: `scripts/smoke_test.py` (Laden auf MPS, Generation, run_with_cache). Bestanden
   2026-07-10, nach dem Repo-Umzug erneut 2026-08-24. Gemma-Ladezeit in TransformerLens
-  ~4-5 min (Gewichts-Konvertierung, einmal pro Session), GPT-2 ~8 s; Generation auf MPS
-  ~2,7 Token/s bei Gemma. Aktivierungs-Cache eines kurzen Prompts: 0,07 GB (629 Tensoren)
-  bei Gemma — unkritisch, wächst aber linear mit der Prompt-Länge.
+  2-3 min (Gewichts-Konvertierung, einmal pro Session), GPT-2 ~8 s; Generation auf MPS
+  ~2,7 Token/s bei Gemma. Cache-Kosten und Speicherfallen → „Gemma-2-2B — Befunde aus der Tour".
 - TransformerLens 3.5.1 warnt beim Laden weiterhin pauschal vor MPS ("silently incorrect
   results", Issue #1178) — die Warnung hängt an der torch-Version, nicht an einer Messung,
   und ist durch `verify_mps.py` widerlegt (→ Numerik-Policy). `TRANSFORMERLENS_ALLOW_MPS=1`
@@ -289,7 +325,10 @@ Konsequenzen:
    sensible Messungen brauchen Baselines/Wiederholungen oder gezielt fp32.
 3. Befunde vor Aufnahme in die Abhandlung einmal auf CPU gegenchecken (`verify_mps.py`
    als Vorlage).
-4. Gemma-2-Eigenheit: sehr große Residual-Aktivierungen (bis ~4000, wächst über Layer) —
+4. Bei bf16 kommt die Rundung von TLs Gewichtsverarbeitung (fold_ln rechnet float32 und rundet
+   zurück) auf das Backend-Rauschen obendrauf — für knappe Effekte fp32 oder
+   `from_pretrained_no_processing` → „Gemma-2-2B — Befunde aus der Tour".
+5. Gemma-2-Eigenheit: sehr große Residual-Aktivierungen (bis ~4000, wächst über Layer) —
    relevant für alles, was absolute Schwellwerte benutzt.
 
 ## Forschungsstand Steering-Nebeneffekte (Stand 2026-08-24)
@@ -433,17 +472,33 @@ identisch zur Random-Vektor-Kontrolle beim Steering — verbindet beide Projektt
 Nicht machbar: Seed-Instabilität (braucht mehrere SAE-Trainingsläufe), L0-Studien über
 SAE-Familien.
 
-## Tooling-Realität (Stand 2026-08-24)
+## Tooling-Realität (Stand 2026-09-18)
 
 Recherchiert und teils lokal verifiziert. Korrigiert mehrere ältere Annahmen.
 
-- **TransformerLens: aktuell 3.8.0** (installiert: 3.5.1). Hohe Release-Kadenz.
-  **Gemma-3 wird unterstützt** (Architektur-Adapter im Quellcode, Configs für 270m–27b) —
-  die alte Annahme „Support offen" ist überholt.
-- **`transformers` v5 hat das Gemma-Embedding-Scaling geändert.** TransformerLens bietet
-  `enable_compatibility_mode()` für die alte `HookedTransformer`-Numerik. Echter
-  Reproduzierbarkeits-Stolperstein: Tutorials und Papers auf TL 1.x/2.x liefern ohne diesen
-  Schalter andere Zahlen. Muss bewusst entschieden und dokumentiert werden.
+- **TransformerLens: aktuell 3.9.0, installiert und entschieden 3.5.1** (Henry, 2026-09-18).
+  Grund: Quelltext-Diff 3.5.1 → 3.9.0 des Gemma-2-Pfads (Gewichtskonvertierung, Config-Block,
+  RMSNorm, Grouped-Query-Attention) zeigt genau einen Fix: 3.5.1 hat die Reihenfolge
+  global/local der Attention-Layer vertauscht (Layer 0 global statt sliding wie in HF), ohne
+  Wirkung unter 4096 Tokens. Alle anderen Attention-Änderungen betreffen fremde Architekturen.
+  Ab 3.7.0 wirft `HookedTransformer.from_pretrained` eine DeprecationWarning, 4.0 (Beta seit
+  07/2026) entfernt HookedTransformer zugunsten `TransformerBridge`. Upgrade erst, wenn ein
+  Modell außerhalb der HookedTransformer-Liste oder die Bridge gebraucht wird; dann
+  `verify_mps.py` und Smoke-Test neu. Gemma-3 wird unterstützt (Configs 270m–27b).
+- **Gemma-Embedding-Scaling und `enable_compatibility_mode()` betreffen nur `TransformerBridge`.**
+  transformers 4.x skalierte die Embeddings mit √d_model im Model-Forward, 5.x im
+  Embedding-Modul; das gespeicherte Gewicht ist in beiden roh, und `HookedTransformer` liest
+  das rohe Gewicht und skaliert selbst (`convert_gemma_weights`) — für unseren Pfad hat sich
+  nichts geändert. Die Bridge wickelt das HF-Modell direkt, ihr Embedding-Hook sieht in v5
+  skalierte Werte; `enable_compatibility_mode()` ist ihre Methode, um fold_ln, Zentrierung und
+  die alten Hook-Namen nachzurüsten, damit Bridge-Zahlen zu HookedTransformer-Tutorials passen.
+  Für HookedTransformer gegenstandslos. Bei Gemma schaltet HookedTransformer `center_unembed`
+  selbst ab (Logit-Softcap ist nicht verschiebungsinvariant), Logits bleiben so direkt mit HF
+  vergleichbar; Parity-Check → `notebooks/05_gemma.ipynb`.
+- **TL-Bug `to_str_tokens` mit Gemma-Tokenizern** (3.5.1, in 3.9.0 unverändert drin): bei
+  String-Eingabe hängt die Funktion für Gemma eine Batch-Dimension an, die darunterliegende
+  v5-Kompatibilitätsschicht eine zweite → `TypeError`. Workaround: den Token-Tensor übergeben,
+  `model.to_str_tokens(model.to_tokens(text)[0])`.
 - **MPS**: lokal geprüft — macOS 26.6.1, torch 2.13.0, bf16-Matmul auf MPS funktioniert.
   Die bekannte „bf16 nicht auf MPS"-Fehlerklasse betrifft M1/Intel, nicht diesen Stack.
   Es gibt aber eine gemeldete „MPS gebaut, aber nicht verfügbar"-Klasse auf macOS 26 mit

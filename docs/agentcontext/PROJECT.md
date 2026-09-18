@@ -41,7 +41,8 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
   Station Patching erledigt (2026-09-16) → DETAILS „Activation Patching". Noch keine
   Experimente für die Abhandlung. Station Steering erledigt (2026-09-18) → DETAILS „Steering —
   Befund GPT-2 small". Station Probing erledigt (2026-09-18) → DETAILS „Probing — Befund GPT-2
-  small". Aktuell: Gemma-2-2B-Tour, vorher TL-Version entscheiden (To-Do unten).
+  small". Station Gemma-2-2B-Tour erledigt (2026-09-18) → DETAILS „Gemma-2-2B — Befunde aus der Tour".
+  Aktuell: SAE-Blick als letzte Schnupperstation, bewusst klein (Henry, 2026-09-18), danach Phase 3.
 
 ---
 # To-Dos & offene Entscheidungen
@@ -52,7 +53,8 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
       2. **Schnuppertour** — jede Methode einmal klein, eine Session und ein Notebook pro Station:
          Patching (erledigt 2026-09-16 → DETAILS „Activation Patching"), Steering (erledigt
          2026-09-18 → DETAILS „Steering — Befund GPT-2 small"), Probing (erledigt 2026-09-18 → DETAILS „Probing — Befund GPT-2 small"),
-         Gemma-2-2B-Tour (vorher TL-Version entscheiden) ← *hier stehen wir*, SAE-Blick optional.
+         Gemma-2-2B-Tour (erledigt 2026-09-18 → DETAILS „Gemma-2-2B — Befunde aus der Tour"),
+         SAE-Blick klein ← *hier stehen wir*.
       3. **Forschungsstand mappen** — eine Seite Methode × Modell × Messung × Lücke, Rohstoff
          DETAILS „Forschungsstand", „SAE-Kritik". Volltext erst für die gewählte Sache.
       4. **Entscheidung** — Kandidaten gegen Kriterien, *eine* Sache: Methode, Modell, Frage,
@@ -76,11 +78,10 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
       Nebenwirkungen messen" ist publiziert (SteeringSafety, arXiv:2509.13450, auf genau
       Gemma-2-2B). Offene Lücken auf Metrik-, Dosis- und Kontroll-Ebene → DETAILS
       „Forschungsstand", Abschnitt „Offene Lücken"
-- [ ] **TransformerLens-Version entscheiden — erst vor der ersten Gemma-Messung.**
-      Für die GPT-2-Einarbeitung irrelevant (die `transformers`-v5-Änderung am
-      Embedding-Scaling betrifft nur Gemma). Installiert 3.5.1 (verifiziert), aktuell 3.8.0;
-      Upgrade verlangt neuen `verify_mps.py`-Lauf. Dazu `enable_compatibility_mode()` bewusst
-      setzen oder nicht → DETAILS „Tooling-Realität"
+- [x] **TransformerLens bleibt auf 3.5.1** (Henry, 2026-09-18). Grund: der Gemma-2-Pfad ist bis
+      3.9.0 bis auf einen für uns wirkungslosen Sliding-Window-Fix unverändert, ein Upgrade
+      kostete Neu-Verifikation und Deprecation-Warnungen. `enable_compatibility_mode()` betrifft
+      nur `TransformerBridge`, nicht unseren Pfad → DETAILS „Tooling-Realität"
 - [x] **Zwischenpräsi 11.07.**: gehalten, Thema abgeschlossen
 - [x] Modellwahl: **Gemma-2-2B (base+it)** als Haupt-Modell, GPT-2 small als
       Ground-Truth-Zweitmodell → DETAILS „Modellwahl"

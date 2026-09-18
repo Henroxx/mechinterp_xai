@@ -68,3 +68,7 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
 - **2026-09-18** | Schnuppertour Station 3: Probing auf GPT-2 small (`notebooks/04_probing.ipynb`) —
   logistische Regression auf den 40 Steering-Vektoren, Control Task, C-Sweep gegen d, w und w⊥ im
   Dosis-Sweep, Layer-Scan; scikit-learn als Dependency | → DETAILS „Probing — Befund GPT-2 small".
+- **2026-09-18** | Schnuppertour Station 4: Gemma-2-2B-Tour (`notebooks/05_gemma.ipynb`) — Parity gegen
+  HuggingFace, Architektur und Cache-Kosten, Norm- und BOS-Profil, Induction Heads, `-it` als Anekdote;
+  davor TransformerLens per Quelltext-Diff auf 3.5.1 festgeschrieben | → DETAILS „Gemma-2-2B — Befunde
+  aus der Tour", „Tooling-Realität".
