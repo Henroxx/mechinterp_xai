@@ -53,6 +53,11 @@ nie ganz lesen.
   was wären Alternativen. Vor der Ausführung Pseudo-Code bzw. High-Level-Beschreibung
   des Vorgehens zeigen. Experiment-Code darf Claude schreiben; Henry muss die Methode
   und die Interpretation der Ergebnisse tragen können, nicht jede Code-Zeile.
+- **Nach jedem Schritt das Warum im Chat:** zu jeder Zelle und jeder kleinen Entscheidung
+  kurz sagen, warum sie so und nicht anders gebaut ist (Daten, Werkzeug, Kontrolle, Metrik),
+  nicht nur was sie tut. Grund: die Notebook-Prosa bleibt minimal, also trägt der Chat die
+  Begründung — Henry muss die Methode verteidigen können, und ein Schritt ohne Warum ist für
+  ihn nur Code.
 - **Abgesegnete Pläne werden Dateien:** Für größere Arbeitsblöcke den abgestimmten Plan
   nach `docs/agentcontext/plans/<thema>.md` schreiben. Spätere Sessions prüfen gegen den
   Plan, nicht nur gegen To-Dos. Kleine Aufgaben brauchen das nicht.

@@ -40,7 +40,8 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
 - Einarbeitung abgeschlossen (2026-09-05) → DETAILS „GPT-2 small". Schnuppertour läuft:
   Station Patching erledigt (2026-09-16) → DETAILS „Activation Patching". Noch keine
   Experimente für die Abhandlung. Station Steering erledigt (2026-09-18) → DETAILS „Steering —
-  Befund GPT-2 small". Aktuell: Station Probing, noch nicht geplant.
+  Befund GPT-2 small". Station Probing erledigt (2026-09-18) → DETAILS „Probing — Befund GPT-2
+  small". Aktuell: Gemma-2-2B-Tour, vorher TL-Version entscheiden (To-Do unten).
 
 ---
 # To-Dos & offene Entscheidungen
@@ -50,8 +51,8 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
       1. **Einarbeitung** — erledigt 2026-09-05 → `notebooks/01_explore.ipynb`, DETAILS „GPT-2 small".
       2. **Schnuppertour** — jede Methode einmal klein, eine Session und ein Notebook pro Station:
          Patching (erledigt 2026-09-16 → DETAILS „Activation Patching"), Steering (erledigt
-         2026-09-18 → DETAILS „Steering — Befund GPT-2 small"), Probing ← *hier stehen wir*,
-         Gemma-2-2B-Tour (vorher TL-Version entscheiden), SAE-Blick optional.
+         2026-09-18 → DETAILS „Steering — Befund GPT-2 small"), Probing (erledigt 2026-09-18 → DETAILS „Probing — Befund GPT-2 small"),
+         Gemma-2-2B-Tour (vorher TL-Version entscheiden) ← *hier stehen wir*, SAE-Blick optional.
       3. **Forschungsstand mappen** — eine Seite Methode × Modell × Messung × Lücke, Rohstoff
          DETAILS „Forschungsstand", „SAE-Kritik". Volltext erst für die gewählte Sache.
       4. **Entscheidung** — Kandidaten gegen Kriterien, *eine* Sache: Methode, Modell, Frage,

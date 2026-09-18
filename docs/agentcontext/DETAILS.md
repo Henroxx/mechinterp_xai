@@ -169,6 +169,46 @@ auf 10 sachlichen Sätzen. n = 10/10, ein Zufallsvektor — Orientierung, keine 
   Top-Vorhersagen ändern — vor einer Vertiefung Metrik gegen Generierung oder KL prüfen. Offen:
   Schritt 9 des Plans (SAE-Decoder-Zeile im selben Sweep) nicht gelaufen.
 
+## Probing — Befund GPT-2 small (Stand 2026-09-18)
+
+Quelle: `notebooks/04_probing.ipynb`, Plan `plans/done/schnuppertour-probing.md`. Dieselben 40
+Satzvektoren wie im Steering (20 Minimalpaare, `hook_resid_pre` Layer 6, Mittel ohne BOS). Probe:
+`LogisticRegression` (scikit-learn), L2 mit Regler C, Features roh — Standardisieren würde w aus dem
+Raum von d nehmen —, leave-one-pair-out (beide Sätze eines Paares raus). Margin = (x_pos − x_neg)·ŵ
+mit ŵ auf Länge 1, dieselbe Größe wie beim Steering-Lesecheck. Metrik, Loss, Dosis und Zufallsvektor
+wörtlich aus 03. n = 40, ein Seed — Orientierung, keine Statistik.
+
+- **Lesen (C = 1):** held-out 40/40 Sätze, Margin im Mittel 5,56 (min 3,27) gegen 5,64/3,29 für d.
+  Control Task (Vorzeichen je Paar gewürfelt, 10 Ziehungen): held-out 19,4/40 (15–25) bei
+  Trainingsgenauigkeit 1,0 — die Probe trennt 38 Punkte in 768 Dimensionen immer, Information ist
+  nur der Held-out-Abstand dazu.
+- **w gegen d über C:** cos(ŵ, d) von 1,000 (C = 1e-5, |w| = 0,0006, linearer Bereich der Sigmoid,
+  w ∝ Σ y·x = Mitteldifferenz) über 0,965 (C = 1) bis minimal 0,954 (C = 10), nie unter 0,95.
+  Held-out 39–40/40 und Margin 5,5–5,65 bei jedem C — Treffer und Margin können w und d nicht
+  unterscheiden. Erwartet war ein Abfall auf 0,5–0,8 bei großem C; die Max-Margin-Richtung dieser
+  40 Punkte liegt fast auf d, weil die Paardifferenzen per Konstruktion alle gleich zeigen.
+- **Steuern:** w (C = 1) liegt in Metrik und Loss auf d (c = 1: 7,02 vs. 7,24 Logits, 5,81 vs.
+  5,99 nats). w⊥ (Anteil von w senkrecht zu d, Länge 0,263 vor Normierung, dann Einheitslänge):
+  Metrik −0,5 bei beiden Vorzeichen (Zufallsvektor −0,9/−0,03), Loss +1,88/+1,77 bei ∓1 (Zufall
+  +1,78/+1,51). Was die Probe über die Mitteldifferenz hinaus aufnimmt, wirkt wie ein Stoß gleicher
+  Größe ohne Richtung.
+- **Layer-Scan (C = 1 überall):** Layer 0 held-out 39/40 mit Margin 0,17 — die Embeddings der
+  Stimmungswörter reichen zum Lesen. Margin wächst monoton bis 11,71 (min 4,43) an Layer 11,
+  relativ zur Residual-Norm an Layer 6 und 10 gleich (0,067 bzw. 0,065). Held-out fällt dagegen von
+  40/40 (L6) auf 35/40 (L11): jedes Paar bleibt entlang w geordnet, aber ganze Paare rutschen über
+  die Schwelle — die Paardifferenz kürzt den Satzinhalt heraus, der Einzelsatz nicht. cos(ŵ, d)
+  fällt von 0,998 (L0) auf 0,86 (L11). Vorbehalt: C fest bei dreifacher Norm, späte Layer effektiv
+  schwächer regularisiert; erklärt einen Teil des Kosinus-Abfalls.
+- **Erwartung vs. Befund:** Control Task, kleines-C-Ende (cos = 1) und w⊥ ≈ Zufall wie erwartet;
+  falsch lag der erwartete Kosinus-Abfall bei großem C; nicht erwartet der Held-out-Abfall in
+  späten Layern bei wachsender Margin.
+- **Merksätze:** Auf Minimalpaaren sind Probe und Difference-in-Means dieselbe Richtung — der
+  Marks-Tegmark-Unterschied (Probe trennt, DiM steuert) ist hier nicht messbar, weil die Paare der
+  Probe nichts anderes zum Aufsammeln lassen; ein Test dafür braucht heterogene Daten.
+  Held-out-Treffer (Lage der Ebene) und Paar-Margin (Richtung) beantworten verschiedene Fragen,
+  nur die Richtung überträgt sich aufs Steuern. Bei Layer-Vergleichen C an die Feature-Skala
+  koppeln, sonst vergleicht man Regularisierungsregime.
+
 ## Umgebung & Tooling (Stand 2026-08-24)
 
 - Paketverwaltung: **uv** (seit 2026-08-24). `pyproject.toml` deklariert, `uv.lock` pinnt
@@ -181,8 +221,8 @@ auf 10 sachlichen Sätzen. n = 10/10, ein Zufallsvektor — Orientierung, keine 
   entwertet die Verifikation und verlangt einen neuen Durchlauf von `verify_mps.py`.
 - Explorations-Tooling: **jupyter** (Notebooks — bei ~5 min Gemma-Ladezeit gehört das
   Modell in einen laufenden Kernel, nicht in Skript-Starts), **circuitsvis 1.43.3**
-  (interaktive Attention-Darstellung in der Notebook-Zelle) und **matplotlib 3.11.2**
-  (seit 2026-09-18, Dosis-Kurven im Steering-Notebook). Bewusst noch nicht drin:
+  (interaktive Attention-Darstellung in der Notebook-Zelle) und **matplotlib 3.11.2** (seit 2026-09-18, Dosis-Kurven im Steering-Notebook) und
+  **scikit-learn 1.9.1** mit scipy 1.18.1 (seit 2026-09-18, logistische Regression für Proben). Bewusst noch nicht drin:
   SAELens — kommt erst mit Kandidat D dazu, bis dahin bläht es nur den Lock auf.
 - **TransformerLens** als Kern-Library (Hooks auf alle internen Aktivierungen; festes
   Modell-Set). Alternative für Modelle außerhalb der Liste: nnsight.

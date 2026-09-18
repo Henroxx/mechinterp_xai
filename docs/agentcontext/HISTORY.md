@@ -65,3 +65,6 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
 - **2026-09-18** | Schnuppertour Station 2: Steering auf GPT-2 small (`notebooks/03_steering.ipynb`) —
   Difference-in-Means-Richtung aus 20 Minimalpaaren, Dosis-Sweep an Layer 6, Loss als Nebenwirkung,
   Zufalls- und Layer-Kontrollen; matplotlib als Dependency | → DETAILS „Steering — Befund GPT-2 small".
+- **2026-09-18** | Schnuppertour Station 3: Probing auf GPT-2 small (`notebooks/04_probing.ipynb`) —
+  logistische Regression auf den 40 Steering-Vektoren, Control Task, C-Sweep gegen d, w und w⊥ im
+  Dosis-Sweep, Layer-Scan; scikit-learn als Dependency | → DETAILS „Probing — Befund GPT-2 small".
