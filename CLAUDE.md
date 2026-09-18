@@ -107,6 +107,11 @@ nie ganz lesen.
   die Reproduzierbarkeit der Messungen hängt am Lockfile, nicht an den direkten Pins.
 - Python läuft über **uv**: `uv sync` baut die Umgebung, `uv run …` startet alles.
   Nie `pip install` ins Blaue und nichts global installieren.
+- **Notebook-Prosa schreibt Claude direkt in die `.ipynb`**, kurz: Markdown-Zellen ein bis drei
+  Sätze in Henrys Stimme (Befund der letzten Zelle, dann was als Nächstes kommt), Kopfkommentare
+  drei bis vier Zeilen mit Zweck und Erwartung, Code und Outputs unangetastet, vorher den Stand
+  auf der Platte gegen VS Code prüfen. Grund: Henry liest die Zellen als Notizen beim Ausführen
+  und überliest lange Texte; Pasten aus dem Chat kostet ihn die Zeit, die die Zelle sparen soll.
 
 ## Git
 
@@ -155,7 +160,9 @@ nie ganz lesen.
   iterativ: Henry liest einen Abschnitt, äußert seine Gedanken, Claude korrigiert oder
   ergänzt und stellt Verständnisfragen nur da, wo eine Formulierung wackelt — keine
   Quizshow. Kompakt anfangen, on the fly erweitern. Fakten stehen in DETAILS, das
-  Lerndokument erklärt sie; bei Widerspruch gewinnt DETAILS.
+  Lerndokument erklärt sie; bei Widerspruch gewinnt DETAILS. Rechnungen im Stil von „The
+  Illustrated Transformer": Spielzeugzahlen in Kästchen, ein Schritt pro Figur, nachrechenbar.
+  Grund: Henry behält, was er nachrechnen kann.
 - **`docs/fahrplan/index.html`** → Henrys Fahrplan-Dashboard, die Sicht auf den Fahrplan in
   PROJECT. Nach jedem abgeschlossenen Schritt `status` und `STAND` im Datenblock umstellen,
   sonst nichts. Grund: Henry priorisiert mit dem Blick darauf — ein veraltetes Dashboard
