@@ -166,8 +166,8 @@ auf 10 sachlichen Sätzen. n = 10/10, ein Zufallsvektor — Orientierung, keine 
 - **Merksätze:** Dosis nur relativ zur Layer-Norm vergleichbar, und selbst dann ist der Wechselkurs
   Metrik/Loss layerabhängig. Ein Zufallsvektor kontrolliert die Größe des Eingriffs, nicht die
   Spezifität der Richtung. Eine Wortlisten-Metrik kann um 13 Logits laufen, ohne dass sich die
-  Top-Vorhersagen ändern — vor einer Vertiefung Metrik gegen Generierung oder KL prüfen. Offen:
-  Schritt 9 des Plans (SAE-Decoder-Zeile im selben Sweep) nicht gelaufen.
+  Top-Vorhersagen ändern — vor einer Vertiefung Metrik gegen Generierung oder KL prüfen. Der offene
+  Schritt 9 (SAE-Decoder-Zeile im selben Sweep) ist als Station 5 nachgeholt → „SAE — Befund GPT-2 small".
 
 ## Probing — Befund GPT-2 small (Stand 2026-09-18)
 
@@ -245,6 +245,39 @@ Orientierung, keine Statistik. Zahlen dort, hier die Essenz.
   24 GB auf MPS, weit mehr als zwei bf16-Kopien brauchen — entweder hielt ein Traceback das erste
   Modell fest oder die float32-Puffer der Gewichtsverarbeitung. **Zwischen zwei Modellen den
   Kernel neu starten**, `del` + `empty_cache()` genügt nicht verlässlich.
+
+## SAE — Befund GPT-2 small (Stand 2026-09-18)
+
+Quelle: `notebooks/06_sae.ipynb`, Plan `plans/done/schnuppertour-sae.md`. SAE aus
+`jbloom/GPT2-Small-SAEs-Reformatted`, Ordner `blocks.6.hook_resid_pre` (d_sae 24 576, 32×,
+OpenWebText, Kontext 128), geladen mit `huggingface_hub` + `safetensors`, ohne SAELens. Setup,
+Metrik, Dosis und Zufallskontrolle unverändert aus Station 2 (Norm 83, Baseline +1,89 exakt
+reproduziert).
+
+- **Encoder-Konvention gemessen statt geraten:** `cfg.json` sagt nichts dazu. Mit b_dec-Abzug
+  (`relu((x − b_dec) @ W_enc + b_enc)`) erklärte Varianz 0,950 bei L0 44,2; ohne Abzug −43,1 bei
+  L0 1622. Decoder-Zeilen haben Norm 1,0000 — eine Zeile ist ohne Umrechnung eine Steering-Richtung.
+- **Feature selbst gefunden, Label extern bestätigt:** Kriterium vorab (feuert in ≥ 12/20 Sätzen des
+  einen Sets, ≤ 5/20 des anderen, darunter größte Differenz) → Feature 986 (18/20 pos, 2/20 neg) und
+  15262 (13/20 neg, 0/20 pos). Neuronpedia `6-res-jb`: „positive feedback or compliments" bzw.
+  „negative words or phrases describing … undesirable situations". Ohne Feuer-Kriterium gewinnt
+  Feature 787, das in allen 40 Sätzen feuert und nur über die Höhe trennt — die Auswahlregel ist
+  hier der eigentliche Befund.
+- **Sentiment ist im SAE keine Achse:** cos(986, 15262) = 0,049, praktisch orthogonal. cos zu d
+  +0,360 bzw. −0,507; die Projektion von d (Einheitslänge) auf die von beiden Zeilen aufgespannte
+  Ebene hat Länge 0,637 — zwei von 24 576 Features tragen rund 40 % von d im Quadrat.
+- **Dosis-Wirkung:** d ist pro Dosis stärker und sättigt früher (+4,74 bei c = 0,5, +5,35 bei c = 1),
+  Feature 986 steigt noch (+3,23 bzw. +4,21), Feature 15262 wirkt spiegelbildlich (−2,71 bei c = 0,5).
+- **Gleiche Wirkung statt gleicher Dosis** (interpoliert auf +2,00 Logits): d bei c = 0,139 für
+  +0,077 nats, Feature 986 bei c = 0,250 für +0,069 nats — bei n = 10 Sätzen ein Gleichstand.
+  Feature 15262 braucht +0,421 nats, das Fünffache. Der Zufallsvektor erreicht +2,00 nie.
+- **Erwartung vs. Befund:** richtig lagen schwächere Wirkung pro Dosis, alle Kosinus deutlich unter 1
+  und die nicht-antiparallelen Features. **Falsch** lag die Erwartung, die sparse „monosemantische"
+  Richtung sei der sauberere Eingriff — bei gleicher Wirkung ist sie einmal gleichauf und einmal
+  klar teurer. Ein SAE-Feature ist hier kein besserer Hebel, nur ein anders hergeleiteter.
+- **Grenzen:** n = 20 Paare / 10 Prompts / 10 Sätze, ein Layer, ein SAE, eine Wortlisten-Metrik —
+  Orientierung, keine Statistik. Der Gleichstand 0,069 vs. 0,077 nats liegt innerhalb dessen, was
+  dieses n auflösen kann.
 
 ## Umgebung & Tooling (Stand 2026-08-24)
 

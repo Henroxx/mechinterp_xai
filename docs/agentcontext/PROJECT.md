@@ -17,9 +17,10 @@ Fragen untersuchen, das Ganze dokumentieren.
 ## Akademischer Rahmen
 
 Modul XAI, FH SWF (F. Neubürger). Einzelprojekt. Keine explizite Forschungsfrage
-nötig (Absprache mit Dozent per Mail). Zwischenpräsentation: 11.07.2026.
-Abgabe: Ausarbeitung einen Tag vor der Blockwoche, Vortrag in der Blockwoche;
-Bewertung 50 % Ausarbeitung / 50 % Vortrag.
+nötig (Absprache mit Dozent per Mail). Zwischenpräsentation: 11.07.2026 — damit ist der
+Vortragsanteil abgegolten, ein zweiter Vortrag in der Blockwoche entfällt (Henry, 2026-09-18).
+Abgabe: Ausarbeitung einen Tag vor der Blockwoche. Bewertung 50 % Ausarbeitung /
+50 % Vortrag; der Vortragsteil ist gehalten, offen ist nur noch die Ausarbeitung.
 
 ---
 # Status
@@ -42,7 +43,8 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
   Experimente für die Abhandlung. Station Steering erledigt (2026-09-18) → DETAILS „Steering —
   Befund GPT-2 small". Station Probing erledigt (2026-09-18) → DETAILS „Probing — Befund GPT-2
   small". Station Gemma-2-2B-Tour erledigt (2026-09-18) → DETAILS „Gemma-2-2B — Befunde aus der Tour".
-  Aktuell: SAE-Blick als letzte Schnupperstation, bewusst klein (Henry, 2026-09-18), danach Phase 3.
+  Station SAE-Blick erledigt (2026-09-18) → DETAILS „SAE — Befund GPT-2 small"; **Schnuppertour damit
+  abgeschlossen**. Aktuell: Phase 3, Forschungsstand mappen.
 
 ---
 # To-Dos & offene Entscheidungen
@@ -54,13 +56,13 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
          Patching (erledigt 2026-09-16 → DETAILS „Activation Patching"), Steering (erledigt
          2026-09-18 → DETAILS „Steering — Befund GPT-2 small"), Probing (erledigt 2026-09-18 → DETAILS „Probing — Befund GPT-2 small"),
          Gemma-2-2B-Tour (erledigt 2026-09-18 → DETAILS „Gemma-2-2B — Befunde aus der Tour"),
-         SAE-Blick klein ← *hier stehen wir*.
-      3. **Forschungsstand mappen** — eine Seite Methode × Modell × Messung × Lücke, Rohstoff
+         SAE-Blick (erledigt 2026-09-18 → DETAILS „SAE — Befund GPT-2 small"). Tour abgeschlossen.
+      3. **Forschungsstand mappen** ← *hier stehen wir* — eine Seite Methode × Modell × Messung × Lücke, Rohstoff
          DETAILS „Forschungsstand", „SAE-Kritik". Volltext erst für die gewählte Sache.
       4. **Entscheidung** — Kandidaten gegen Kriterien, *eine* Sache: Methode, Modell, Frage,
          Kontrolle, Anker. Bis dahin sind Lücken und Ideen Kandidaten, kein Zuschnitt.
       5. **Vertiefung** — die Papers dazu im Volltext, Plan, Anker reproduzieren, eigenes Experiment.
-      6. **Abhandlung & Vortrag** — Struktur abstimmen, Typst auf Englisch, Vortrag.
+      6. **Abhandlung** — Struktur abstimmen, Typst auf Englisch. Kein Vortrag mehr nötig.
       Schnuppern vor Lesen ist Claudes Vorschlag (bei Henry bleibt Gemachtes hängen, Gelesenes
       weniger), von Henry mit dem Dashboard angenommen.
 - [x] **Umfang: breit schnuppern, eine Sache vertiefen** (Henry, 2026-09-16). Im Notebook

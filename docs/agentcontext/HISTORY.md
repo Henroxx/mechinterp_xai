@@ -72,3 +72,8 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
   HuggingFace, Architektur und Cache-Kosten, Norm- und BOS-Profil, Induction Heads, `-it` als Anekdote;
   davor TransformerLens per Quelltext-Diff auf 3.5.1 festgeschrieben | → DETAILS „Gemma-2-2B — Befunde
   aus der Tour", „Tooling-Realität".
+- **2026-09-18** | Schnuppertour Station 5: SAE-Blick auf GPT-2 small (`notebooks/06_sae.ipynb`) — Feature
+  per Encoder über die Minimalpaare selbst gesucht (Neuronpedia nur als Gegenprobe), Decoder-Zeilen im
+  Dosis-Sweep neben d und Zufallsvektor; Schnuppertour damit abgeschlossen | → DETAILS „SAE — Befund
+  GPT-2 small". Befund gegen die Erwartung: die SAE-Richtung ist bei gleicher Wirkung nicht billiger.
+
