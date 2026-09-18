@@ -35,23 +35,31 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
 - **Zwischenpräsentation am 11.07. gehalten und abgeschlossen** — Material liegt in
   `presentation/zwischenpraesi.html`, ist für die weitere Arbeit aber nicht mehr relevant.
 - Lerndokument für Henry angelegt: `docs/learning/index.html` (SteeringSafety im Volltext,
-  Messmethodik, Metrik-Kritik, Werkzeugkasten, Glossar) — wächst iterativ, siehe CLAUDE.md „Doku".
-- Einarbeitung abgeschlossen (2026-09-05) → DETAILS „GPT-2 small — Befunde aus der
-  Einarbeitung". Noch keine Experimente für die Abhandlung. Aktuell: Fahrplan Schritt 2.
+  Messmethodik, Metrik-Kritik, Werkzeugkasten, Richtungen im Residual Stream mit LRH und vier
+  Wegen, Sparse Autoencoder mit Rechenbeispiel, Glossar) — wächst iterativ, siehe CLAUDE.md „Doku".
+- Einarbeitung abgeschlossen (2026-09-05) → DETAILS „GPT-2 small". Schnuppertour läuft:
+  Station Patching erledigt (2026-09-16) → DETAILS „Activation Patching". Noch keine
+  Experimente für die Abhandlung. Station Steering erledigt (2026-09-18) → DETAILS „Steering —
+  Befund GPT-2 small". Aktuell: Station Probing, noch nicht geplant.
 
 ---
 # To-Dos & offene Entscheidungen
 
-- [ ] **Fahrplan** (Henry, 2026-08-25) — vier Schritte, in dieser Reihenfolge:
-      1. **Einarbeitung** — erledigt 2026-09-05: TransformerLens auf GPT-2 small, alle
-         Werkzeuge einmal angefasst → `notebooks/01_explore.ipynb`, DETAILS „GPT-2 small".
-      2. **Forschungsstand mappen** — Überblick gewinnen, Teile davon können in die
-         Abhandlung (Methodenkritik). Rohstoff: DETAILS „Forschungsstand", „SAE-Kritik",
-         Lerndokument. ← *hier stehen wir*
-      3. **Reproduzieren oder Lücke** — Bekanntes auf anderen Modellen nachbauen oder eine
-         Lücke strukturiert angehen; 2–3 kleine Experimente, nicht tief.
-      4. Themenwahl fällt erst *nach* Schritt 2. Bis dahin sind Lücken und Ideen Kandidaten,
-         kein Zuschnitt.
+- [ ] **Fahrplan** (Henry, 2026-08-25; auf sechs Phasen umgebaut 2026-09-16) — Sicht darauf:
+      `docs/fahrplan/index.html`. Ein Schritt = ein Arbeitsblock mit eigenem Ergebnis.
+      1. **Einarbeitung** — erledigt 2026-09-05 → `notebooks/01_explore.ipynb`, DETAILS „GPT-2 small".
+      2. **Schnuppertour** — jede Methode einmal klein, eine Session und ein Notebook pro Station:
+         Patching (erledigt 2026-09-16 → DETAILS „Activation Patching"), Steering (erledigt
+         2026-09-18 → DETAILS „Steering — Befund GPT-2 small"), Probing ← *hier stehen wir*,
+         Gemma-2-2B-Tour (vorher TL-Version entscheiden), SAE-Blick optional.
+      3. **Forschungsstand mappen** — eine Seite Methode × Modell × Messung × Lücke, Rohstoff
+         DETAILS „Forschungsstand", „SAE-Kritik". Volltext erst für die gewählte Sache.
+      4. **Entscheidung** — Kandidaten gegen Kriterien, *eine* Sache: Methode, Modell, Frage,
+         Kontrolle, Anker. Bis dahin sind Lücken und Ideen Kandidaten, kein Zuschnitt.
+      5. **Vertiefung** — die Papers dazu im Volltext, Plan, Anker reproduzieren, eigenes Experiment.
+      6. **Abhandlung & Vortrag** — Struktur abstimmen, Typst auf Englisch, Vortrag.
+      Schnuppern vor Lesen ist Claudes Vorschlag (bei Henry bleibt Gemachtes hängen, Gelesenes
+      weniger), von Henry mit dem Dashboard angenommen.
 - [x] **Umfang: breit schnuppern, eine Sache vertiefen** (Henry, 2026-09-16). Im Notebook
       einmal überall reinschauen, auch Gemma-2-2B; die Vertiefung am Ende ist *eine* simple
       Sache mit Zeit zum Verstehen, keine Masse. Grund: Henry muss alles, was in die
@@ -79,9 +87,12 @@ Bewertung 50 % Ausarbeitung / 50 % Vortrag.
 - [x] **Sprache der Abhandlung: Englisch** (2026-08-24). Grund: die gesamte Literatur und
       Terminologie ist englisch, Rückübersetzen von Fachbegriffen erzeugt nur Unschärfe.
       → `report/main.typ` muss noch umgestellt werden
+- [ ] **Datum der Blockwoche und damit der Abgabe klären** (Henry) — steht nirgends in den Docs,
+      ohne Datum ist die Zeitplanung der Phasen 5–6 offen.
 - [ ] **Vertiefung** (Henrys Verständnis, für die Verteidigung):
       Grokking-Beispiel (Nanda, Addition mod 113) durcharbeiten; Linear Representation
-      Hypothesis sauber durchsprechen (konnte Henry noch nicht frei erklären)
+      Hypothesis sauber durchsprechen (konnte Henry noch nicht frei erklären; Erklärung
+      mit Grafik seit 2026-09-18 im Lerndokument, Abschnitt 6)
 - [x] Format der Abhandlung: **Typst**, Template aus Big-Data-Projekt adaptiert
       (`report/main.typ`, kompiliert). Umfang und Gliederung noch offen.
 

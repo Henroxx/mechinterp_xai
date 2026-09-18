@@ -56,3 +56,12 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
 - **2026-09-05** | Einarbeitung TransformerLens auf GPT-2 small (`notebooks/01_explore.ipynb`):
   Anatomie, Cache, Attention, Logit Lens, BOS-Senke, Induction Heads reproduziert, erste
   Ablation mit Zufalls-Kontrolle | Fahrplan Schritt 1 abgeschlossen → DETAILS „GPT-2 small".
+- **2026-09-16** | Umfangsentscheidung „breit schnuppern, eine Sache vertiefen", Fahrplan auf
+  sechs Phasen umgebaut, Dashboard `docs/fahrplan/index.html`; Schnuppertour Station 1:
+  Activation Patching am Induction-Setup (`notebooks/02_patching.ipynb`) | → DETAILS „Activation Patching".
+- **2026-09-18** | Lerndokument Abschnitt 6 (Linear Representation Hypothesis, vier Wege zu einer
+  Richtung) und 7 (Sparse Autoencoder, Spielzeugrechnung im Illustrated-Transformer-Stil); SAELens-Pins
+  und fertige GPT-2-SAE-Gewichte geprüft; Steering-Station geplant | → `plans/schnuppertour-steering.md`.
+- **2026-09-18** | Schnuppertour Station 2: Steering auf GPT-2 small (`notebooks/03_steering.ipynb`) —
+  Difference-in-Means-Richtung aus 20 Minimalpaaren, Dosis-Sweep an Layer 6, Loss als Nebenwirkung,
+  Zufalls- und Layer-Kontrollen; matplotlib als Dependency | → DETAILS „Steering — Befund GPT-2 small".

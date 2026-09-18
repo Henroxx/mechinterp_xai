@@ -80,7 +80,7 @@
 
 <script>
 // Maintenance: flip a step's status (done | current | open | optional), set STAND. That is all.
-const STAND = "2026-09-16";
+const STAND = "2026-09-18";
 const STEPS = [
   {n:1,  phase:"1 · Einarbeitung", status:"done",
    title:"GPT-2 small in TransformerLens: Anatomie, Tokenizer, Cache und Hook-Namen", note:"2026-09-05"},
@@ -89,16 +89,16 @@ const STEPS = [
   {n:3,  phase:"1 · Einarbeitung", status:"done",
    title:"Induction Heads reproduzieren, Zero-Ablation mit Zufallskontrolle", note:"2026-09-05"},
 
-  {n:4,  phase:"2 · Schnuppertour", status:"current",
-   title:"Activation Patching auf dem Induction-Setup: Clean/Corrupt, Logit-Diff"},
-  {n:5,  phase:"2 · Schnuppertour", status:"open",
-   title:"Steering auf GPT-2: Difference-in-Means-Richtung addieren, Zufallsvektor als Kontrolle"},
-  {n:6,  phase:"2 · Schnuppertour", status:"open",
+  {n:4,  phase:"2 · Schnuppertour", status:"done",
+   title:"Activation Patching auf dem Induction-Setup: Clean/Corrupt, Restoration", note:"2026-09-16"},
+  {n:5,  phase:"2 · Schnuppertour", status:"done",
+   title:"Steering auf GPT-2: Difference-in-Means-Richtung addieren, Zufallsvektor als Kontrolle", note:"2026-09-18"},
+  {n:6,  phase:"2 · Schnuppertour", status:"current",
    title:"Linear Probing auf den Residual Stream", note:"macht die Linear Representation Hypothesis konkret"},
   {n:7,  phase:"2 · Schnuppertour", status:"open",
    title:"Gemma-2-2B-Tour: TL-Version entscheiden, laden, Cache-Kosten, BOS, Induction Heads"},
   {n:8,  phase:"2 · Schnuppertour", status:"optional",
-   title:"SAE-Blick über Gemma Scope", note:"nur wenn SAELens ohne Kampf läuft"},
+   title:"SAE-Blick über Gemma Scope", note:"Gewichte liegen fertig auf HF, SAELens dafür nicht nötig"},
 
   {n:9,  phase:"3 · Forschungsstand", status:"open",
    title:"Eine Seite Landkarte: Methode × Modell × Messung × offene Lücke, aus DETAILS"},

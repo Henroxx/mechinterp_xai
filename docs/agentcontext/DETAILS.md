@@ -12,7 +12,7 @@ Pitch (Steering-Nebeneffekte, methodenkritisch) > Machbarkeit > Methodenkritik-W
 
 **Stand 2026-08-25:** Die Grundform von A+B ist publiziert (SteeringSafety, auf Gemma-2-2B)
 → „Forschungsstand Steering-Nebeneffekte". Das Ranking unten ist damit überholt, wird aber
-erst nach der Einarbeitung neu entschieden — bis dahin gelten alle Punkte als Kandidaten.
+erst in Fahrplan-Phase 4 (Entscheidung) neu entschieden — bis dahin gelten alle Punkte als Kandidaten.
 
 1. **A+B — Herzstück: Steering-Nebeneffekte am Fall der Refusal Direction.**
    Kontrastive Steering-Vektoren auf gemma-2-2b-it (Refusal nach Arditi 2024 als
@@ -99,10 +99,75 @@ an einem Prompt gemessen — Orientierung, keine Statistik. Zahlen dort, hier di
   (schlechter als uniform ≈ 10,8 — das Modell erwartet Englisch), zweite Hälfte 1,10.
 - **Erste Ablation (Zero-Ablation auf `attn.hook_z` via `run_with_hooks`):** die 5 Heads
   genullt → Loss zweite Hälfte 1,10 → 3,86; Kontrolle mit 5 Zufalls-Heads aus denselben
-  Layern → 1,12. Effekt kausal und spezifisch, aber weit unter 12,4: Redundanz, vermutlich
-  die unscharfen Heads in Layer 9–10. Merksatz: Ablation misst, was ohne ein Bauteil fehlt,
+  Layern → 1,12. Effekt kausal und spezifisch, aber weit unter 12,4: Redundanz durch die
+  unscharfen Heads in Layer 9–11 (per Patching bestätigt → „Activation Patching"). Merksatz: Ablation misst, was ohne ein Bauteil fehlt,
   nicht, was es leistet. Mean-Ablation wäre der sauberere Standard; Zero-Ablation hat hier
   laut Kontrolle keinen Kollateralschaden.
+
+## Activation Patching — Befund am Induction-Setup (Stand 2026-09-16)
+
+Quelle: `notebooks/02_patching.ipynb`. Denoising: corrupt-Lauf [BOS, B, A] (nichts zu kopieren),
+an den Positionen der zweiten Hälfte Aktivierungen aus dem clean-Lauf [BOS, A, A] eingesetzt
+(A = dieselbe Folge wie in 01, Seed 0). Maß: Restoration = (corrupt − gepatcht) / (corrupt − clean)
+auf dem Loss der zweiten Hälfte; clean 1,10, corrupt 12,01. Eine Sequenz, n = 1.
+
+- **Layer-Scan (`hook_resid_pre`):** Layer 0–5 ≤ 0,10; nach Layer 5/6/7 auf 0,28/0,46/0,70 —
+  die drei Layer der bekannten Induction Heads; danach Rampe 0,75/0,93/0,99 bis Layer 11,
+  `resid_post` 11 = 1,00 (Konstruktionskontrolle). Erwartung „nahe eins ab Layer 8" war falsch:
+  30 % der Lücke schließen sich erst in Layer 8–10.
+- **Head-Scan (`attn.hook_z`, 144 Einzel-Patches):** kein Head allein über 0,13. Top: L7H2 0,13,
+  L6H9 0,12, L9H6 0,11, L9H9 0,11, L7H10 0,09, L10H6 0,09, L5H1 0,08, L11H9 0,08. Die unscharfen
+  Heads in Layer 9–11 kopieren also mit, kausal so wirksam wie die kanonischen. Rauschboden
+  (Layer 0–4) ±0,03. Negativ: L10H7 −0,13, L11H10 −0,07 — clean-Output schadet im
+  corrupt-Kontext; ungeklärt, nicht gedeutet.
+- **Rang nach Attention ≠ Rang nach Wirkung:** L5H5 hat den höchsten Induction-Score (0,84),
+  aber nur 0,05 Restoration; L7H2 den niedrigsten der fünf (0,74) und die höchste. Head-Auswahl
+  über Attention-Muster sortiert anders als die kausale Messung.
+- **Gemeinsame Patches:** 5 kanonische Heads 0,60 bei Summe der Einzeleffekte 0,47 (überadditiv);
+  dieselben 5 Zufallsheads wie bei der Ablation 0,05; 5 + 4 späte Heads (L9H6, L9H9, L10H6,
+  L11H9) 0,86, dort exakt additiv. Rest 14 %: viele kleine Heads, MLPs, Störung durch die
+  corrupt-erste Hälfte.
+- **Ablation vs. Patching:** die 5 Heads entfernt zerstört 25 % der Lücke (1,10 → 3,86 bei
+  Boden 12), eingesetzt stellen sie 60 % wieder her — hinlänglicher als notwendig, weil
+  Backup-Heads beim Entfernen kompensieren. Merksätze: Ablation misst Notwendigkeit, Patching
+  Hinlänglichkeit; Einzeleffekte addieren sich nicht, Restoration 0,13 heißt nicht „13 % der
+  Arbeit". Offen: Loss vs. Logit des richtigen Tokens als Maß (Literatur-Standard: Logit-Diff).
+
+## Steering — Befund GPT-2 small (Stand 2026-09-18)
+
+Quelle: `notebooks/03_steering.ipynb`, Plan `plans/schnuppertour-steering.md`. Richtung d =
+Difference-in-Means aus 20 Minimalpaaren (gleicher Satz, nur Stimmungswörter getauscht, Token-Länge
+paarweise gleich), Aktivierungen an `hook_resid_pre`, Mittel über Positionen ohne BOS, Einheitslänge.
+Dosis c = α / mittlere Residual-Norm des Layers (L2 59, L6 83, L10 165), addiert auf alle Positionen
+außer BOS. Zielmetrik: 10 neutrale Prompts („The movie was", …), am letzten Token mittlerer Logit von
+8 positiven minus 8 negativen Adjektiven, absichtlich nicht die Wörter der Paare. Nebenwirkung: Loss
+auf 10 sachlichen Sätzen. n = 10/10, ein Zufallsvektor — Orientierung, keine Statistik.
+
+- **Lesen:** leave-one-pair-out 20/20 richtig geordnet an Layer 2, 6 und 10. Layer 6: Abstand der
+  Set-Mittel 6,2, held-out-Rand im Mittel 5,6 (min 3,3), Streuung innerhalb eines Sets ≈ 4,5 —
+  d trägt viel Nicht-Sentiment. cos(d_2, d_6) = 0,79, cos(d_10, d_6) = 0,75: gleiches Konzept,
+  nicht derselbe Vektor.
+- **Baseline schief:** ohne Eingriff Logit-Differenz +1,89 (0,46 bis 3,90, Hotels oben) — „good",
+  „great" sind häufige Tokens. Alle Effekte als Änderung gegen diese Baseline gelesen.
+- **Dosis an Layer 6:** S-Kurve, um null ≈ 0,8 Logits pro 0,05 c, Sättigung ab |c| ≈ 0,5; +5,35 bei
+  c = 1, −2,75 bei c = −1 (asymmetrisch). Top-5 für „The movie was" bleiben über alle Dosen
+  „released, directed, …", kein Adjektiv rückt hinein: die Metrik läuft, die Vorhersage nicht.
+- **Loss an Layer 6:** Parabel mit Minimum bei c ≈ −0,12 (−0,02 nats, anekdotisch); +0,19 bei 0,25,
+  +0,69 bei 0,5, +2,00 bei 1; negativ +0,29 bei −0,5, +1,36 bei −1. Das Metrik-Plateau liegt dort,
+  wo der Loss steigt. Nutzfenster grob |c| < 0,25 (drei Logits für 0,2 nats).
+- **Kontrollen:** Zufallsvektor (cos zu d 0,003) auf der Metrik flach (|Δ| ≤ 0,3), Loss +0,34 bei
+  0,5 und +1,51/+1,77 bei ±1 — bei voller Dosis erklärt die Norm den Großteil des Schadens, bei 0,5
+  zählt die Richtung noch (d: +0,69 bzw. +0,29). Layer 10: +8,40 bei 0,5, +12,82 bei 1, Loss wie
+  Layer 6 (+0,63/+1,81), im Bereich keine Sättigung. Layer 2: +2,07 bei 0,5, zurück auf +1,48 bei 1
+  (nicht monoton), Loss am höchsten (+0,93/+2,46).
+- **Erwartung vs. Befund:** monotone Kurve, flacher Zufallsvektor und stärkerer Layer 10 wie
+  erwartet; „Zufall und d bei großem α gleich schlecht" gilt bei |c| = 1, nicht bei 0,5; falsch
+  lagen die Norm-Schätzung (100–200 statt 83) und die Baseline-Annahme (≈ 0 statt +1,9).
+- **Merksätze:** Dosis nur relativ zur Layer-Norm vergleichbar, und selbst dann ist der Wechselkurs
+  Metrik/Loss layerabhängig. Ein Zufallsvektor kontrolliert die Größe des Eingriffs, nicht die
+  Spezifität der Richtung. Eine Wortlisten-Metrik kann um 13 Logits laufen, ohne dass sich die
+  Top-Vorhersagen ändern — vor einer Vertiefung Metrik gegen Generierung oder KL prüfen. Offen:
+  Schritt 9 des Plans (SAE-Decoder-Zeile im selben Sweep) nicht gelaufen.
 
 ## Umgebung & Tooling (Stand 2026-08-24)
 
@@ -115,8 +180,9 @@ an einem Prompt gemessen — Orientierung, keine Statistik. Zahlen dort, hier di
   transformer_lens 3.5.1, torch 2.13.0, transformers 5.13.0. Ein Wechsel bei einem davon
   entwertet die Verifikation und verlangt einen neuen Durchlauf von `verify_mps.py`.
 - Explorations-Tooling: **jupyter** (Notebooks — bei ~5 min Gemma-Ladezeit gehört das
-  Modell in einen laufenden Kernel, nicht in Skript-Starts) und **circuitsvis 1.43.3**
-  (interaktive Attention-Darstellung in der Notebook-Zelle). Bewusst noch nicht drin:
+  Modell in einen laufenden Kernel, nicht in Skript-Starts), **circuitsvis 1.43.3**
+  (interaktive Attention-Darstellung in der Notebook-Zelle) und **matplotlib 3.11.2**
+  (seit 2026-09-18, Dosis-Kurven im Steering-Notebook). Bewusst noch nicht drin:
   SAELens — kommt erst mit Kandidat D dazu, bis dahin bläht es nur den Lock auf.
 - **TransformerLens** als Kern-Library (Hooks auf alle internen Aktivierungen; festes
   Modell-Set). Alternative für Modelle außerhalb der Liste: nnsight.
@@ -343,10 +409,19 @@ Recherchiert und teils lokal verifiziert. Korrigiert mehrere ältere Annahmen.
   Es gibt aber eine gemeldete „MPS gebaut, aber nicht verfügbar"-Klasse auf macOS 26 mit
   torch 2.9–2.12 (pytorch#167679, #177819). **Nicht auf eine andere torch-Version wechseln,
   ohne neu zu messen.**
-- **SAELens 6.49.1** — 6.x hat Breaking Changes gegenüber der 3.x/4.x-API in vielen
+- **SAELens 6.51.1** (Stand 2026-09-18, nicht installiert) — Pins `transformer-lens>=2.16.1`,
+  `transformers<6`: mit unserem TL 3.5.1 verträglich, `uv add` würde vermutlich nichts
+  hochziehen (nicht ausprobiert). 6.x hat Breaking Changes gegenüber der 3.x/4.x-API in vielen
   Tutorials. Gemma-2-2b-Releases: `gemma-scope-2b-pt-res{,-canonical}`, `-mlp`, `-att`,
   `-transcoders`. Laden über
   `SAE.from_pretrained(release="gemma-scope-2b-pt-res-canonical", sae_id="layer_12/width_16k/canonical")`.
+- **Fertige SAE-Gewichte ohne SAELens** (Stand 2026-09-18) — ein SAE sind vier Tensoren
+  (W_enc, b_enc, W_dec, b_dec); die Feature-Richtung zum Steern ist eine Zeile von W_dec.
+  GPT-2 small: `jbloom/GPT2-Small-SAEs-Reformatted` auf HF, pro Layer ein Ordner
+  `blocks.{l}.hook_resid_pre/` mit `cfg.json` + `sae_weights.safetensors`; d_sae 24 576 (32×),
+  ReLU + L1 (λ 8e-5), OpenWebText, Kontext 128. Zum Laden reichen `huggingface_hub` +
+  `safetensors`, beide schon im Lock. Neuronpedia-ID für Layer 6: `6-res-jb`. SAELens braucht
+  man erst, um den Encoder auf Aktivierungen laufen zu lassen (welche Features feuern).
 - **Gemma-Scope-Downloadgrößen** (pro einzelner SAE): 16k ≈ 302 MB · 65k ≈ 1,21 GB ·
   1M ≈ 19,3 GB. **Gesamtrepo ≈ 657 GB — nie klonen, immer einzelne Pfade.** „canonical"
   = L0 am nächsten zu 100 (Layer 12/16k → L0 82). Nachfolge-Architekturen für Gemma-2-2b
