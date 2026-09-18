@@ -279,7 +279,7 @@ reproduziert).
   Orientierung, keine Statistik. Der Gleichstand 0,069 vs. 0,077 nats liegt innerhalb dessen, was
   dieses n auflösen kann.
 
-## Umgebung & Tooling (Stand 2026-08-24)
+## Umgebung & Tooling (Stand 2026-09-18)
 
 - Paketverwaltung: **uv** (seit 2026-08-24). `pyproject.toml` deklariert, `uv.lock` pinnt
   den vollständigen Abhängigkeitsbaum und ist committet — das ist die eigentliche
@@ -289,11 +289,14 @@ reproduziert).
   ML-Stack. Kern-Pins exakt, weil Smoke-Test und MPS-Verifikation dagegen liefen:
   transformer_lens 3.5.1, torch 2.13.0, transformers 5.13.0. Ein Wechsel bei einem davon
   entwertet die Verifikation und verlangt einen neuen Durchlauf von `verify_mps.py`.
-- Explorations-Tooling: **jupyter** (Notebooks — bei ~5 min Gemma-Ladezeit gehört das
+- Explorations-Tooling: **jupyter** (Notebooks — bei 2-3 min Gemma-Ladezeit gehört das
   Modell in einen laufenden Kernel, nicht in Skript-Starts), **circuitsvis 1.43.3**
   (interaktive Attention-Darstellung in der Notebook-Zelle) und **matplotlib 3.11.2** (seit 2026-09-18, Dosis-Kurven im Steering-Notebook) und
-  **scikit-learn 1.9.1** mit scipy 1.18.1 (seit 2026-09-18, logistische Regression für Proben). Bewusst noch nicht drin:
-  SAELens — kommt erst mit Kandidat D dazu, bis dahin bläht es nur den Lock auf.
+  **scikit-learn 1.9.1** mit scipy 1.18.1 (seit 2026-09-18, logistische Regression für Proben).
+  Bewusst weiter nicht drin: **SAELens** — Station 5 kam mit `huggingface_hub` + `safetensors`
+  aus (vier Tensoren laden, Encoder ist eine Zeile Code → „SAE — Befund GPT-2 small"). Nötig
+  würde es erst, um den Encoder über große Textmengen laufen zu lassen (welche Features feuern
+  wo im Korpus).
 - **TransformerLens** als Kern-Library (Hooks auf alle internen Aktivierungen; festes
   Modell-Set). Alternative für Modelle außerhalb der Liste: nnsight.
 - Projekt-Repo: `~/dev/private_repos/mechinterp_xai`. Kursunterlagen und Slides-Quelle
@@ -309,6 +312,12 @@ reproduziert).
   2026-07-10, nach dem Repo-Umzug erneut 2026-08-24. Gemma-Ladezeit in TransformerLens
   2-3 min (Gewichts-Konvertierung, einmal pro Session), GPT-2 ~8 s; Generation auf MPS
   ~2,7 Token/s bei Gemma. Cache-Kosten und Speicherfallen → „Gemma-2-2B — Befunde aus der Tour".
+- **Notebooks kann Claude selbst ausführen**, statt auf Henrys VS-Code-Lauf zu warten:
+  `uv run jupyter nbconvert --to notebook --execute --inplace <nb>` schreibt Outputs und Plots
+  direkt in die Datei (GPT-2-Station: 50 s). Sinnvoll, wenn Henry „mach alles" sagt; läuft er
+  selbst, gilt weiter der mtime-Abgleich vor jeder Bearbeitung. Stolperstein: in diesem Kernel
+  hat Python kein eigenes CA-Bundle, `urllib` scheitert an HTTPS — `ssl.create_default_context(
+  cafile=certifi.where())` übergeben (z. B. für die Neuronpedia-API).
 - TransformerLens 3.5.1 warnt beim Laden weiterhin pauschal vor MPS ("silently incorrect
   results", Issue #1178) — die Warnung hängt an der torch-Version, nicht an einer Messung,
   und ist durch `verify_mps.py` widerlegt (→ Numerik-Policy). `TRANSFORMERLENS_ALLOW_MPS=1`
