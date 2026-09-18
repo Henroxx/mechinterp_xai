@@ -112,6 +112,7 @@
     <li><a href="#werkzeug">Werkzeugkasten: TransformerLens an GPT-2 small</a></li>
     <li><a href="#richtungen">Richtungen im Residual Stream</a></li>
     <li><a href="#sae">Sparse Autoencoder: woher fertige Feature-Vektoren kommen</a></li>
+    <li><a href="#probing">Lineare Proben: eine Trennebene lernen</a></li>
     <li><a href="#glossar">Glossar</a></li>
   </ol>
 </nav>
@@ -851,7 +852,8 @@ gebräuchlich, und sie unterscheiden sich vor allem darin, <b>wer das Konzept de
     aus gelabelten Aktivierungen, positiv von negativ zu trennen. Sein Gewichtsvektor steht
     senkrecht auf der Trennebene und ist die Richtung. Trennt meist am besten, steuert aber
     oft schlechter als Difference-in-Means (Marks &amp; Tegmark): Der Klassifikator nimmt
-    jedes Korrelat mit, das beim Trennen hilft, ob das Modell es benutzt oder nicht.</li>
+    jedes Korrelat mit, das beim Trennen hilft, ob das Modell es benutzt oder nicht. Ganz
+    durchgerechnet in Abschnitt 8.</li>
   <li><b>SAE-Feature</b> — kein Konzept vorgeben, sondern ein fertiges Wörterbuch aus
     Richtungen durchsuchen und eine wählen. Der einzige Weg ohne Labels und ohne Prompt-Sets,
     dafür mit der Frage, ob dein Konzept dort überhaupt als sauberes Feature vorkommt. Wie das
@@ -1113,7 +1115,149 @@ Cunningham et al. 2023 für das Verfahren; Lieberum et al. 2024 („Gemma Scope"
 Die Zahlen zu den GPT-2-SAEs stammen aus der veröffentlichten <code>cfg.json</code> von
 <code>jbloom/GPT2-Small-SAEs-Reformatted</code>, Layer 6. Nichts davon ist selbst gemessen.</p>
 
-<h2 id="glossar">8 · Glossar</h2>
+<h2 id="probing">8 · Lineare Proben: eine Trennebene lernen</h2>
+
+<p class="lead">Der dritte Weg aus Abschnitt 6, einmal ganz. Eine Probe ist ein Klassifikator,
+der aus Aktivierungen ein Label vorhersagt. Sie beantwortet eine Frage: Steckt die Information
+an dieser Stelle linear lesbar drin? Sie beantwortet nicht, ob das Modell sie benutzt.</p>
+
+<h3>Was die Probe rechnet</h3>
+
+<p>Logistische Regression: Score s = w·x + b, Wahrscheinlichkeit σ(s), Label „positiv", wenn
+s &gt; 0. Die Punkte mit s = 0 bilden die Trennebene, w steht senkrecht darauf. Im Spielzeug
+unten: sechs Sätze als Punkte in zwei Dimensionen statt 768, w = (0, 1), b = −2. Der Score
+ist dann einfach x₂ − 2.</p>
+
+<figure>
+  <div class="frame">
+  <svg viewBox="0 0 700 320" role="img"
+       aria-label="Sechs Punkte in zwei Dimensionen, drei positive oben, drei negative unten. Eine waagerechte Trennlinie bei x2 gleich 2 mit ihrer Normalen w, dazu die Difference-in-Means-Richtung d von Mittelwert zu Mittelwert, die schräg dazu steht.">
+    <defs>
+      <marker id="ah8" markerWidth="8" markerHeight="8" refX="6" refY="3"
+              orient="auto"><path d="M0,0 L6,3 L0,6" fill="#1a1a1a"/></marker>
+    </defs>
+    <!-- axes through the origin -->
+    <line x1="100" y1="202" x2="540" y2="202" stroke="#e2e2de" stroke-width="1"/>
+    <line x1="210" y1="20" x2="210" y2="280" stroke="#e2e2de" stroke-width="1"/>
+    <text x="544" y="206" font-size="10" fill="#8a8a84">x₁</text>
+    <text x="214" y="22" font-size="10" fill="#8a8a84">x₂</text>
+
+    <!-- separating line x2 = 2 and its normal w -->
+    <line x1="100" y1="150" x2="540" y2="150" stroke="#8a8a84" stroke-width="1.4"/>
+    <text x="544" y="154" font-size="11" fill="#666">w·x + b = 0</text>
+    <line x1="441" y1="150" x2="441" y2="114" stroke="#1a1a1a" stroke-width="1.6" marker-end="url(#ah8)"/>
+    <text x="449" y="128" font-size="12" font-weight="600" fill="#1a1a1a">w = (0, 1)</text>
+
+    <!-- negative sentences -->
+    <g fill="#c1440e" fill-opacity=".85">
+      <circle cx="265" cy="176" r="5.5"/><circle cx="375" cy="176" r="5.5"/><circle cx="155" cy="254" r="5.5"/>
+    </g>
+    <g font-size="10" fill="#666">
+      <text x="265" y="194" text-anchor="middle">(1, 1)</text>
+      <text x="375" y="194" text-anchor="middle">(3, 1)</text>
+      <text x="167" y="258">(−1, −2)</text>
+    </g>
+    <!-- positive sentences -->
+    <g fill="#0d6e6e" fill-opacity=".85">
+      <circle cx="265" cy="124" r="5.5"/><circle cx="375" cy="124" r="5.5"/><circle cx="485" cy="46" r="5.5"/>
+    </g>
+    <g font-size="10" fill="#666">
+      <text x="265" y="114" text-anchor="middle">(1, 3)</text>
+      <text x="375" y="114" text-anchor="middle">(3, 3)</text>
+      <text x="497" y="50">(5, 6)</text>
+    </g>
+
+    <!-- class means and the difference-in-means direction -->
+    <circle cx="265" cy="202" r="5.5" fill="#fff" stroke="#c1440e" stroke-width="2"/>
+    <text x="252" y="220" font-size="10" fill="#666" text-anchor="end">Mittel (1, 0)</text>
+    <circle cx="375" cy="98" r="5.5" fill="#fff" stroke="#0d6e6e" stroke-width="2"/>
+    <text x="388" y="92" font-size="10" fill="#666">Mittel (3, 4)</text>
+    <line x1="270" y1="197" x2="367" y2="105" stroke="#1a1a1a" stroke-width="1.6"
+          stroke-dasharray="6 4" marker-end="url(#ah8)"/>
+    <text x="292" y="162" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="end">d ∝ (1, 2)</text>
+
+    <!-- legend -->
+    <circle cx="110" cy="306" r="5" fill="#0d6e6e"/>
+    <text x="122" y="310" font-size="11" fill="#666">positive Sätze</text>
+    <circle cx="230" cy="306" r="5" fill="#c1440e"/>
+    <text x="242" y="310" font-size="11" fill="#666">negative Sätze</text>
+    <text x="540" y="310" font-size="11" fill="#666" text-anchor="end">2 statt 768 Dimensionen, Zahlen erfunden</text>
+  </svg>
+  </div>
+  <figcaption><b>Nachrechenbar.</b> Die Probe w = (0, 1), b = −2 trennt mit der Linie x₂ = 2;
+  ihr Abstand zum nächsten Punkt ist 1 auf beiden Seiten, keine andere Linie schafft mehr.
+  Difference-in-Means zieht von Mittel zu Mittel und kippt zu den Ausreißern (5, 6) und
+  (−1, −2). Beide Richtungen trennen, aber cos(w, d) = 2/√5 ≈ 0,89.</figcaption>
+</figure>
+
+<h3>Probe gegen Difference-in-Means, dieselben sechs Punkte</h3>
+
+<p>Difference-in-Means aus Abschnitt 6 an denselben Punkten: Mittel der positiven (3, 4),
+Mittel der negativen (1, 0), Differenz (2, 4), als Richtung d ∝ (1, 2). Beide Richtungen
+nebeneinander, pro Punkt eine Zahl:</p>
+
+<figure>
+  <div class="frame">
+  <table>
+    <tr><th class="rowhead">Punkt</th><th>(1, 3)</th><th>(3, 3)</th><th>(5, 6)</th><th>(1, 1)</th><th>(3, 1)</th><th>(−1, −2)</th></tr>
+    <tr><th class="rowhead">Label</th><td class="ziel">pos</td><td class="ziel">pos</td><td class="ziel">pos</td><td class="hit">neg</td><td class="hit">neg</td><td class="hit">neg</td></tr>
+    <tr><th class="rowhead">Probe: w·x + b = x₂ − 2</th><td>1</td><td>1</td><td>4</td><td>−1</td><td>−1</td><td>−4</td></tr>
+    <tr><th class="rowhead">DiM: x·(1, 2)</th><td>7</td><td>9</td><td>17</td><td>3</td><td>5</td><td>−5</td></tr>
+  </table>
+  </div>
+  <figcaption>Entlang w liegt zwischen dem kleinsten positiven Score (1) und dem größten
+  negativen (−1) ein Abstand von 2. Entlang d sind es 7 − 5 = 2, aber d hat hier die Länge √5;
+  auf Länge 1 gebracht bleiben 2/√5 ≈ 0,89. Die Probe trennt mit doppeltem Abstand.</figcaption>
+</figure>
+
+<p>Der Mittelwert wiegt jeden Punkt gleich, also ziehen die beiden Ausreißer d schräg. Die
+Trennlinie mit dem größten Abstand hört nur auf die vier Punkte am Rand. Probe-Richtung und
+DiM-Richtung sind zwei verschiedene Objekte, auch wenn beide „die Sentiment-Richtung" heißen.
+In 768 Dimensionen mit 40 Punkten kann der Unterschied viel größer sein als hier.</p>
+
+<h3>Warum 40 Punkte in 768 Dimensionen ein Problem sind</h3>
+
+<p>Drei Punkte in der Ebene kann eine Gerade immer trennen, egal wie man sie labelt. Allgemein:
+bis n ≤ d + 1 Punkte gibt es zu <em>jeder</em> Labelvergabe eine trennende Ebene (Cover 1965).
+Mit 40 Sätzen in 768 Dimensionen ist Trainingsgenauigkeit deshalb immer 100 % und sagt
+nichts. Zwei Folgen:</p>
+
+<ul>
+  <li><b>Ohne Regularisierung läuft der Fit weg.</b> Die Ebene lässt sich beliebig weit von
+    allen Punkten schieben, w wächst ins Unendliche. Der Strafterm ½‖w‖² hält es fest; in
+    scikit-learn heißt der Regler C, klein heißt stark regularisiert.</li>
+  <li><b>Nur Held-out zählt.</b> Bei uns leave-one-pair-out: beide Sätze eines Paares raus,
+    damit das Satzgerüst des Testpaares ungesehen ist.</li>
+</ul>
+
+<p>Und C bestimmt, wohin w zeigt. Bei starker Regularisierung bleibt w klein, die Sigmoid ist
+dort fast linear, und das beste kleine w ist proportional zu Σ y·x mit y = ±1. Im Spielzeug:
+Summe der positiven Punkte (9, 12) minus Summe der negativen (3, 0) ist (6, 12) ∝ (1, 2). Das
+ist d. Bei schwacher Regularisierung wandert w zur Trennlinie mit größtem Abstand, im
+Spielzeug (0, 1). cos(w, d) ist also ein Regler, keine Eigenschaft des Modells. Genau das
+prüft das Notebook, indem es C durchfährt.</p>
+
+<h3>Control Task: misst die Probe das Modell oder sich selbst?</h3>
+
+<p>Hewitt &amp; Liang 2019: dieselbe Probe auf gewürfelte Labels trainieren. Trifft sie
+held-out immer noch gut, liegt das an ihrer Kapazität, nicht an der Information in den
+Aktivierungen. Bei uns: pro Paar das Vorzeichen würfeln, so bleiben 20 gegen 20 und die
+Paarstruktur erhalten. Erwartung um 50 %; alles deutlich darüber wäre ein Warnsignal.</p>
+
+<h3>Lesbar heißt nicht benutzt</h3>
+
+<p>Eine Probe ist korrelativ. Dass sich Sentiment aus Layer 6 auslesen lässt, sagt nicht,
+dass das Modell entlang w rechnet. Der Test dafür ist der Eingriff: w addieren und schauen,
+ob sich die Vorhersage bewegt, derselbe Dosis-Sweep wie beim Steering. Marks &amp; Tegmark
+fanden auf Llama: Proben trennen mindestens so gut, aber DiM-Richtungen steuern stärker. Das
+ist eine Behauptung, die man an GPT-2 small mit 40 Sätzen prüfen kann, kein Naturgesetz.</p>
+
+<p class="refs"><b>Quellen:</b> Alain &amp; Bengio 2016 („Understanding intermediate layers
+using linear classifier probes"); Hewitt &amp; Liang 2019 („Designing and Interpreting Probes
+with Control Tasks"); Belinkov 2022 („Probing Classifiers: Promises, Shortcomings, and
+Advances"); Cover 1965; Marks &amp; Tegmark 2023. Nicht im Volltext gelesen.</p>
+
+<h2 id="glossar">9 · Glossar</h2>
 
 <p>Begriffe, die in dieser Literatur ständig auftauchen.</p>
 
@@ -1146,6 +1290,19 @@ Die Zahlen zu den GPT-2-SAEs stammen aus der veröffentlichten <code>cfg.json</c
 </div>
 
 <div class="begriff">
+  <p><b>Lineare Probe</b> — ein einfacher Klassifikator, meist logistische Regression, der aus
+  Aktivierungen ein Label vorhersagt. Held-out-Genauigkeit sagt, ob die Information dort linear
+  lesbar ist; der Gewichtsvektor ist eine Richtung. Sagt nichts darüber, ob das Modell die
+  Richtung benutzt (→ Abschnitt 8).</p>
+</div>
+
+<div class="begriff">
+  <p><b>Control Task</b> — dieselbe Probe auf gewürfelte Labels. Ihre Genauigkeit dort ist der
+  Anteil, den die Probe aus eigener Kraft schafft; nur der Abstand zur echten Aufgabe zählt
+  (Hewitt &amp; Liang 2019).</p>
+</div>
+
+<div class="begriff">
   <p><b>Superposition</b> — mehr Konzepte als Achsen: Das Modell kodiert mehr Richtungen in
   den Residual Stream, als der Raum Dimensionen hat, also überlappen sie sich. Folge: Eine
   einzelne Koordinate ist <b>polysemantisch</b>, sie trägt mehrere Bedeutungen zugleich. Ein
@@ -1162,7 +1319,7 @@ Die Zahlen zu den GPT-2-SAEs stammen aus der veröffentlichten <code>cfg.json</c
 <footer>
   Iteratives Dokument — wächst mit dem Projekt. Befunde aus der Literatur stammen aus
   Abstracts und Suchergebnissen, außer SteeringSafety (Volltext gelesen). Abschnitt 5 ist
-  selbst gemessen und als solches gekennzeichnet; Abschnitte 6 und 7 erklären die Verfahren
+  selbst gemessen und als solches gekennzeichnet; Abschnitte 6 bis 8 erklären die Verfahren
   aus den Originalarbeiten (nicht im Volltext) und der veröffentlichten Konfiguration der
   GPT-2-SAEs.
 </footer>
