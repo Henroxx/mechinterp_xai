@@ -21,6 +21,7 @@ dependencies = [
     "jupyter",
     "circuitsvis",
     "matplotlib",
+    "scikit-learn",
 ]
 
 [tool.uv]
