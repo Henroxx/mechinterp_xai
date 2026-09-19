@@ -54,9 +54,11 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
   `notebooks/08_direction_sources.ipynb`. **Phase 5 damit abgeschlossen.** Struktur und Eckdaten der
   Abhandlung entschieden (2026-09-19) → `plans/abhandlung.md`. Aktuell: **Phase 7, Schreiben** —
   Vorarbeit erledigt (`report/main.typ` englisch und neu gegliedert, `refs.bib` angelegt, Figuren
-  als Vektor exportiert) und **Abschnitt 5 „Reading versus steering" geschrieben** (~4,6 Seiten,
-  zwei Figuren, drei Tabellen). Nächster Abschnitt: 4 „Choosing the question". Fortschritt pro
-  Abschnitt → `docs/fahrplan/index.html`, Phase 7.
+  als Vektor exportiert) und **die Abschnitte 5, 4 und 3 geschrieben** — 5 „Reading versus steering"
+  (~4,6 Seiten, zwei Figuren, drei Tabellen), 4 „Choosing the question" (~1 Seite, Landkarte mit
+  Suchprotokoll, Anker, die zwei Lücken), 3 „Exploration" (~1,4 Seiten, die Tour als eine Tabelle
+  plus Modellwahl). Nächster Abschnitt: 2 „Background", der einzige mit noch offenem Grafik-Bedarf.
+  Fortschritt pro Abschnitt → `docs/fahrplan/index.html`, Phase 7.
 
 ---
 # To-Dos & offene Entscheidungen

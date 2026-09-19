@@ -112,3 +112,9 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
   vorab waren bei diesem Abschnitt unbeantwortbar. Beim Nachrechnen der Tabellen drei DETAILS-Sätze
   auf das Gemessene zurückgeschnitten; alle fünf Kernaussagen hielten. Der Neulauf beider Notebooks
   reproduzierte `results/` bitgleich.
+- **2026-09-19** | Phase 7: **Abschnitt 4 „Choosing the question" und Abschnitt 3 „Exploration"
+  geschrieben** — Landkarte mit dem vorab fixierten Suchprotokoll, Anker und die zwei Lücken; die
+  Schnuppertour als eine Tabelle mit sechs Stationen plus der Begründung für GPT-2 small | Aus der
+  Tour sind drei Design-Entscheidungen statt Befunde ausgewiesen (heterogene Daten aus Probing,
+  Vergleich bei gleicher Wirkung aus SAE, Dosisregel aus Steering); Patching steht bewusst ohne
+  Beitrag zum Hauptexperiment da.

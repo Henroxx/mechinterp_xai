@@ -1,4 +1,4 @@
-# Plan — Abhandlung (Phase 6, Fahrplan-Schritte 14–15)
+# Plan — Abhandlung (Phasen 6–7, Fahrplan-Schritte 14–22)
 
 Struktur und Eckdaten entschieden von Henry am 2026-09-19. Schreiben beginnt erst auf sein Go.
 
