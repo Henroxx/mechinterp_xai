@@ -52,7 +52,7 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
   `notebooks/07_reading_vs_steering.ipynb`. Eigenes Experiment durchgeführt (2026-09-19) →
   DETAILS „Lesen gegen Steuern — Richtungsquellen bei gleicher Wirkung",
   `notebooks/08_direction_sources.ipynb`. **Phase 5 damit abgeschlossen.** Struktur und Eckdaten der
-  Abhandlung entschieden (2026-09-19) → `plans/abhandlung.md`. Aktuell: **Phase 7, Schreiben** —
+  Abhandlung entschieden (2026-09-19) → `plans/done/abhandlung.md`. Aktuell: **Phase 7, Schreiben** —
   Vorarbeit erledigt (`report/main.typ` englisch und neu gegliedert, `refs.bib` angelegt, Figuren
   als Vektor exportiert) und **alle Abschnitte geschrieben, keine TODOs mehr im Text** (2026-09-19):
   Abstract, 1 „Introduction" (¾ Seite), 2 „Background" (eigene SVG-Grafik, LRH, Methodentabelle),
@@ -61,9 +61,14 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
   Schicht und das Schema der drei Vergleichsarten), 6 „Conclusion", Kasten „Use of AI" mit Pfadtabelle
   unter dem Abstract, Anhang mit Repo-Link, Tag und Mess-Pfaden. Ein Review-Durchgang ist durch
   (Zahlen-Inkonsistenzen, Redundanzen, LLM-Klang → HISTORY). Hauptteil ~10,5 Seiten inkl. gut 1,5
-  Seiten Grafiken, **nicht gekürzt** → `plans/abhandlung.md` „Entschieden im Review-Durchgang".
-  **Offen: Henrys Leserunde (Schritt 22), drei Literatureinträge ohne `note`-Feld, „5 of 23" beim
-  Anker prüfen, Untertitel, Tag `v1.0-submission`.** Fortschritt → `docs/fahrplan/index.html`, Phase 7.
+  Seiten Grafiken, **nicht gekürzt** → `plans/done/abhandlung.md` „Entschieden im Review-Durchgang".
+  **Abgabe fertig (2026-09-19).** Report final (15 Seiten, Seitenumbruch vor den References),
+  Untertitel steht („Reading is not steering …"), Notebooks für die Abgabe durchgesehen, `main`
+  gepusht und als `v1.0-submission` getaggt, Repo-README und GitHub-Beschreibung auf den Endstand
+  gebracht. Abgabepaket unter `~/Downloads/XAI_Abgabe_Brose/` (PDF, README, acht Notebooks) —
+  der Upload ist Henrys Schritt. **Bewusst so abgegeben, nicht vergessen:** die drei
+  Literatureinträge ohne `note`-Feld und die ungeprüfte Zahl „5 of 23" in §3; Henrys Leserunde
+  (Schritt 22) entfällt auf seine Ansage. Fortschritt → `docs/fahrplan/index.html`, Phase 7.
 
 ---
 # To-Dos & offene Entscheidungen
@@ -84,7 +89,7 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
          reproduziert (Schritte 11–12), eigenes Experiment mit
          Kontrolle durchgeführt (Schritt 13 → DETAILS „Richtungsquellen bei gleicher Wirkung").
       6. **Abhandlung** — erledigt 2026-09-19: Struktur, Seitenbudget und Kernaussagen abgestimmt
-         → `plans/abhandlung.md`.
+         → `plans/done/abhandlung.md`.
       7. **Schreiben** ← *hier stehen wir* — ein Schritt pro Abschnitt in der Schreibreihenfolge
          5 → 4 → 3 → 2 → 6 → 7 → 1 → Abstract, je mit den Konzepten, die Henry dafür verstehen
          muss. Sicht darauf: `docs/fahrplan/index.html`, Phase 7. Kein Vortrag mehr nötig.
@@ -122,7 +127,7 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
 - [x] **Sprache der Abhandlung: Englisch** (2026-08-24). Grund: die gesamte Literatur und
       Terminologie ist englisch, Rückübersetzen von Fachbegriffen erzeugt nur Unschärfe.
       `report/main.typ` am 2026-09-19 umgestellt.
-- [x] **Zuschnitt der Abhandlung entschieden** (Henry, 2026-09-19) → `plans/abhandlung.md`:
+- [x] **Zuschnitt der Abhandlung entschieden** (Henry, 2026-09-19) → `plans/done/abhandlung.md`:
       Technical Report auf Englisch, unter 10 Seiten Hauptteil, jeder Abschnitt beginnt mit „was und
       warum" vor dem Detail. Grund für die Skip-Ebene: die Zeit des Dozenten wertschätzen, er soll
       überspringen können, was er nicht braucht. Erste Person für Entscheidungen; KI-Nutzung als

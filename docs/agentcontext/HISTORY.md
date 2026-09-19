@@ -137,4 +137,16 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
   ausgedünnt. Zwei Grafiken neu: Dosis-Konfundierung pro Schicht (`scripts/fig_dose_confound.py`
   aus `results/`) und Schema der drei Vergleichsarten (`comparison_modes.svg`). Zwei geprüfte
   XAI-Referenzen (Gilpin 2018, Ribeiro 2016). Hauptteil bleibt ~10,5 Seiten inkl. Grafiken, nicht
-  gekürzt → `plans/abhandlung.md`.
+  gekürzt → `plans/done/abhandlung.md`.
+- **2026-09-19** | Phase 7 abgeschlossen: **Abgabepaket gebaut und Repo abgerundet** | Das
+  Fahrplan-Dashboard war kaputt — ein gerades Anführungszeichen in einer Notiz beendete den
+  JS-String und damit den ganzen Datenblock; seitdem werden Änderungen am Datenblock mit
+  `node --check` geprüft. `#pagebreak()` vor die References (kostet keine Seite, deshalb bleibt
+  auch der Appendix-Umbruch). Notebooks für die Abgabe durchgesehen: interne Nummerierung raus
+  („Step 12", „Station 5" → Dateinamen), fünf Pointen-Sätze in Fließtext, elf ASCII-`--` zu
+  Gedankenstrichen, fünf „we/our" zu „I/my" — Code und Outputs nachweislich unangetastet. Dabei ein
+  Rechenfehler gefunden, der in Notebook 07 **und** im Report stand: ρ = +0,48…+0,90 war als
+  „inside" von Billas +0,63…+0,92 beschrieben, richtig ist überlappend und tiefer reichend. Die
+  zehn ipywidgets-Fehlerkästen bleiben auf Henrys Ansage drin (kosmetisch, Inhalt ist ein
+  eingefrorener Ladebalken). Vier Commits, gepusht, Tag `v1.0-submission` gesetzt; alle vier
+  GitHub-Links aus dem PDF anonym gegen HTTP 200 geprüft.

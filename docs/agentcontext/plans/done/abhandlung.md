@@ -84,16 +84,13 @@ in Schreibreihenfolge, je mit Inhalt und den Konzepten, die Henry dafür versteh
 ⬜ / 🟡 / ✅ wie im Lerndokument). Grund für den Umzug: Henry priorisiert mit dem Blick auf das
 Dashboard, und eine zweite Checkliste hier wäre die Stelle, die als Erstes veraltet.
 
-## Offen
+## Offen — aufgelöst bei der Abgabe (2026-09-19)
 
-- Endgültige Formulierung des Untertitels.
-- Literaturverzeichnis: Typsts IEEE-Stil wirft `note`-Felder weg, damit fehlen TransformerLens 3.5.1,
-  der Fundort von Blooms SAE-Set und die LessWrong-Herkunft des Logit-Lens-Posts (→ Schritt 22).
-- Eine Zahl unverifiziert: §3 „5 of 23 concepts steerable at 160M" gegen §4 „24 families" — beim
-  Anker nachschlagen, ob die Skalierungstabelle wirklich 23 Familien hat.
-- Henrys Leserunde (Schritt 22): Verständnis zu Abschnitt 5, Sätze in eigene Worte — bewusst nicht
-  von Claude vorweggenommen (Henry, 2026-09-19: „es ist okay, dass das LLM geschrieben ist zu einem
-  gewissen Grad").
+- Untertitel: die Arbeitsfassung ist die Endfassung geblieben.
+- Die drei Literatureinträge ohne `note`-Feld und die ungeprüfte Zahl „5 of 23" in §3 sind
+  **bewusst so abgegeben** (Henry: „sind wir quasi komplett durch").
+- Henrys Leserunde (Schritt 22) entfällt auf seine Ansage.
+- Tag `v1.0-submission` gesetzt und gepusht, alle Links aus dem PDF gegen HTTP 200 geprüft.
 
 ## Entschieden im Review-Durchgang (2026-09-19)
 

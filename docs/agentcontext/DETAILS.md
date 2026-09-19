@@ -403,8 +403,8 @@ keine Verteilung.
   Literatur über `refs.bib` im IEEE-Stil.
 - **Der IEEE-Stil wirft `note`-Felder stillschweigend weg.** Was dort steht, fehlt im Druck ohne
   Fehlermeldung — gefunden nur durch Ansehen der gerenderten Literaturseite. Venue und Vorabdruck
-  gehören deshalb in `journal`/`booktitle`. Offen betroffen: TransformerLens 3.5.1, Blooms SAE-Set,
-  die LessWrong-Herkunft des Logit-Lens-Posts.
+  gehören deshalb in `journal`/`booktitle`. So abgegeben, bewusst und nicht vergessen: TransformerLens 3.5.1,
+  Blooms SAE-Set, die LessWrong-Herkunft des Logit-Lens-Posts.
 - **Layout nie schätzen, immer ansehen:** `pdftoppm -png -r 80 main.pdf <ziel>` und die Seiten
   lesen. Seitenzahl und Inhaltsverzeichnis verraten weder Umbruchschäden noch verrutschte Figuren.
 - **Figuren, drei Wege.** Notebook-Ergebnisse als Vektor-PDF per `savefig` aus 07 und 08.
