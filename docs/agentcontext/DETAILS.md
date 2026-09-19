@@ -11,7 +11,7 @@ Destilliert aus der Themen-Landkarte (Chat 2026-07-10). Kriterien: Passung zu He
 Pitch (Steering-Nebeneffekte, methodenkritisch) > Machbarkeit > Methodenkritik-Wert.
 
 **Stand 2026-08-25:** Die Grundform von A+B ist publiziert (SteeringSafety, auf Gemma-2-2B)
-→ „Forschungsstand Steering-Nebeneffekte". Das Ranking unten ist damit überholt, wird aber
+→ `details/forschungsstand.md`. Das Ranking unten ist damit überholt, wird aber
 erst in Fahrplan-Phase 4 (Entscheidung) neu entschieden — bis dahin gelten alle Punkte als Kandidaten.
 
 1. **A+B — Herzstück: Steering-Nebeneffekte am Fall der Refusal Direction.**
@@ -373,146 +373,13 @@ Konsequenzen:
 5. Gemma-2-Eigenheit: sehr große Residual-Aktivierungen (bis ~4000, wächst über Layer) —
    relevant für alles, was absolute Schwellwerte benutzt.
 
-## Forschungsstand Steering-Nebeneffekte (Stand 2026-08-24)
+## Forschungsstand & SAE-Kritik → `details/forschungsstand.md` (Stand 2026-09-18)
 
-Recherche per Subagent. **Kernbefund: die Grundform des geplanten Experiments ist
-publiziert.** Ein eigener Beitrag muss auf der Metrik-, Dosis- und Kontroll-Ebene liegen,
-nicht in der Idee „Nebenwirkungen messen".
-
-- **SteeringSafety** (Siu et al., arXiv:2509.13450v3, ICML 2026, PMLR 306) — **im Volltext
-  gelesen 2026-08-25**, PDF liegt in den Kursunterlagen. Gemma-2-2B-IT, Llama-3.1-8B,
-  Qwen-2.5-7B; 5 Methoden (DIM, ACE, CAA, PCA, LAT); gesteuert wird auf **drei** Perspektiven
-  (Refusal, Halluzination, Bias), gemessen wird auf **allen neun** / 18 Datensätzen.
-  Zwei Metriken: *Effectiveness* (Verbesserung auf der Ziel-Perspektive, normiert auf den
-  verbleibenden Headroom 1−y) und *Entanglement* (RMS der **absoluten**, bewusst
-  un-normierten Drift auf allen anderen Perspektiven).
-  **Befunde:** Entanglement ist am höchsten bei Social Behaviors (Sycophancy, Brand Bias,
-  Anthropomorphismus, User Retention — bis 76 % Degradation) und Normative Judgment
-  (Moral bis 26 %); **Reasoning bleibt robust (<2 %)**. Alles hängt am Tripel
-  (Methode, Modell, Perspektive), nicht an einem der drei. Kontraintuitiv: Jailbreaking
-  macht Modelle *nicht* durchgehend toxischer — bei Llama schwer, bei Qwen kaum.
-  Conditional Steering (CAST-Gating) ist meist eine Pareto-Verbesserung, beseitigt
-  Entanglement aber nicht.
-  **Fünf Punkte, die für dieses Projekt entscheidend sind:**
-  1. Die Refusal-Intervention ist **Unterdrückung** von Refusal („adversarial refusal
-     ablation", Orthogonalisierung gegen den Refusal-Vektor), nicht additives Steering.
-     Die umgekehrte Richtung wird **bewusst nicht** untersucht: Refusal-Induktion sättigt
-     in pauschales Verweigern, und die Baseline-ASR liegt schon unter 0,05.
-  2. **Gemma-2-2B ist beim Refusal-Steering das schwächste der drei Modelle** — „ACE und DIM
-     überschreiten 50 % Effectiveness auf jedem Modell außer Gemma-2-2B"; DIM/Refusal/Gemma
-     hat in Tabelle 2 gar keinen Wert.
-  3. **Die Dosis-Achse ist grob und wird nie als Kurve berichtet:** Suchraster ist
-     Layer (25.–80. Perzentil der Tiefe, Schritt 2) × Koeffizient (**ganze Zahlen −3…3**),
-     daraus wird *ein* bestes Paar per Validierung gewählt. Es gibt im Paper **keine
-     Dosis-Wirkungs-Kurve**.
-  4. **Ein KL-Filter entscheidet mit, was überhaupt gemessen wird:** jedes (Layer,
-     Koeffizient)-Paar mit durchschnittlicher KL-Divergenz > 0,1 auf den Last-Token-Logits
-     (auf Alpaca) wird verworfen. Ohne den Filter („NoKL") verdoppelt sich Entanglement
-     „oft mehr als". Der Filter siebt also genau die Konfigurationen aus, die das Modell
-     kaputtmachen — eine Schwellenwert-Entscheidung, die das Ergebnis mitbestimmt.
-  5. **Keine Textqualitäts- oder Kohärenz-Metrik.** Alle Capability-Messungen sind
-     Benchmark-Aufgaben (ARC-C, GPQA, LongBench, TruthfulQA), per Substring-Matching oder
-     LLM-Judge ausgewertet. KL-Divergenz wird nur als *Filter* benutzt, nicht als Ergebnis
-     berichtet.
-  **Explizite Einladung zur Anschlussarbeit** (Abschnitt 5): sie führen Entanglement
-  hypothetisch auf Superposition zurück, markieren das ausdrücklich als *nicht* etabliert
-  und schreiben, dass „future work with sparse autoencoders or related circuit-level tools
-  could investigate individual cases, and our benchmark is designed to make those targeted
-  follow-ups tractable". Das trifft Kandidat D.
-- **Style Modulation Heads** (Izawa et al., arXiv:2603.13249) — der methodisch wichtigste
-  Befund: **MMLU bleibt innerhalb 0,5 % stabil, auch wenn die Textkohärenz schon zerfallen
-  ist**; Perplexity sagt den Qualitätsverfall nicht vorher (fällt teils in beide
-  Steering-Richtungen). Kohärenz gemessen per LLM-as-Judge (0–100: Klarheit, Halluzination,
-  Konfusion) auf Held-out-Set. Außerdem: Degradation ist graduell zu häufigen Verhaltens-
-  weisen, **abrupter Kollaps** zu OOD-Richtungen; Verstärkung und Suppression asymmetrisch.
-  Gemessen auf 7–8B für Persona-Traits — für 2B und Refusal offen.
-- **Forecasting Side Effects** (Ong et al., arXiv:2608.11227) — Cross-Effect-Matrix über 67
-  Verhaltensweisen: Nebeneffekte sind häufig, strukturiert und **asymmetrisch** (A→B ≠ B→A),
-  nicht über Similarity-Heuristiken erklärbar, aber aus ungesteuerten Repräsentationen
-  vorhersagbar.
-- **Steering Safely or Off a Cliff?** (Goyal & Daumé, arXiv:2602.06256) — zerlegt Spezifität
-  in *general* (Fluency), *control* (verwandte Eigenschaften), *robustness*. Steering hält
-  die ersten zwei, **scheitert konsistent an robustness**: Over-Refusal-Reduktion erhöht
-  Jailbreak-Anfälligkeit.
-- **Refusal-Geometrie** (Joad et al., arXiv:2602.02132) — 11 Refusal-Kategorien liegen auf
-  geometrisch verschiedenen Richtungen, aber Steering entlang *jeder* erzeugt nahezu
-  identische Refusal↔Over-Refusal-Trade-offs. Ein gemeinsamer 1D-Regler; die Richtungen
-  unterscheiden *wie*, nicht *ob* verweigert wird.
-- **Perfect Detection, Failed Control** (Galeone et al., arXiv:2606.24952) — primär
-  **Gemma-2-2b-it**: Cosine-Similarity sagt Steerability nicht vorher (Detektionsrichtung
-  steht 83° zur Refusal-Richtung, trotzdem steuerbar nach Rotation).
-- **Layer-Wahl** (Billa, arXiv:2604.15557) — trainingsfreies Logit-Lens-Kriterium prognostiziert
-  Steering-Wirksamkeit (ρ ≈ 0,9) und Layer-Wahl; die übliche „mittlere Schicht"-Heuristik ist
-  **unterlegen**. Auf Gemma-2-2B demonstriert.
-- **Mechanismus** (Cheng et al., arXiv:2604.08524) — Steering-Vektoren wirken fast nur über
-  den OV-Circuit, kaum über QK; sie lassen sich um 90–99 % sparsifizieren, und die Zerlegung
-  ist semantisch lesbar, auch wenn der Vektor selbst es nicht ist.
-- **Abliteration-Nebeneffekte** (Young, arXiv:2512.13655) — **GSM8K ist die empfindlichste
-  Metrik** (bis −18,8 pp), deutet auf Overlap von Refusal-Repräsentation und mathematischem
-  Reasoning. Fafuła (arXiv:2607.17427): Off-Target-Effekte gehen bei verschiedenen
-  Modellfamilien teils in **gegensätzliche** Richtungen.
-- **Vorgeschichte, weiter gültig:** Tan et al. (arXiv:2407.12404) — Steerability ist
-  überwiegend eine Eigenschaft des *Datensatzes*, nicht des Modells, und OOD brittle.
-  Braun et al. (arXiv:2505.24859) — bei freier Generierung statt Multiple Choice erzeugt hohe
-  Steering-Stärke degenerative Repetition und Halluzinationen.
-
-**Keine Standard-Evaluation existiert.** Am nächsten dran: SteeringSafety als Suite,
-AxBench für Effektivität, die Spezifitäts-Taxonomie aus 2602.06256 als Rahmen. Übliche
-Instrumente: Refusal-Rate (AdvBench/HarmBench/JailbreakBench) · Over-Refusal (XSTest,
-OR-Bench) · Capability (MMLU, GSM8K, HellaSwag, IFEval) · Qualität (PPL, Distinct-2,
-LLM-as-Judge) · Kontrollen (norm-matched Random-Vektoren, pro Layer neu skaliert, typisch
-~5 Ziehungen pro echtem Vektor).
-
-**Offene Lücken, die mit diesem Compute erreichbar sind:**
-1. **Metrik-Validierung statt Metrik-Anwendung** — hält der „MMLU/PPL sehen den Kollaps
-   nicht"-Befund auf 2B und für Refusal? Mehrere Metriken auf derselben Dosis-Achse,
-   kreuzkorreliert.
-2. **Dichte Dosis-Auflösung** (15–20 Stufen statt der üblichen 3–5) — gibt es eine
-   Bruchstelle, und liegt sie vor oder nach dem Erreichen der Zielwirkung?
-3. **Ehrliche Kontroll-Buchführung** — Refusal-Richtung / norm-matched random /
-   orthogonalisierte Richtung als drei parallele Dosis-Kurven. Trennt „direction-specific"
-   von „irgendein großer Vektor schüttelt das Modell".
-4. **Entanglement auf kleinem Maßstab** — ist ein 2B-Modell überhaupt entangled genug, dass
-   man Nachbarverhalten sieht, oder ist die Repräsentation zu grob?
-
-Nicht als Beitrag geeignet (gelöst): Refusal-Richtung finden, abliterieren und ASR berichten,
-eine neue Steering-Methode vorschlagen.
-
-## SAE-Kritik — Stand 2026-08-24
-
-- **AxBench** (Wu et al., arXiv:2501.17148, ICML 2025) — auf **Gemma-2-2B**, ~500 Konzepte:
-  beim Steering schlägt **Prompting alles**, SAEs sind nicht konkurrenzfähig; bei Concept
-  Detection gewinnt **difference-in-means**. Gegenposition (arXiv:2605.31183): mit
-  aufwendiger supervidierter Feature-Selektion erreichen SAEs LoRA-Nähe. Faire Formulierung:
-  out-of-the-box verlieren SAEs, mit erheblichem Zusatzaufwand nicht mehr.
-- **Sparse Probing** (Kantamneni et al., arXiv:2502.16681) — kein Ensemble aus SAE+Baselines
-  schlägt konsistent ein Ensemble nur aus Baselines.
-- **Feature Absorption** (Chanin et al., arXiv:2409.14507, NeurIPS 2025) — auf **Gemma-2-2b
-  mit Gemma-Scope-SAEs**: ein Latent für „beginnt mit E" feuert bei „Elephant" nicht, die
-  Information ist in ein spezifischeres Latent absorbiert. **Absorption steigt mit Sparsity
-  und Breite** — größere SAEs lösen es nicht. Bester Reproduktions-Kandidat mit kleinem Compute.
-- **L0 ist kein freier Parameter** (Chanin & Garriga-Alonso, arXiv:2508.16560) — zu niedriges
-  L0 mischt korrelierte Features, zu hohes erzeugt degenerierte Lösungen. Die meisten
-  gebräuchlichen SAEs haben zu niedriges L0 — betrifft die Gemma-Scope-„canonical"-Wahl (L0≈100).
-- **Seed-Instabilität** (arXiv:2606.12138) — differenzierter als oft behauptet: stabile
-  Features tragen fast das ganze Signal, instabile sind Low-Frequency-Surface-Form-Trigger in
-  reproduzierbaren Unterräumen. Also Basis-Ambiguität, nicht Rauschen.
-- **Benchmarks selbst unzuverlässig** (Chanin, arXiv:2605.18229) — SAEBench-Metriken TPP und
-  SCR sollten nicht mehr zur SAE-Evaluation verwendet werden.
-- **Position, die am meisten trägt** (arXiv:2506.23845): SAEs zur *Entdeckung unbekannter*
-  Konzepte einsetzen, nicht zum Handeln auf bekannten. Bei bekanntem Zielkonzept verlieren
-  sie gegen Baselines — genau der Fall bei Steering auf ein spezifiziertes Verhalten.
-- **Rahmen für Methodenkritik allgemein:** „The Dead Salmons of AI Interpretability"
-  (arXiv:2512.18792) — Identifizierbarkeit, False-Discovery-Rates, fehlende
-  Unsicherheitsquantifizierung über Feature Attribution, Probing, SAEs und Causal Analysis
-  hinweg; Vorschlag, Erklärungen gegen explizite Alternativhypothesen zu testen.
-
-Mit kleinem Compute reproduzierbar (fertige Gemma-Scope-SAEs, kein Training): Feature
-Absorption · SAE-Steering vs. difference-in-means auf einem Konzept · **SAE-Rekonstruktion
-vs. norm-matched Random-Perturbation im KL** (billig, aussagekräftig, und methodisch
-identisch zur Random-Vektor-Kontrolle beim Steering — verbindet beide Projektteile).
-Nicht machbar: Seed-Instabilität (braucht mehrere SAE-Trainingsläufe), L0-Studien über
-SAE-Familien.
+Ausgelagert, weil die Sektion für gezieltes Springen zu groß wurde. Dort steht die
+Landkarte über alle Methoden der Schnuppertour: wie recherchiert wurde (fixiertes
+Protokoll, Evidenzstufen, Auflösbarkeits-Check), Steering-Nebeneffekte, SAE-Kritik,
+Activation Patching, Probing — je mit Standard-Messungen, „gilt als gelöst" und den
+offenen Lücken samt Urteil, ob sie mit unserem Compute erreichbar sind.
 
 ## Tooling-Realität (Stand 2026-09-18)
 

@@ -1084,7 +1084,7 @@ liest sie und formuliert eine Hypothese („feuert auf positive Bewertungen"). A
 hat das ein Sprachmodell für alle Features automatisch gemacht. <b>Die Richtung ist das
 Feature, der Name ist eine Vermutung über die Richtung.</b> Ein Feature „beginnt mit E" kann
 bei „Elephant" schweigen, weil ein spezifischeres Feature die Information übernommen hat
-(Feature Absorption, DETAILS „SAE-Kritik").</p>
+(Feature Absorption, <code>details/forschungsstand.md</code>).</p>
 
 <h3>Und Steering damit</h3>
 
@@ -1095,7 +1095,7 @@ auf dein Ziel zugeschnitten. Beim SAE hat das Wörterbuch die Richtung ohne dich
 wählst danach aus dem Angebot. Das kann sauberer sein, weil ein Feature im Idealfall genau
 ein Konzept trägt. In der Praxis ist es oft schlechter, sobald das Zielverhalten vorher
 feststeht: Bei bekanntem Konzept verlieren SAE-Richtungen gegen die einfachen Baselines
-(AxBench, DETAILS „SAE-Kritik").</p>
+(AxBench, <code>details/forschungsstand.md</code>).</p>
 
 <p>Für α gibt es beim SAE einen Maßstab, den Difference-in-Means nicht hat: Neuronpedia zeigt
 pro Feature, wie stark es in echtem Text maximal feuert. Steering mit dem Zwei- oder
@@ -1105,8 +1105,8 @@ liegt außerhalb dessen, wofür die Richtung je gefittet wurde.</p>
 <div class="flag">
   <p><b>Was das SAE nicht garantiert.</b> Dass die gefundenen Features die „wahren" Bausteine
   des Modells sind. Sie hängen von Seed, Breite und λ ab, und ein zweites Training mit anderem
-  Seed findet einen Teil der Liste nicht wieder. Die Kritik dazu steht gesammelt in DETAILS
-  „SAE-Kritik". Hier nur der Satz, der hängen bleiben soll: <b>Ein SAE ist eine Zerlegung,
+  Seed findet einen Teil der Liste nicht wieder. Die Kritik dazu steht gesammelt in
+  <code>docs/agentcontext/details/forschungsstand.md</code>. Hier nur der Satz, der hängen bleiben soll: <b>Ein SAE ist eine Zerlegung,
   keine Entdeckung.</b> Steering mit einem Feature testet die Zerlegung, nicht das Modell.</p>
 </div>
 
