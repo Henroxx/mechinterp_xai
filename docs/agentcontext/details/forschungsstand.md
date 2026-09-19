@@ -226,9 +226,21 @@ nicht in der Idee „Nebenwirkungen messen".
 - **Perfect Detection, Failed Control** (Galeone et al., arXiv:2606.24952) — primär
   **Gemma-2-2b-it**: Cosine-Similarity sagt Steerability nicht vorher (Detektionsrichtung
   steht 83° zur Refusal-Richtung, trotzdem steuerbar nach Rotation).
-- **Layer-Wahl** (Billa, arXiv:2604.15557) — trainingsfreies Logit-Lens-Kriterium prognostiziert
-  Steering-Wirksamkeit (ρ ≈ 0,9) und Layer-Wahl; die übliche „mittlere Schicht"-Heuristik ist
-  **unterlegen**. Auf Gemma-2-2B demonstriert.
+- **Layer-Wahl** (Billa, arXiv:2604.15557) — **[V], Volltext gelesen 2026-09-19.** Das Maß ist
+  `A_lin`: Unembedding auf den Zwischenzustand jeder Schicht, argmax gegen das Zieltoken, also
+  Logit-Lens-Trefferquote — trainingsfrei, ein Forward-Pass. Sie prognostiziert Steering-Wirkung
+  über 24 kontrollierte Binärfamilien mit ρ = +0,86 bis +0,91 und die Schichtwahl mit ρ = +0,63
+  bis +0,92; die übliche „mittlere Schicht"-Heuristik liegt auf Gemma-2-2B bei `A_lin` = 0 und wirkt
+  dort gar nicht. Drei Regime: `A_mlp` niedrig → kein Verfahren steuert; `A_mlp` hoch und `A_lin`
+  niedrig → nichtlinear kodiert, Mittelwertdifferenz versagt; `A_lin` hoch → Mittelwertdifferenz
+  reicht. Wirkung = ΔP auf dem Zieltoken, Nebenwirkung = KL auf 50 fremden Prompts, Effizienz =
+  ΔP/KL. Selbst benannte Grenzen: Bodeneffekt (oberhalb `A_lin` > 0,1 fällt ρ auf +0,50 bis +0,52
+  auf den kleinen Modellen), nur Einzeltoken-Aufgaben, Steering nur als Mittelwertdifferenz.
+  Eigener Kritikpunkt: die Dosis wird nirgends angegeben, und ρ(‖d‖, KL) = +0,96 — die gemessene
+  Nebenwirkung ist fast nur die Norm des addierten Vektors. Drei der fünf Kernfamilien beziehen
+  ihre Richtung aus ≤ 10 Zielbeispielen, obwohl der Anhang genau das als Fehlerquelle nennt.
+  **Die SAE-Vorhersage des Papers ist ausdrücklich ungetästet** (future work): SAE-Features sollen
+  in Regime 2 helfen und in Regime 3 wenig beitragen.
 - **Mechanismus** (Cheng et al., arXiv:2604.08524) — Steering-Vektoren wirken fast nur über
   den OV-Circuit, kaum über QK; sie lassen sich um 90–99 % sparsifizieren, und die Zerlegung
   ist semantisch lesbar, auch wenn der Vektor selbst es nicht ist.
@@ -275,12 +287,28 @@ die arXiv-API geprüft, Titel und Erstautor stimmen in allen Fällen. Evidenzstu
 - **Grundlage:** Hewitt & Liang (arXiv:1909.03368, EMNLP 2019) — Control Task und Selectivity,
   bis heute die Referenz für „die Probe misst auch sich selbst"; Belinkov (arXiv:2102.12452,
   CL 2022) sammelt die kanonischen Einwände (Kapazität, Korrelation vs. Kausalität, Baseline).
-- **Decodability is Not Causality** (Tiwari et al., arXiv:2609.18080) — Gemma-2-9B-it, Truth-Probe
-  gegen SAE-Zerlegung: stark gewichtete Probe-Features überlappen nur ~12 % mit den verhaltens-
-  kausalen; Ablation gemeinsamer Features ändert den Output 27 %, probe-only 6 %, random 1 %.
-  Preprint vom 16.09.2026, nicht begutachtet — trägt es, ist es der direkteste Beleg für die Kluft.
-- **Predicting Where Steering Vectors Succeed** (Billa, arXiv:2604.15557, → auch im Steering-Teil) —
-  Probe über L0–L25 mit >93 % Accuracy, Steering am accuracy-besten Layer nahezu wirkungslos.
+- **Decodability is Not Causality** (Tiwari et al., arXiv:2609.18080) — **[V], Volltext gelesen
+  2026-09-19.** Gemma-2-9B-it, Layer 20, GemmaScope-SAE: die geometrisch probe-nächsten Features
+  überlappen nur zu 11–14 % mit den gradienten-relevanten (Spearman ρ = 0,10). Ablation bei
+  gleicher Mengengröße von 16 Features ändert das Verhalten: gemeinsame 0,12 · probe-only 0,06 ·
+  random 0,01; die ganze Probe-Richtung zu ablieren bringt 0,18. Umgekehrt bewegen die
+  probe-only-Features den *Readout* am stärksten (0,24 gegen 0,05) — die Dissoziation existiert
+  nur als dieser Gegensatz. **Korrektur unserer Notiz (2026-09-19):** die Arbeit ist kein
+  unbegutachteter Preprint, die Kopfzeile sagt „Published at COLM 2026 Workshop on Agent
+  Behavior" — Workshop-Review. Zweite Korrektur: die früher notierten 27 % gehören zum 54er-Set,
+  nicht zum 16er; das Abstract mischt die Mengengrößen. Verglichen wird bei **gleicher Dosis**
+  (gleiche Set-Größe), nicht bei gleicher Wirkung; der Dosis-Confound wird nur nachträglich
+  entkräftet. Eigener Kritikpunkt: die gemeinsame Menge ist doppelt gefiltert, die probe-only-Menge
+  einfach — getestet wird damit Konjunktion gegen Einzelkriterium, nicht Geometrie gegen Kausalität.
+  Übertragbar ist die **Substrat-Prüfung**: im Qwen3-8B-Versuch lagen 74 % des Probe-Margins im
+  Rekonstruktionsfehler der SAE, Ablationen wirkten nur im Rekonstruktionsraum (32,7 % gegen 2,1 %).
+  Code: `github.com/cam1lled/causal-validation-sae`.
+- **Predicting Where Steering Vectors Succeed** (Billa, arXiv:2604.15557, → auch im Steering-Teil)
+  — **[V]** eine trainierte logistische Probe erreicht auf Gemma-2-2B in *jeder* Schicht L0–L25
+  über 93 %, während Steering in den frühen Schichten ΔP = 0 erzeugt. Die Aussage ist also nicht
+  „gut gelesen heißt schlecht gesteuert", sondern: die Probe ist über die Tiefe gesättigt und hat
+  keine Varianz mehr, mit der sie die Schichtwahl leiten könnte. Das korrigiert unsere
+  abstract-basierte Notiz (2026-09-19).
 - **Confounds:** Sahoo et al. (arXiv:2606.02907) — 100 % CV-Accuracy fällt nach Residualisierung
   gegen Quelle, Optionenzahl und Antwortlänge auf Zufallsniveau (Qwen3-14B, über unserer
   Modellgrenze, vom Subagenten als bewusste Ausnahme aufgenommen). Boxo et al. (arXiv:2509.21344) —

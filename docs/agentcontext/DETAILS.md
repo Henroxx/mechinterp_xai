@@ -279,6 +279,42 @@ reproduziert).
   Orientierung, keine Statistik. Der Gleichstand 0,069 vs. 0,077 nats liegt innerhalb dessen, was
   dieses n auflösen kann.
 
+## Lesen gegen Steuern — Anker-Reproduktion (Stand 2026-09-19)
+
+`notebooks/07_reading_vs_steering.ipynb`, läuft top-to-bottom in ~20 s, Seed 0, Zahlen zusätzlich
+in `results/07_anchor.json`. Reproduziert Billa (arXiv:2604.15557) auf GPT-2 small.
+
+**Aufbau.** Sechs kontrollierte Binärfamilien nach seiner Bauart (zwei Antwortklassen, gleiche
+Vorlage, Einzeltoken-Antwort): `temperature`, `size`, `pronoun` (je 36+36, drei Satzvorlagen),
+`daynight` (16+16), `parity` und `continent` als Bodenfälle. Gemessen pro Schicht: `A_lin`
+(Unembedding auf `resid_post`, argmax gegen das Zieltoken), eine logistische Probe held-out
+samt Kontrollaufgabe mit vertauschten Labels, sowie Steering über die Mittelwertdifferenz
+(Koeffizient 1,0, Addition an allen Positionen) mit ΔP auf dem Zieltoken und KL auf 50 fremden
+Prompts.
+
+**Befunde.**
+- **Emergenzmuster bestätigt sich auf 124M:** `A_lin` ist bis L7 exakt null und steigt erst im
+  letzten Viertel — dieselbe Form wie bei ihm auf Gemma-2-2B in L18–L24. Ausnahme `pronoun`,
+  dort ab L6 (0,64) und am Ende 0,99.
+- **Die Probe kann keine Schicht wählen.** Bei `continent` liegt sie held-out in *jeder* Schicht
+  L0–L11 bei 1,00, während `A_lin` mit 0,04 gipfelt und Steering nichts bewegt: überall lesbar,
+  nirgends steuerbar. ρ(Probe, ΔP) wechselt familär das Vorzeichen (+0,74 bis −0,39), ρ(`A_lin`,
+  ΔP) liegt bei +0,48 bis +0,90 und damit in seinem Band (+0,63 bis +0,92).
+- **Mittlere Schicht verliert, wo `A_lin` es ansagt:** `temperature` +0,092 in L11 gegen +0,008 in
+  L6, `daynight` +0,035 gegen +0,007. Wo `A_lin` mittig schon hoch ist (`pronoun`), funktioniert
+  die Heuristik — das ist seine Erklärung, kein Gegenbeispiel.
+- **Go/no-go-Schwelle trägt:** `parity` und `continent` bleiben unter 0,05 Spitzen-`A_lin` und
+  erzeugen ΔP ≤ +0,014.
+- **Dosis-Konfundierung im eigenen Material sichtbar:** ‖d‖ reicht von 0,5 bis 58,4 über Familien
+  und Schichten, die KL-Nebenwirkung folgt dem. Billas Effizienz ΔP/KL vergleicht damit Konzepte
+  bei der Dosis, die ihre Mittelwertdifferenz zufällig hat — das ist die Lücke für Schritt 13.
+
+**Grenzen, selbst benannt.** Die Kreuzfamilien-Korrelation ist +1,00 auf sechs Punkten, das ist
+eine Illustration und kein Beleg. Die Probe-Zahlen sind von den Daten geschmeichelt: Familien mit
+nur einer Satzvorlage (`continent`, `parity`, `daynight`) lassen die Probe das Subjektwort lesen,
+die Drei-Vorlagen-Familien liegen niedriger (`temperature` 0,84). Held-out-Mengen sind 4 bis 18
+Prompts groß. Genau deshalb braucht der eigene Teil heterogene Prompts.
+
 ## Umgebung & Tooling (Stand 2026-09-18)
 
 - Paketverwaltung: **uv** (seit 2026-08-24). `pyproject.toml` deklariert, `uv.lock` pinnt

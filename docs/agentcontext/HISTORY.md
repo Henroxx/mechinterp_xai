@@ -86,3 +86,17 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
   Billa (arXiv:2604.15557). Blockwoche als veraltet gestrichen, es hängt kein Abgabetermin daran |
   D nutzt die Stationen 2, 3 und 5 wieder und braucht kein neues Tooling; Kandidat C ist als
   Kontrollaufgabe darin enthalten, B fiel wegen Bauaufwand weg. → `plans/lesen-vs-steuern.md`.
+- **2026-09-19** | Phase 5, Schritt 11: Billa (arXiv:2604.15557) und Tiwari et al. (arXiv:2609.18080)
+  im Volltext gelesen, ausgearbeiteter Plan geschrieben | Der Volltext korrigierte beide
+  abstract-basierten Notizen (Billa: die Probe ist über die Tiefe gesättigt, nicht schlecht;
+  Tiwari: COLM-Workshop statt unbegutachtet, und die 27 % gehören zur größeren Feature-Menge) und
+  lieferte Wirkungs- und Nebenwirkungsmaß fertig. Beitrag geschärft: Billas Effizienz ist
+  norm-konfundiert (ρ(‖d‖, KL) = +0,96), seine SAE-Vorhersage ausdrücklich ungetästet.
+  Vorab gemessen, um die Modellfrage zu entscheiden: `A_lin` auf GPT-2 small erreicht 0,29 bis 0,91
+  mit Maximum in L10 und ist bis L7 exakt null — Billas Emergenzmuster im Kleinen, kein Bodeneffekt.
+  → `details/forschungsstand.md`, `plans/lesen-vs-steuern.md`.
+- **2026-09-19** | Phase 5, Schritt 12: Anker reproduziert (`notebooks/07_reading_vs_steering.ipynb`)
+  — sechs kontrollierte Binärfamilien auf GPT-2 small, `A_lin` gegen Probe gegen Steuerwirkung pro
+  Schicht | Billas Emergenzmuster und seine Korrelationsbandbreite bestätigen sich im Kleinen, die
+  Probe sättigt über die Tiefe und taugt nicht zur Schichtwahl. → DETAILS „Lesen gegen Steuern —
+  Anker-Reproduktion".

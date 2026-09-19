@@ -46,8 +46,11 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
   Station SAE-Blick erledigt (2026-09-18) → DETAILS „SAE — Befund GPT-2 small"; **Schnuppertour damit
   abgeschlossen**. Forschungsstand als Landkarte gemappt (2026-09-18) →
   `details/forschungsstand.md`. **Entscheidung gefallen (Henry, 2026-09-19): Kandidat D, „Lesen
-  gegen Steuern"** → `plans/lesen-vs-steuern.md`. Aktuell: Phase 5, Vertiefung — erst der Volltext
-  der Anker-Arbeit, dann der ausgearbeitete Plan.
+  gegen Steuern"** → `plans/lesen-vs-steuern.md`. Beide Anker-Arbeiten am 2026-09-19 im Volltext
+  gelesen und der ausgearbeitete Plan geschrieben; `A_lin` auf GPT-2 small vorgemessen, um die
+  Modellwahl zu entscheiden. Anker reproduziert (2026-09-19) → DETAILS „Lesen gegen Steuern — Anker-Reproduktion",
+  `notebooks/07_reading_vs_steering.ipynb`. Aktuell: Phase 5, Schritt 13 — das eigene Experiment
+  (drei Richtungsquellen norm-matched, Vergleich bei gleicher Wirkung).
 
 ---
 # To-Dos & offene Entscheidungen
@@ -65,8 +68,9 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
          für die gewählte Sache.
       4. **Entscheidung** — erledigt 2026-09-19: Kandidat D, „Lesen gegen Steuern"
          → `plans/lesen-vs-steuern.md`.
-      5. **Vertiefung** ← *hier stehen wir* — die Papers dazu im Volltext, Plan, Anker reproduzieren,
-         eigenes Experiment.
+      5. **Vertiefung** ← *hier stehen wir* — Volltexte gelesen und Plan geschrieben (2026-09-19,
+         Schritte 11–12 → `plans/lesen-vs-steuern.md`), Anker reproduziert; offen ist das eigene
+         Experiment (Schritt 13).
       6. **Abhandlung** — Struktur abstimmen, Typst auf Englisch. Kein Vortrag mehr nötig.
       Schnuppern vor Lesen ist Claudes Vorschlag (bei Henry bleibt Gemachtes hängen, Gelesenes
       weniger), von Henry mit dem Dashboard angenommen.

@@ -1,60 +1,131 @@
 # Plan — Lesen gegen Steuern (Kandidat D, Phase 5)
 
 Entschieden von Henry am 2026-09-19. Umfang bewusst klein: Uni-Projekt, kein
-Masterarbeits-Maßstab. Dieser Plan ist der abgestimmte Grobschnitt; der ausgearbeitete Plan
-mit Datensätzen und Zellfolge entsteht als Fahrplan-Schritt 12, nach dem Volltext-Lesen.
+Masterarbeits-Maßstab. Anker im Volltext gelesen am 2026-09-19 (Fahrplan-Schritt 11), Plan
+danach ausgearbeitet (Schritt 12). Die Zellfolge steht unten in Schritt 4.
+
+## Fortschritt
+
+- **Schritte 1–2 erledigt (2026-09-19).** Volltexte gelesen; Daten stehen als sechs kontrollierte
+  Binärfamilien, ausgewählt durch Vorabmessung statt Vermutung.
+- **Anker reproduziert (Schritt 12 des Fahrplans).** `notebooks/07_reading_vs_steering.ipynb`
+  → DETAILS „Lesen gegen Steuern — Anker-Reproduktion". Damit sind `A_lin`, die Probe samt
+  Kontrollaufgabe und die Mittelwertdifferenz-Steuerung pro Schicht schon gemessen.
+- **Offen: Schritte 3–5** — Probe-Gewichtsvektor und SAE-Decoder-Zeile als zweite und dritte
+  Richtungsquelle, Substrat-Prüfung davor, alles norm-matched, Vergleich bei gleicher Wirkung
+  und gleicher Nebenwirkung, dazu die norm-matched Zufallsrichtung als Boden.
 
 ## Frage
 
-Eine Richtung, die ein Konzept gut *ausliest*, muss das Verhalten nicht gut *steuern*. Für drei
+Eine Richtung, die ein Konzept gut *ausliest*, muss das Verhalten nicht gut *steuern*. Für die
 Wege zu einer Richtung — Mittelwertdifferenz, lineare Probe, SAE-Feature — beide Achsen messen
-und gegeneinander auftragen: sagt Lesegüte die Steuerwirkung vorher?
+und gegeneinander auftragen: sagt Lesegüte die Steuerwirkung vorher, und welches Lesemaß tut es?
 
-## Warum das der Zuschnitt ist
+## Was der Volltext geändert hat
 
-- Zieht die Stationen 2 (Steering), 3 (Probing) und 5 (SAE) zusammen; alle drei Richtungsquellen
-  sind schon gebaut, das Dosis-Werkzeug läuft.
-- Kein neues Tooling, kein fremder Benchmark-Code, keine Versionspins fremder Repos.
-- Anker zum Reproduzieren: Billa (arXiv:2604.15557) — Probe über L0–L25 mit >93 % Genauigkeit,
-  Steering auf der lesestärksten Schicht nahezu wirkungslos.
-- Sitzt auf der Kernfrage der Landkarte: das Messinstrument bestimmt das Ergebnis mit.
-- Kandidat C (Kontrollaufgabe, Selectivity) ist als Schritt 3 enthalten, nicht verworfen.
+Billa, *Predicting Where Steering Vectors Succeed* (arXiv:2604.15557, Preprint, unbegutachtet).
+Fünf Punkte, die den Plan verschoben haben:
+
+1. **Unsere Notiz war falsch paraphrasiert.** Nicht „Steering wirkt auf der lesestärksten Schicht
+   nicht", sondern: die trainierte Probe erreicht in *jeder* Schicht L0–L25 über 93 % und ist
+   deshalb über die Tiefe gesättigt — sie hat keine Varianz, mit der sie die Schichtwahl leiten
+   könnte. Das Maß, das es kann, ist `A_lin`.
+2. **`A_lin` kommt als viertes, trainingsfreies Lesemaß dazu:** Unembedding auf den
+   Zwischenzustand, argmax gegen das Zieltoken. Ein Forward-Pass, keine Gewichte, kein Training.
+3. **Die Wirkung ist ein Forward-Pass-Maß,** nicht Generierung: ΔP auf dem Zieltoken bei
+   Einzeltoken-Antworten. Damit fällt unsere Laufzeitsorge (2,7 Token/s) für das Kernraster weg.
+4. **Metriken übernehmen statt erfinden:** Nebenwirkung = KL auf 50 fremden Prompts,
+   Effizienz = ΔP/KL. So zitierbar statt selbstgebaut.
+5. **Zwei Lücken, die das Paper selbst offenlässt** — sie sind unser Beitrag:
+   - Es nennt **nirgends die Dosis**, und berichtet ρ(‖d‖, KL) = +0,96. Die gemessene
+     Nebenwirkung ist also fast nur die Norm des addierten Vektors, und die Effizienz-Zahlen
+     vergleichen Konzepte, deren Mittelwertdifferenzen Normen von 2,4 bis 149 haben.
+   - Die **SAE-Vorhersage ist ausdrücklich ungetestet** („natural direction for future work"):
+     SAE-Features sollen in Regime 2 (nichtlinear kodiert) helfen und in Regime 3 (schon
+     output-aligned) wenig beitragen.
+
+## Was die zweite Arbeit beiträgt
+
+Tiwari et al., *Decodability is Not Causality* (arXiv:2609.18080, COLM-2026-Workshop). Sie
+ablieren nur und steuern nicht, haben keine Mittelwertdifferenz-Quelle, und vergleichen bei
+gleicher Set-Größe statt gleicher Wirkung — unser Zuschnitt ist damit kein Nachbau. Zwei Dinge
+übernehmen wir:
+
+- **Substrat-Prüfung als Abbruchkriterium vor jeder SAE-Aussage:** welcher Anteil der
+  Lese-Trennung überlebt die SAE-Rekonstruktion? Bei ihnen lagen im Qwen3-8B-Versuch 74 % des
+  Probe-Margins im Rekonstruktionsfehler — dort messen SAE-Eingriffe nur noch sich selbst.
+- **Gleich große Zufallskontrolle und die ganze Richtung als Obergrenze,** damit eine
+  Feature-Auswahl gegen beides steht statt gegen nichts.
+
+## Der Beitrag in einem Satz
+
+Billas Diagnose bei *gleicher Wirkung und gleicher Nebenwirkung* nachmessen statt bei der Dosis,
+die sich zufällig aus der Vektornorm ergibt — und dabei seine offene SAE-Vorhersage im Kleinen
+prüfen.
+
+## Annahmen: beide geklärt (2026-09-19)
+
+- **Modell GPT-2 small — bestätigt, gemessen.** Billas Skalierungstabelle (5/23 steuerbare
+  Konzepte bei 160M) ließ einen Bodeneffekt befürchten. `A_lin` selbst gemessen: geography
+  0,774 · sequence 0,909 · word transform 0,292, alle mit Maximum in L10, alle exakt 0 bis L7.
+  Zwei Familien weit über der go/no-go-Schwelle 0,1, eine im Mittelfeld — brauchbarer Spread.
+  Gemma-2-2B ist damit als Hauptmodell nicht nötig, höchstens als Gegenprobe an einer Schicht.
+- **SAEs für alle 12 Schichten — belegt.** `jbloom/GPT2-Small-SAEs-Reformatted` liefert
+  `blocks.0`–`blocks.11` je `hook_resid_pre`, 144 MiB pro Schicht, nur `HOOK` tauschen
+  (Station 5 nutzte L6). Haken: Feature-Indizes sind pro Schicht unabhängig trainiert, also
+  nicht über Schichten identifizierbar — die Feature-Suche läuft pro Schicht neu.
 
 ## Schritte
 
-1. **Volltext lesen** (Fahrplan-Schritt 11): Billa arXiv:2604.15557 als Anker. Kandidat für die
-   zweite Arbeit: Tiwari et al. arXiv:2609.18080 („Decodability is Not Causality") — beide sind
-   Preprints ohne Begutachtung, das gehört beim Zitieren gesagt. Prüfen, was der Volltext an den
-   abstract-basierten Notizen korrigiert (bei SteeringSafety waren es mehrere Punkte).
-2. **Daten heterogener machen.** Die 20 Minimalpaare sind der Entartungsfall: dort liegen Probe
-   und Mittelwertdifferenz bei cos ≥ 0,95 und können nicht auseinanderfallen. Gebraucht werden
-   Sätze, die im Konzept variieren und in Form, Länge und Thema *nicht* gekoppelt sind.
-3. **Richtungen erzeugen**, pro Konzept und Schicht: Mittelwertdifferenz · Probe (mit
-   Kontrollaufgabe und Selectivity daneben, nicht nur Trefferquote) · SAE-Feature (Decoder-Zeile,
-   Auswahl über den Encoder wie in Station 5).
-4. **Beide Achsen messen.** Lesegüte held-out; Steuerwirkung über den Dosis-Sweep, und zwar bei
-   *gleicher Wirkung und gleicher Nebenwirkung*, nicht bei gleicher Dosis — diese Unterscheidung
-   hat bei der SAE-Station das Ergebnis gedreht. Norm-matched Zufallsrichtung als Boden.
-5. **Auswerten:** Lesegüte gegen Steuerwirkung, pro Schicht und Richtungsquelle.
-
-## Offene Punkte, vor Schritt 3 zu klären
-
-> **ANNAHME:** Modell ist GPT-2 small, weil dort alle drei Richtungsquellen billig sind. Gemma-2-2B
-> höchstens als Gegenprobe an einer Schicht — offen, ob das überhaupt nötig ist.
-
-> **ANNAHME:** Fertige SAEs liegen für mehr als Schicht 6 vor. Nur für `blocks.6.hook_resid_pre`
-> ist das belegt (Station 5). Trifft es nicht zu, begrenzt das die Schichtachse für die
-> SAE-Quelle — dann werden nur die verfügbaren Schichten verglichen und das offen berichtet.
-
-- Welche und wie viele Konzepte? Zwei reichen, wenn sie unterschiedlich geartet sind; ein
-  bewusst oberflächliches Konzept als Gegenprobe ist die Überlegung aus Kandidat C.
-- Maß für die Lesegüte: Trefferquote, Margin oder AUROC — Station 3 hat gezeigt, dass Trefferquote
-  und Margin verschiedene Fragen beantworten und nur die Richtung aufs Steuern übergeht.
+1. **Daten.** Drei Konzeptfamilien mit Einzeltoken-Antwort nach Billas Bauart (seine Tabelle 7):
+   `geography` (»Paris is the capital of« → France), `sequence` (Tage, Monate, Alphabet),
+   `word transform` (Gegensatzpaare). Heterogen in Form und Thema, damit Probe und
+   Mittelwertdifferenz auseinanderfallen können — die 20 Minimalpaare aus Station 2 sind der
+   Entartungsfall (cos ≥ 0,95). Antworten werden auf Einzeltoken geprüft und Ausfälle berichtet.
+2. **Lesen (Achse A), pro Schicht und Konzept.** `A_lin` trainingsfrei · Probe-Accuracy
+   held-out mit Kontrollaufgabe und Selectivity daneben (Kandidat C steckt hier) ·
+   Separabilität der Mittelwertdifferenz als AUROC der Projektion · SAE-Encoder-Aktivierung
+   als AUROC. Vier Lesemaße, damit die Frage „welches Lesen sagt Steuern vorher" überhaupt
+   beantwortbar ist.
+3. **Richtungen (drei Quellen + Boden), pro Schicht und Konzept.** Davor die Substrat-Prüfung
+   nach Tiwari: hält die SAE-Rekonstruktion die Lese-Trennung des Konzepts? Wenn nicht, wird die
+   SAE-Quelle als nicht tragfähig berichtet statt gemessen.
+   Quellen: Mittelwertdifferenz ·
+   Probe-Gewichtsvektor · SAE-Decoder-Zeile (Feature über den Encoder gesucht wie in Station 5) ·
+   norm-matched Zufallsrichtung als Boden. Alle auf Einheitsnorm gebracht, die Dosis ist der
+   einzige Skalenparameter.
+4. **Steuern (Achse B).** Richtung auf den Residual Stream addieren, ΔP auf dem Zieltoken,
+   KL auf 50 fremden Prompts. Dosis-Sweep pro Kombination, daraus zwei Vergleiche:
+   Wirkung bei gleichem KL-Budget, und KL bei gleicher Wirkung (ΔP-Ziel fixiert). Billas
+   Effizienz ΔP/KL kommt als drittes Maß dazu, damit die Zahlen vergleichbar bleiben.
+   Raster: 12 Schichten × 3 Konzepte × 4 Quellen × ~6 Dosen, alles Forward-Pässe auf GPT-2
+   small — Minuten, nicht Stunden.
+5. **Auswerten.** Pro Schicht: die vier Lesemaße gegen die Steuerwirkung. Pro Quelle: Kosten
+   bei gleicher Wirkung. Kernfrage an die SAE-Vorhersage: liegt GPT-2 small in L8–L10 in
+   Regime 3, und ist das SAE-Feature dort wie vorhergesagt kein Gewinn?
 
 ## Erwartung
 
-Die Mittelwertdifferenz steuert am verlässlichsten, die Probe liest am besten, und das SAE-Feature
-verliert auf beiden Achsen — Letzteres haben wir in Station 5 schon einmal gesehen. Wenn die
-Lesegüte über die Schichten ein anderes Maximum hat als die Steuerwirkung, ist der Kern von Billa
-im Kleinen reproduziert. Interessanter wäre der Fall, dass es *kein* Auseinanderfallen gibt: dann
-liegt es an den Daten, und das wäre ein Befund über die Methode, nicht über das Modell.
+`A_lin` sagt die Steuerwirkung über die Schichten vorher, die Probe-Accuracy nicht — sie
+sättigt, wie bei Billa. Die Mittelwertdifferenz steuert am verlässlichsten; das SAE-Feature
+verliert bei gleicher Wirkung, wie in Station 5 schon gesehen, und das wäre eine Bestätigung
+seiner Regime-3-Vorhersage. Am interessantesten wäre der Fall, dass die Effizienz-Reihenfolge
+der Quellen kippt, sobald man norm-matched statt bei Rohnorm vergleicht — dann steckt sein
+Effizienzmaß den Befund selbst hinein.
+
+## Zuschnitt entschieden (Henry, 2026-09-19)
+
+- **Vier Familien tragen das Ergebnis:** `temperature`, `size`, `pronoun`, `daynight`. `parity` und
+  `continent` laufen als Bodenfälle mit — sie kosten nichts, weil alles Forward-Pässe sind —
+  erscheinen im Text aber nur als Kontrolle, nicht als eigene Fälle. Grund: vier Familien × drei
+  Richtungsquellen ist bereits ein volles Kapitel, und ohne Bodenfall ist die go/no-go-Schwelle
+  nicht prüfbar.
+- **Billas nichtlinearer Teil bleibt draußen.** Kein `A_mlp`, kein trainiertes MLP pro Schicht —
+  die Grenze „kein Training" bleibt damit sauber und der Umfang klein.
+  **Ersatz statt Lücke:** die Regime-Einordnung läuft über die Probe, die ohnehin pro Schicht
+  gemessen wird. Liest eine Probe das Konzept, wo `A_lin` es nicht liest, ist es vorhanden aber
+  nicht output-aligned — operativ genau Billas Regime 2 (`continent` ist dieser Fall: Probe 1,00
+  gegen `A_lin` 0,04). Die Einschränkung wird mitgeschrieben: eine *scheiternde* Probe belegt
+  keine Abwesenheit, also bleibt die Grenze zwischen „gar nicht da" und „nur nichtlinear da"
+  unscharf. Damit ist von seiner SAE-Vorhersage die Regime-3-Hälfte prüfbar (`A_lin` hoch → das
+  SAE-Feature soll wenig beitragen), die Regime-2-Hälfte nur unter diesem Vorbehalt.
