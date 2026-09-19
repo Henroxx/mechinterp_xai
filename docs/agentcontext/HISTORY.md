@@ -118,3 +118,11 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
   Tour sind drei Design-Entscheidungen statt Befunde ausgewiesen (heterogene Daten aus Probing,
   Vergleich bei gleicher Wirkung aus SAE, Dosisregel aus Steering); Patching steht bewusst ohne
   Beitrag zum Hauptexperiment da.
+- **2026-09-19** | Phase 7: **Abschnitt 2 „Background" und Abschnitt 6 „Conclusion" geschrieben**,
+  Abschnitt 7 „Working method and use of AI" auf Henrys Ansage gestrichen und durch einen Kasten
+  „Use of AI" mit Pfadtabelle unter dem Abstract ersetzt | Die erste Fassung der Residual-Stream-
+  Grafik war in Typst gezeichnet und sah mechanisch aus; neu als SVG in der Bildsprache des
+  Lerndokuments (`report/figures/residual_stream.svg`). Abschnitt 6 war zuerst fünf Methodenpunkte
+  und damit fast vollständig redundant zum Fließtext — jetzt sechs Sätze Ergebnisse plus die zwei
+  Fragen, die aus der Arbeit bleiben. Zwei geprüfte Patching-Referenzen ergänzt (Zhang & Nanda,
+  Heimersheim & Nanda). Repo-Freigabe geprüft, Ergebnis in PROJECT.

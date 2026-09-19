@@ -11,8 +11,10 @@ Struktur und Eckdaten entschieden von Henry am 2026-09-19. Schreiben beginnt ers
   Leitprinzip ist die Zeit des Dozenten: **jeder Abschnitt beginnt mit einem kurzen Absatz „was und
   warum", danach erst das Detail** — so kann er überspringen, was er nicht braucht.
 - **Erste Person Singular für Entscheidungen,** unpersönlich für Messungen.
-- **KI-Nutzung: ein Satz am Anfang plus der kurze Abschnitt 7.** Keine Zuschreibung bei jedem
-  einzelnen Schritt — das wäre Lärm, nicht Ehrlichkeit. Der Agent-Kontext im Repo bleibt sichtbar.
+- **KI-Nutzung: ein Kasten „Use of AI" unter dem Abstract, sonst nichts** (geändert von Henry am
+  2026-09-19: der ursprünglich geplante Abschnitt 7 war „viel zu viel Text"). Drei Sätze außerhalb
+  des nummerierten Textes — womit gearbeitet wurde, dass die Entscheidungen seine sind, und dass
+  Regeldatei und Agent-Kontext im Repo vollständig einsehbar sind. Keine Zuschreibung pro Schritt.
 - **Selbstzitate zeigen auf einen Git-Tag** (`v1.0-submission`), nie auf `main`. Grund: Links auf
   einen Branch brechen beim nächsten Push.
 - **Grafiken:** Notebook-Figuren als Vektor per einer `savefig`-Zeile in den Figurenzellen von 07
@@ -35,8 +37,7 @@ steering: what a probe cannot tell you about a steering vector*.
 | 3 | Exploration: one station per method | 1½ | **Tabelle:** Station → Notebook → Frage → Befund → Lehre. Drei Sätze, was ins Hauptexperiment floss; Modellentscheidung. |
 | 4 | Choosing the question | 1 | Landkarte in einem Absatz, Kandidat D und warum, Anker (Billa), zweite Arbeit (Tiwari), die zwei Lücken. |
 | 5 | Reading versus steering | 3½–4 | Design; Anker-Reproduktion (07-Grafik); Richtungsquellen bei gleicher Wirkung (08-Grafik, Dosis-Tabelle); Diskussion; Grenzen. **Hauptteil.** |
-| 6 | What I take from this | ½ | Vier, fünf methodische Punkte. |
-| 7 | Working method and use of AI | ½ | Regeln der Zusammenarbeit, wo der Agent-Kontext liegt. Kurz. |
+| 6 | Conclusion | ⅓ | Ergebnisse in sechs Sätzen, dann die zwei Fragen an jedes Steering-Ergebnis. |
 | — | References, Anhang | — | Anhang = Tabelle „Pfad im Repo → was liegt dort". |
 
 ## Kernaussagen (bestätigt 2026-09-19 beim Schreiben von Abschnitt 5 — alle fünf hielten,
@@ -69,7 +70,7 @@ Materials voraus, die der Abschnitt erst herstellt, und waren bei Abschnitt 5 un
 3. **Am Ende zurück zu Abschnitt 5:** Verständnis nachschärfen und alles insgesamt glätten.
    Der Hauptteil wird zuerst geschrieben und zuletzt verstanden.
 
-**Reihenfolge:** 5 → 4 → 3 → 2 → 6 → 7 → 1 → Abstract. Alles andere verweist auf Abschnitt 5,
+**Reihenfolge:** 5 → 4 → 3 → 2 → 6 → 1 → Abstract. Alles andere verweist auf Abschnitt 5,
 nicht umgekehrt: die Introduction muss wissen, was herauskam, und die Kernaussagen sind aus dem
 Hauptteil destilliert.
 
@@ -83,4 +84,9 @@ Dashboard, und eine zweite Checkliste hier wäre die Stelle, die als Erstes vera
 ## Offen
 
 - Endgültige Formulierung des Untertitels.
+- Seitenbudget: Hauptteil liegt nach Abschnitt 6 bei rund 10,5 statt „unter 10". Entschieden wird
+  nach Schritt 21, wenn der Umbruch echt ist; Kürzungskandidaten in dieser Reihenfolge: Tour-Tabelle
+  in 3, die vier „further findings" in 5.4, die Spalte „What it assumes" in Tabelle 1.
+- Literaturverzeichnis: Typsts IEEE-Stil wirft `note`-Felder weg, damit fehlen TransformerLens 3.5.1,
+  der Fundort von Blooms SAE-Set und die LessWrong-Herkunft des Logit-Lens-Posts (→ Schritt 22).
 - Welche Lerndokument-Grafiken wiederverwendet werden (entscheidet sich in Abschnitt 2).

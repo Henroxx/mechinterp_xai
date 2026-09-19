@@ -54,10 +54,14 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
   `notebooks/08_direction_sources.ipynb`. **Phase 5 damit abgeschlossen.** Struktur und Eckdaten der
   Abhandlung entschieden (2026-09-19) → `plans/abhandlung.md`. Aktuell: **Phase 7, Schreiben** —
   Vorarbeit erledigt (`report/main.typ` englisch und neu gegliedert, `refs.bib` angelegt, Figuren
-  als Vektor exportiert) und **die Abschnitte 5, 4 und 3 geschrieben** — 5 „Reading versus steering"
+  als Vektor exportiert) und **die Abschnitte 5, 4, 3, 2 und 6 geschrieben** — 5 „Reading versus steering"
   (~4,6 Seiten, zwei Figuren, drei Tabellen), 4 „Choosing the question" (~1 Seite, Landkarte mit
   Suchprotokoll, Anker, die zwei Lücken), 3 „Exploration" (~1,4 Seiten, die Tour als eine Tabelle
-  plus Modellwahl). Nächster Abschnitt: 2 „Background", der einzige mit noch offenem Grafik-Bedarf.
+  plus Modellwahl), 2 „Background" (~1,6 Seiten, eigene SVG-Grafik des Residual Streams, LRH, die
+  vier Methoden als Tabelle), 6 „Conclusion" (⅓ Seite Ergebnisse). Der geplante Abschnitt 7 ist
+  gestrichen, die KI-Nutzung steht als Kasten plus Pfadtabelle unter dem Abstract. **Offen: 1
+  „Introduction", dann das Abstract, dann die Gesamtlesung.** Hauptteil projiziert auf ~10,5 Seiten
+  gegen ein Budget von „unter 10" → Kürzungskandidaten stehen in `plans/abhandlung.md`.
   Fortschritt pro Abschnitt → `docs/fahrplan/index.html`, Phase 7.
 
 ---
@@ -120,14 +124,23 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
 - [x] **Zuschnitt der Abhandlung entschieden** (Henry, 2026-09-19) → `plans/abhandlung.md`:
       Technical Report auf Englisch, unter 10 Seiten Hauptteil, jeder Abschnitt beginnt mit „was und
       warum" vor dem Detail. Grund für die Skip-Ebene: die Zeit des Dozenten wertschätzen, er soll
-      überspringen können, was er nicht braucht. Erste Person für Entscheidungen; KI-Nutzung offen,
-      aber als *ein* Satz plus kurzer Abschnitt statt Zuschreibung pro Schritt. Selbstzitate zeigen
+      überspringen können, was er nicht braucht. Erste Person für Entscheidungen; KI-Nutzung als
+      **ein Kasten „Use of AI" unter dem Abstract plus Pfadtabelle** (Henry, 2026-09-19: der
+      geplante Abschnitt 7 war „viel zu viel Text", der Satz in der Introduction entfällt damit
+      auch), keine Zuschreibung pro Schritt. Selbstzitate zeigen
       auf den Tag `v1.0-submission`, nicht auf `main` — Branch-Links brechen beim nächsten Push.
-      Schreibreihenfolge 5 → 4 → 3 → 2 → 6 → 7 → 1 → Abstract. **Ablauf pro Abschnitt geändert
+      Schreibreihenfolge 5 → 4 → 3 → 2 → 6 → 1 → Abstract. **Ablauf pro Abschnitt geändert
       (Henry, 2026-09-19):** erst schreiben, dann verstehen — die ursprünglich geplanten fünf
       Lückenfragen vorab setzten Kenntnis voraus, die der Abschnitt erst herstellt, und waren bei
       Abschnitt 5 unbeantwortbar. Henry liest den fertigen Abschnitt und fragt; am Ende geht es für
       die Verständnisrunde zu Abschnitt 5 zurück.
+- [x] **Repo wird öffentlich** (Henry, 2026-09-19). Vorher geprüft: keine Secrets, keine
+      Mailadressen in Dateiinhalten, keine Mailzitate in der History, `.claude/` ignoriert.
+      Zwei Funde, beide von Henry als unkritisch entschieden: das Slides-Kondensat
+      `context/xai_slides.md` liegt noch in der History (Commit `261000b`) — die Folien des
+      Dozenten sind selbst öffentlich auf GitHub —, und vier Commits tragen `hbrose@neuland.ai`
+      statt der GitHub-Noreply-Adresse. Kein History-Rewrite. Offen bleibt nur: der Tag
+      `v1.0-submission`, auf den die Selbstzitate zeigen, existiert noch nicht.
 - [ ] **Vertiefung** (Henrys Verständnis, für die Verteidigung):
       Grokking-Beispiel (Nanda, Addition mod 113) durcharbeiten; Linear Representation
       Hypothesis sauber durchsprechen (konnte Henry noch nicht frei erklären; Erklärung
