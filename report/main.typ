@@ -115,9 +115,100 @@
 
 // TODO
 
-= Exploration: one station per method
+= Exploration: one station per method <sec:tour>
 
-// TODO
+#lead[
+  *What and why.* Before choosing a question I ran every method once and small --- one notebook per
+  station: patching, steering, probing, sparse autoencoders, plus one pass over a second model. The
+  point was not to find anything. These are single prompts and sample sizes around twenty,
+  orientation rather than statistics. The point was to learn what each instrument measures and
+  where it misleads. @tab:tour is the whole tour; the column that matters is the last one. Three of
+  those lessons became the design of @sec:main, and the final paragraph says why the experiment
+  then ran on the smaller of the two models.
+]
+
+#figure(
+  [
+  // Ragged right inside the table: at this column width justification opens rivers.
+  #set text(size: 9pt)
+  #set par(justify: false)
+  #table(
+    columns: (2.2cm, 1fr, 1.5fr, 1.25fr),
+    align: (left, left, left, left),
+    inset: (x: 4pt, y: 3.5pt),
+    stroke: none,
+    table.hline(),
+    table.header([*Station*], [*What I asked*], [*What came out*], [*What it taught*]),
+    table.hline(stroke: 0.5pt),
+
+    [Orientation \ `01_explore`],
+    [Does the plumbing behave as documented?],
+    [Hook names verified against the library version; BOS carries a residual norm near 3100 against
+     250 elsewhere; the logit lens is unreadable before layer 6.],
+    [Drop position 0 from every mean. Lens probabilities show a direction, not a confidence.],
+
+    [Patching \ `02_patching`],
+    [Which heads carry the induction behaviour?],
+    [Ablating the five canonical heads destroys 25% of the gap; patching them back restores 60%. No
+     single head restores more than 0.13, and the one with the highest attention score restores
+     0.05.],
+    [Ablation measures necessity, patching sufficiency, and they disagree. A rank by structure is
+     not a rank by effect.],
+
+    [Steering \ `03_steering`],
+    [What does a difference-of-means direction do, and at what price?],
+    [An S-curve that saturates before the loss does: the metric plateau sits where the loss is
+     already rising. A random vector of the same size leaves the metric flat and costs most of the
+     same loss.],
+    [State the dose relative to the layer's residual norm. A random control checks the size of an
+     intervention, not the specificity of its direction.],
+
+    [Probing \ `04_probing`],
+    [Is the probe direction different from the difference of means?],
+    [On 20 minimal pairs, no: #box[cos($hat(w)$, $d$) $>= 0.95$] at every regularisation strength.
+     The control task reaches 19.4 of 40 held out at training accuracy 1.00.],
+    [Minimal pairs cannot separate reading from steering --- they leave the probe nothing else to
+     pick up. That test needs heterogeneous data.],
+
+    [SAE \ `06_sae`],
+    [Is a sparse feature a cleaner lever than a difference of means?],
+    [At equal dose it looks weaker; read at *equal effect*, both interpolated to +2.00 logits, it is
+     a tie of 0.069 nats against 0.077. The opposite feature costs five times as much.],
+    [Compare at equal effect, not at equal dose. An SAE feature is not a better lever, only a
+     differently derived one.],
+
+    [Second model \ `05_gemma`],
+    [Does this depend on the quirks of one small model?],
+    [Gemma-2-2B matches its reference implementation to max #box[$|Delta| = 0.375$] at a logit scale
+     of 28.6; its BOS sink is in every layer, and the cache costs about 4 MB per token.],
+    [The BOS sink and the layer-relative dose are not GPT-2 artifacts. A second model costs memory,
+     not correctness.],
+    table.hline(),
+  )],
+  caption: [The exploration tour, one row per notebook in `notebooks/`. The numbers are orientation
+    at #box[$n approx 20$], not statistics; what carried into @sec:main is the last column.],
+) <tab:tour>
+
+*What carried over.* Three results of the tour became design decisions rather than findings. The
+probing station failed in the informative direction: the probe and the difference of means were the
+same direction at every setting, because sentence pairs that differ in one word leave a probe
+nothing else to separate on --- which is why the families in @sec:main vary the template instead of
+a single word. The SAE station produced the method of comparison: reading two directions at equal
+effect instead of at equal dose turned a clear-looking loss into a tie, and that reading is what
+all four sources later get. The steering station produced the dose rule and the reason it is not
+optional, since a random vector of the same norm buys most of the same damage while moving nothing.
+The patching station produced no ingredient, only the habit of not trusting a ranking that was
+never measured causally.
+
+*Which model.* The tour covered Gemma-2-2B, and the experiment still runs on GPT-2 small. That was
+decided by a measurement rather than by preference. The anchor's own scaling table reports 5 of 23
+concepts steerable at 160M parameters, which is a floor effect large enough to make the whole
+comparison vacuous, so before committing I measured #Alin on three candidate families: 0.77, 0.91
+and 0.29, each peaking at layer 10 and each exactly zero up to layer 7. Two families well above the
+anchor's go/no-go threshold of 0.1 and one in between is enough spread to work with. GPT-2
+small also has published sparse autoencoders for all twelve of its layers @bloom2024, and the sweep
+in @sec:main uses one of them per layer. The honest version: this is a budget decision, taken
+after a pre-measurement instead of before one.
 
 = Choosing the question <sec:question>
 
