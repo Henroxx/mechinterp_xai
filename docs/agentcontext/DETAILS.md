@@ -250,7 +250,12 @@ Orientierung, keine Statistik. Zahlen dort, hier die Essenz.
 
 Quelle: `notebooks/06_sae.ipynb`, Plan `plans/done/schnuppertour-sae.md`. SAE aus
 `jbloom/GPT2-Small-SAEs-Reformatted`, Ordner `blocks.6.hook_resid_pre` (d_sae 24 576, 32×,
-OpenWebText, Kontext 128), geladen mit `huggingface_hub` + `safetensors`, ohne SAELens. Setup,
+OpenWebText, Kontext 128), geladen mit `huggingface_hub` + `safetensors`, ohne SAELens.
+Das Release deckt **alle zwölf Schichten** ab (`blocks.0`–`blocks.11` je `hook_resid_pre`, dazu
+`blocks.11.hook_resid_post`), 144 MiB pro Schicht, je mit `cfg.json` und `sparsity.safetensors`;
+ein Schichtwechsel ist nur ein anderer `HOOK`-String (geprüft 2026-09-19 gegen die HF-API).
+Haken: die Feature-Indizes sind pro Schicht unabhängig trainiert, also nicht über Schichten
+hinweg identifizierbar — eine Feature-Suche läuft pro Schicht neu. Setup,
 Metrik, Dosis und Zufallskontrolle unverändert aus Station 2 (Norm 83, Baseline +1,89 exakt
 reproduziert).
 
@@ -333,6 +338,19 @@ Prompts groß. Genau deshalb braucht der eigene Teil heterogene Prompts.
   aus (vier Tensoren laden, Encoder ist eine Zeile Code → „SAE — Befund GPT-2 small"). Nötig
   würde es erst, um den Encoder über große Textmengen laufen zu lassen (welche Features feuern
   wo im Korpus).
+- **Notebooks programmatisch bauen:** in der `.ipynb` muss jede Zeile im `source`-Array ihr
+  `\n` behalten. Ohne das klebt die ganze Zelle zu *einer* Zeile zusammen, und weil Zellen hier
+  mit einem Kommentar beginnen, ist der komplette Code auskommentiert — `nbconvert` läuft dann
+  fehlerfrei in zwei Sekunden durch und schreibt null Outputs. Erst dieses Symptom verrät es.
+  Weiter: `transformer_lens.__version__` existiert nicht, Versionen über
+  `importlib.metadata.version("transformer-lens")`.
+- **Messzahlen neben dem Notebook:** `results/<nb>.json` (seit 2026-09-19). Grund: die Zahlen
+  für die Abhandlung sollen ohne Neu-Durchlauf greifbar sein, und ein Notebook-Output ist als
+  Quelle unhandlich.
+- **Paper-Volltexte:** `pdftotext -layout` liegt über Homebrew vor (`~/homebrew/bin`) und ist
+  für das Lesen deutlich billiger als das PDF selbst — 19 Seiten wurden zu 9 300 Wörtern Text,
+  aus denen sich Abschnitte gezielt schneiden lassen. PDFs nach
+  `~/Documents/Master/4. Semester/XAI/`.
 - **TransformerLens** als Kern-Library (Hooks auf alle internen Aktivierungen; festes
   Modell-Set). Alternative für Modelle außerhalb der Liste: nnsight.
 - Projekt-Repo: `~/dev/private_repos/mechinterp_xai`. Kursunterlagen und Slides-Quelle
