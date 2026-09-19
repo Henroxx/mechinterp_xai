@@ -317,6 +317,9 @@ Prompts.
 - **Dosis-Konfundierung im eigenen Material sichtbar:** ‖d‖ reicht von 0,5 bis 58,4 über Familien
   und Schichten, die KL-Nebenwirkung folgt dem. Billas Effizienz ΔP/KL vergleicht damit Konzepte
   bei der Dosis, die ihre Mittelwertdifferenz zufällig hat — das ist die Lücke für Schritt 13.
+  **Achtung:** die Prosa in Notebook 07 nennt hier „2.0 to 41.6", was zu keiner Familie und keiner
+  Schicht im Ergebnisfile passt. Maßgeblich ist 0,5 bis 58,4 aus `results/07_anchor.json`; die
+  Notebook-Zahl ist mit abgegeben worden (Henry, 2026-09-19: keine Änderungen mehr).
 
 **Grenzen, selbst benannt.** Die Kreuzfamilien-Korrelation ist +1,00 auf sechs Punkten, das ist
 eine Illustration und kein Beleg. Die Probe-Zahlen sind von den Daten geschmeichelt: Familien mit
@@ -436,6 +439,14 @@ keine Verteilung.
   aus (vier Tensoren laden, Encoder ist eine Zeile Code → „SAE — Befund GPT-2 small"). Nötig
   würde es erst, um den Encoder über große Textmengen laufen zu lassen (welche Features feuern
   wo im Korpus).
+- **Zwei GitHub-Accounts auf dieser Maschine:** `gh` ist aktiv auf `henry-neuland` (Arbeit),
+  das Repo gehört `Henroxx`. Git pusht über eigene Credentials und merkt nichts davon, aber
+  `gh repo edit` antwortet mit **HTTP 404** statt mit einer Rechte-Meldung. Vor Repo-Metadaten
+  also `gh auth switch --user Henroxx`, danach zurück auf `henry-neuland`.
+- **`docs/fahrplan/index.html` ist ein JS-Datenblock, kein Text.** Ein gerades `"` in einer
+  deutschen Notiz beendet den String und legt das ganze Dashboard lahm — ohne sichtbaren Fehler,
+  die Seite bleibt einfach leer. Deutsche Anführungszeichen benutzen und nach jeder Änderung die
+  `<script>`-Blöcke mit `node --check` prüfen.
 - **Notebooks programmatisch bauen:** in der `.ipynb` muss jede Zeile im `source`-Array ihr
   `\n` behalten. Ohne das klebt die ganze Zelle zu *einer* Zeile zusammen, und weil Zellen hier
   mit einem Kommentar beginnen, ist der komplette Code auskommentiert — `nbconvert` läuft dann
