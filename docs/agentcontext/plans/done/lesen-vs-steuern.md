@@ -11,9 +11,12 @@ danach ausgearbeitet (Schritt 12). Die Zellfolge steht unten in Schritt 4.
 - **Anker reproduziert (Schritt 12 des Fahrplans).** `notebooks/07_reading_vs_steering.ipynb`
   → DETAILS „Lesen gegen Steuern — Anker-Reproduktion". Damit sind `A_lin`, die Probe samt
   Kontrollaufgabe und die Mittelwertdifferenz-Steuerung pro Schicht schon gemessen.
-- **Offen: Schritte 3–5** — Probe-Gewichtsvektor und SAE-Decoder-Zeile als zweite und dritte
-  Richtungsquelle, Substrat-Prüfung davor, alles norm-matched, Vergleich bei gleicher Wirkung
-  und gleicher Nebenwirkung, dazu die norm-matched Zufallsrichtung als Boden.
+- **Schritte 3–5 erledigt (2026-09-19).** `notebooks/08_direction_sources.ipynb` → DETAILS
+  „Lesen gegen Steuern — Richtungsquellen bei gleicher Wirkung". **Der Block ist damit durch.**
+  Abweichung vom Plan, von Henry entschieden: die Substrat-Prüfung läuft als beschreibender Befund
+  statt als Abbruchkriterium — sie stammt von einer Ablations-Arbeit, wir addieren aber auf den
+  echten Residual Stream und lesen die Wirkung am Modell ab, also validiert sich die Messung
+  selbst. Der Fehleranteil entscheidet über die *Deutung*, nicht über die Gültigkeit der Zahl.
 
 ## Frage
 

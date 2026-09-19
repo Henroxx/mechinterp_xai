@@ -280,6 +280,8 @@ reproduziert).
   und die nicht-antiparallelen Features. **Falsch** lag die Erwartung, die sparse „monosemantische"
   Richtung sei der sauberere Eingriff — bei gleicher Wirkung ist sie einmal gleichauf und einmal
   klar teurer. Ein SAE-Feature ist hier kein besserer Hebel, nur ein anders hergeleiteter.
+  **Reichweite korrigiert (2026-09-19):** das galt für L6. In L10 gewinnt die SAE-Richtung bei
+  `temperature` → Sektion „Richtungsquellen bei gleicher Wirkung".
 - **Grenzen:** n = 20 Paare / 10 Prompts / 10 Sätze, ein Layer, ein SAE, eine Wortlisten-Metrik —
   Orientierung, keine Statistik. Der Gleichstand 0,069 vs. 0,077 nats liegt innerhalb dessen, was
   dieses n auflösen kann.
@@ -319,6 +321,74 @@ eine Illustration und kein Beleg. Die Probe-Zahlen sind von den Daten geschmeich
 nur einer Satzvorlage (`continent`, `parity`, `daynight`) lassen die Probe das Subjektwort lesen,
 die Drei-Vorlagen-Familien liegen niedriger (`temperature` 0,84). Held-out-Mengen sind 4 bis 18
 Prompts groß. Genau deshalb braucht der eigene Teil heterogene Prompts.
+
+## Lesen gegen Steuern — Richtungsquellen bei gleicher Wirkung (Stand 2026-09-19)
+
+`notebooks/08_direction_sources.ipynb`, läuft top-to-bottom in ~3:20, Seed 0, Zahlen in
+`results/08_direction_sources.json`. Baut auf 07 auf: gleiche sechs Familien, gleicher Seed,
+gleiche 50 fremden Prompts.
+
+**Aufbau.** Vier Richtungsquellen auf Einheitsnorm — Mittelwertdifferenz, Probe-Gewichtsvektor,
+SAE-Decoder-Zeile, Zufallsrichtung als Boden (bestes aus fünf Ziehungen, nicht eine). Dosis
+**relativ zur mittleren Residual-Norm der Schicht**, weil die über die Tiefe um Faktor 8,5 wächst
+(L0 76 → L10 644 → L11 489) und eine absolute Dosis damit in jeder Schicht etwas anderes bedeutet.
+Erst ein 12-Schichten-Scan bei fester Dosis 0,1, dann ein Sweep über zehn Dosen (0,01–0,4) auf L6
+(Mittelschicht-Heuristik) und L10 (tiefste Schicht mit SAE), ausgelesen bei **KL\* = 0,1 nat** und
+**ΔP\* = +0,05**, beide vorab fixiert. Richtungen werden auf allen Daten gefittet, Lesegüte auf
+einem Holdout-Viertel gemessen, alle gefitteten Maße teilen einen Split pro Familie.
+
+**Substrat-Prüfung ist ein Befund, kein Abbruchkriterium** (entschieden 2026-09-19, Abweichung vom
+ursprünglichen Plan). Tiwari benutzt sie als Gate, weil *abliert* wird — wer Komponenten innerhalb
+der SAE-Basis entfernt, misst bei hohem Rekonstruktionsfehler nur noch das SAE. Wir addieren auf den
+echten Residual Stream und lesen die Wirkung am Modell ab, also validiert sich die Messung selbst.
+Der Fehleranteil entscheidet, ob „das SAE hat das Konzept gefunden" ein fairer Satz ist — eine Frage
+der Deutung, nicht der Gültigkeit der Zahl.
+
+**Hook-Zuordnung (geprüft).** `blocks.{l+1}.hook_resid_pre` ist bitgleich `blocks.{l}.hook_resid_post`,
+also ist der Repo-Ordner l+1 das richtige SAE für Schicht l — verfügbar für L0–L10. **L11 hat kein
+SAE, und dort liegt bei allen vier tragenden Familien die `A_lin`-Spitze.**
+
+**Befunde.**
+- **Die Dosis-Konfundierung ist beziffert.** Die implizite Dosis des Ankers (‖d‖ geteilt durch die
+  Residual-Norm) reicht über die Tiefe von 0,004 bis 0,119 und korreliert mit `A_lin` bei +0,84
+  (`temperature`), +0,76 (`size`), +0,91 (`pronoun`), +0,76 (`daynight`). Seine Dosis steigt also
+  dort, wo sein Prädiktor steigt. Bei fester Dosis fällt ρ(`A_lin`, ΔP) innerhalb der Familien von
+  +0,80 / +0,57 / +0,48 / +0,90 (07) auf **+0,56 / −0,10 / +0,54 / +0,24**.
+- **Der Prädiktor überlebt den faireren Vergleich trotzdem.** Bei gleichem KL-Budget lautet die
+  Familienreihenfolge `pronoun` > `temperature` > `size` > `daynight` gegen `A_lin`s Vorhersage
+  `pronoun` > `temperature` > `daynight` > `size` — eine benachbarte Vertauschung. Bei *fester
+  Dosis* dagegen kippt sie komplett (`size` von Platz vier auf eins). Der scheinbare Umsturz ist
+  ein Dosis-Artefakt, die Abschwächung der Korrelation ist es nicht.
+- **Dieselbe Richtung, doppelte Wirkung.** `pronoun` erreicht mit der Mittelwertdifferenz ΔP +0,495
+  bei Dosis 0,2, in 07 waren es +0,246. Die ungenannte Dosis des Ankers ist nicht nur unberichtet,
+  sie ist auch nicht die beste.
+- **Erklärte Varianz ist blind für das Konzept.** Die SAE-Rekonstruktion erklärt 93–99 % der
+  Varianz, während **35–99 % der Konzept-Trennung im Rekonstruktionsfehler** liegen (Tiwaris 74 %
+  reproduzieren sich mittig, auf anderem Modell, anderem SAE, anderen Konzepten). Der Anteil sinkt
+  mit der Tiefe. Ersetzt man eine Schicht durch ihre eigene Rekonstruktion, verliert das Modell die
+  Antwort: `temperature` 0,68 → 0,35, `size` 0,25 → 0,07, `daynight` 0,31 → 0,09 (`pronoun` hält).
+- **Die Herkunft der Richtung zählt weniger als Schicht und Dosis.** In L10 liegen die drei
+  prinzipiellen Quellen bei `pronoun` und `temperature` innerhalb von 0,03 beieinander. Die großen
+  Unterschiede im Raster sind zwischen Schichten, nicht zwischen Herleitungen.
+- **Der Zufallsboden ist nicht null und gewinnt manchmal.** Bei `daynight` in L6 schlägt er bei
+  gleicher Nebenwirkung alle drei Quellen (+0,051 gegen +0,021 / +0,005 / −0,038). `parity` bleibt
+  bei allen vier Quellen, zwölf Schichten und zehn Dosen exakt 0,000 — der Bodenfall trägt.
+- **Billas ungetestete SAE-Vorhersage gilt nicht durchgängig.** Regime 3 (hohes `A_lin`) sagt
+  „SAE-Feature bringt wenig": bei `pronoun` stimmt das (+0,285 gegen +0,306), bei `temperature` in
+  L10 gewinnt die SAE-Richtung klar (+0,175 gegen +0,130).
+- **Die Feature-Suche scheitert in der Mittelschicht.** Mit vorab fixiertem Kriterium findet sie in
+  L6 bei vier von sechs Familien nichts (Notlösungen AUROC 0,38–0,79), in L10 dagegen 0,88–1,00 für
+  vier Familien. Die SAE-Richtung ist in L6 fast orthogonal zur Mittelwertdifferenz (cos 0,04–0,09).
+- **Gefittete Lesemaße lesen in L0 das Token, nicht das Konzept:** AUROC 1,00 bei `size`, `parity`,
+  `continent` in der Schicht, die nur Embedding plus Position ist. Bei `parity` steht dem ein
+  `A_lin` von exakt 0 in allen Schichten gegenüber.
+
+**Grenzen, selbst benannt.** Richtungen werden auf denselben Prompts gefittet, auf denen dann
+gesteuert wird (wie im Anker, kein Holdout-Steering-Set). 24–72 Beispiele gegen 768 Dimensionen,
+Holdout-Viertel entsprechend klein. Kein `A_mlp` (Entscheidung), also ruht „vorhanden, aber nicht
+linear lesbar" auf der Probe, und eine scheiternde Probe belegt keine Abwesenheit. KL auf 50 fremden
+Prompts sagt nichts über Generierungsqualität. Der Zufallsboden ist das Beste aus fünf Ziehungen,
+keine Verteilung.
 
 ## Umgebung & Tooling (Stand 2026-09-18)
 
@@ -368,7 +438,9 @@ Prompts groß. Genau deshalb braucht der eigene Teil heterogene Prompts.
   ~2,7 Token/s bei Gemma. Cache-Kosten und Speicherfallen → „Gemma-2-2B — Befunde aus der Tour".
 - **Notebooks kann Claude selbst ausführen**, statt auf Henrys VS-Code-Lauf zu warten:
   `uv run jupyter nbconvert --to notebook --execute --inplace <nb>` schreibt Outputs und Plots
-  direkt in die Datei (GPT-2-Station: 50 s). Sinnvoll, wenn Henry „mach alles" sagt; läuft er
+  direkt in die Datei (GPT-2-Station: 50 s). **Ab einem echten Messraster `--ExecutePreprocessor.timeout`
+  mitgeben** — die Voreinstellung sind 30 s *pro Zelle* und killt jedes ernsthafte Notebook
+  (08 braucht 3:20 gesamt, einzelne Zellen über 90 s). Sinnvoll, wenn Henry „mach alles" sagt; läuft er
   selbst, gilt weiter der mtime-Abgleich vor jeder Bearbeitung. Stolperstein: in diesem Kernel
   hat Python kein eigenes CA-Bundle, `urllib` scheitert an HTTPS — `ssl.create_default_context(
   cafile=certifi.where())` übergeben (z. B. für die Neuronpedia-API).
@@ -488,6 +560,8 @@ Recherchiert und teils lokal verifiziert. Korrigiert mehrere ältere Annahmen.
   ReLU + L1 (λ 8e-5), OpenWebText, Kontext 128. Zum Laden reichen `huggingface_hub` +
   `safetensors`, beide schon im Lock. Neuronpedia-ID für Layer 6: `6-res-jb`. SAELens braucht
   man erst, um den Encoder auf Aktivierungen laufen zu lassen (welche Features feuern).
+  **Alle elf brauchbaren Schichten liegen seit 2026-09-19 im HF-Cache** (~1,6 GB, 144 MiB je
+  Schicht) — ein erneuter Download entfällt.
 - **Gemma-Scope-Downloadgrößen** (pro einzelner SAE): 16k ≈ 302 MB · 65k ≈ 1,21 GB ·
   1M ≈ 19,3 GB. **Gesamtrepo ≈ 657 GB — nie klonen, immer einzelne Pfade.** „canonical"
   = L0 am nächsten zu 100 (Layer 12/16k → L0 82). Nachfolge-Architekturen für Gemma-2-2b

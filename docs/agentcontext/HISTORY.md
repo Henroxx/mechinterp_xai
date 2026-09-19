@@ -100,3 +100,9 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
   Schicht | Billas Emergenzmuster und seine Korrelationsbandbreite bestätigen sich im Kleinen, die
   Probe sättigt über die Tiefe und taugt nicht zur Schichtwahl. → DETAILS „Lesen gegen Steuern —
   Anker-Reproduktion".
+- **2026-09-19** | Phase 5, Schritt 13: das eigene Experiment (`notebooks/08_direction_sources.ipynb`)
+  — vier Richtungsquellen auf Einheitsnorm, Dosis relativ zur Residual-Norm der Schicht, Vergleich
+  bei gleichem KL-Budget und gleicher Wirkung | Billas Dosis-Konfundierung ist damit beziffert statt
+  vermutet: seine implizite Dosis korreliert mit seinem eigenen Prädiktor bei +0,76 bis +0,91.
+  → DETAILS „Richtungsquellen bei gleicher Wirkung".
+

@@ -46,11 +46,14 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
   Station SAE-Blick erledigt (2026-09-18) → DETAILS „SAE — Befund GPT-2 small"; **Schnuppertour damit
   abgeschlossen**. Forschungsstand als Landkarte gemappt (2026-09-18) →
   `details/forschungsstand.md`. **Entscheidung gefallen (Henry, 2026-09-19): Kandidat D, „Lesen
-  gegen Steuern"** → `plans/lesen-vs-steuern.md`. Beide Anker-Arbeiten am 2026-09-19 im Volltext
+  gegen Steuern"**. Beide Anker-Arbeiten am 2026-09-19 im Volltext
   gelesen und der ausgearbeitete Plan geschrieben; `A_lin` auf GPT-2 small vorgemessen, um die
   Modellwahl zu entscheiden. Anker reproduziert (2026-09-19) → DETAILS „Lesen gegen Steuern — Anker-Reproduktion",
-  `notebooks/07_reading_vs_steering.ipynb`. Aktuell: Phase 5, Schritt 13 — das eigene Experiment
-  (drei Richtungsquellen norm-matched, Vergleich bei gleicher Wirkung).
+  `notebooks/07_reading_vs_steering.ipynb`. Eigenes Experiment durchgeführt (2026-09-19) →
+  DETAILS „Lesen gegen Steuern — Richtungsquellen bei gleicher Wirkung",
+  `notebooks/08_direction_sources.ipynb`. **Phase 5 damit abgeschlossen.** Aktuell: Phase 6 —
+  Struktur und Eckdaten der Abhandlung entschieden (2026-09-19) → `plans/abhandlung.md`,
+  Schreiben noch nicht begonnen.
 
 ---
 # To-Dos & offene Entscheidungen
@@ -66,12 +69,12 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
       3. **Forschungsstand mappen** — erledigt 2026-09-18 → `details/forschungsstand.md`:
          Tabelle über vier Methoden, dazu Patching und Probing neu recherchiert. Volltext erst
          für die gewählte Sache.
-      4. **Entscheidung** — erledigt 2026-09-19: Kandidat D, „Lesen gegen Steuern"
-         → `plans/lesen-vs-steuern.md`.
-      5. **Vertiefung** ← *hier stehen wir* — Volltexte gelesen und Plan geschrieben (2026-09-19,
-         Schritte 11–12 → `plans/lesen-vs-steuern.md`), Anker reproduziert; offen ist das eigene
-         Experiment (Schritt 13).
-      6. **Abhandlung** — Struktur abstimmen, Typst auf Englisch. Kein Vortrag mehr nötig.
+      4. **Entscheidung** — erledigt 2026-09-19: Kandidat D, „Lesen gegen Steuern".
+      5. **Vertiefung** — erledigt 2026-09-19: Volltexte gelesen, Plan geschrieben, Anker
+         reproduziert (Schritte 11–12), eigenes Experiment mit
+         Kontrolle durchgeführt (Schritt 13 → DETAILS „Richtungsquellen bei gleicher Wirkung").
+      6. **Abhandlung** ← *hier stehen wir* — Struktur abstimmen, Typst auf Englisch. Kein Vortrag
+         mehr nötig.
       Schnuppern vor Lesen ist Claudes Vorschlag (bei Henry bleibt Gemachtes hängen, Gelesenes
       weniger), von Henry mit dem Dashboard angenommen.
 - [x] **Umfang: breit schnuppern, eine Sache vertiefen** (Henry, 2026-09-16). Im Notebook
@@ -93,7 +96,8 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
       Landkarte. Kandidat C (Control Task) ist als Schritt 3 darin enthalten; Kandidat B
       (Steering-Dosisachse mit Benchmarks) wurde wegen Bauaufwand verworfen, nicht wegen
       Laufzeit. Umfang bewusst klein gehalten — Uni-Projekt, keine Masterarbeit.
-      → `plans/lesen-vs-steuern.md`
+      → DETAILS „Lesen gegen Steuern — Anker-Reproduktion" und „… Richtungsquellen bei gleicher
+      Wirkung"; Plan abgearbeitet in `plans/done/`.
 - [x] **TransformerLens bleibt auf 3.5.1** (Henry, 2026-09-18). Grund: der Gemma-2-Pfad ist bis
       3.9.0 bis auf einen für uns wirkungslosen Sliding-Window-Fix unverändert, ein Upgrade
       kostete Neu-Verifikation und Deprecation-Warnungen. `enable_compatibility_mode()` betrifft
@@ -105,6 +109,14 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
 - [x] **Sprache der Abhandlung: Englisch** (2026-08-24). Grund: die gesamte Literatur und
       Terminologie ist englisch, Rückübersetzen von Fachbegriffen erzeugt nur Unschärfe.
       → `report/main.typ` muss noch umgestellt werden
+- [x] **Zuschnitt der Abhandlung entschieden** (Henry, 2026-09-19) → `plans/abhandlung.md`:
+      Technical Report auf Englisch, unter 10 Seiten Hauptteil, jeder Abschnitt beginnt mit „was und
+      warum" vor dem Detail. Grund für die Skip-Ebene: die Zeit des Dozenten wertschätzen, er soll
+      überspringen können, was er nicht braucht. Erste Person für Entscheidungen; KI-Nutzung offen,
+      aber als *ein* Satz plus kurzer Abschnitt statt Zuschreibung pro Schritt. Selbstzitate zeigen
+      auf den Tag `v1.0-submission`, nicht auf `main` — Branch-Links brechen beim nächsten Push.
+      Schreibreihenfolge 5 → 4 → 3 → 2 → 6 → 7 → 1 → Abstract, pro Abschnitt höchstens fünf
+      Verständnisfragen an Henry, damit der Aufwand planbar bleibt.
 - [ ] **Vertiefung** (Henrys Verständnis, für die Verteidigung):
       Grokking-Beispiel (Nanda, Addition mod 113) durcharbeiten; Linear Representation
       Hypothesis sauber durchsprechen (konnte Henry noch nicht frei erklären; Erklärung
