@@ -56,24 +56,27 @@ Roter Faden: das Messinstrument bestimmt das Ergebnis mit.
 
 ## Ablauf pro Abschnitt
 
-1. **Höchstens fünf Lückenfragen** an Henry im Chat, kurz durchsprechen. Die Kappung macht die
-   Dauer planbar.
-2. Claude schreibt den Abschnitt; Henry liest parallel die Grundlage dazu (Notebook, Lerndokument).
-3. Am Ende alles gemeinsam lesen und korrigieren.
+**Geändert am 2026-09-19 (Henry):** erst schreiben, dann verstehen — nicht umgekehrt. Der
+ursprüngliche Ablauf begann mit höchstens fünf Lückenfragen an Henry; die setzten Kenntnis des
+Materials voraus, die der Abschnitt erst herstellt, und waren bei Abschnitt 5 unbeantwortbar.
 
-**Reihenfolge:** 5 → 4 → 3 → 2 → 6 → 7 → 1 → Abstract. Der Hauptteil ist das Frischeste und das,
-wonach am ehesten gefragt wird — dort lohnt die Fragerunde am meisten.
+1. Claude schreibt den Abschnitt aus DETAILS und den Notebooks, setzt die Schwerpunkte selbst.
+2. Henry liest, versucht ihn zu verstehen und fragt. Claude erklärt und ändert den Text, wo
+   Henrys Lesart zeigt, dass eine Stelle nicht trägt — eine Stelle, die erklärt werden muss,
+   ist schlecht geschrieben.
+3. **Am Ende zurück zu Abschnitt 5:** Verständnis nachschärfen und alles insgesamt glätten.
+   Der Hauptteil wird zuerst geschrieben und zuletzt verstanden.
+
+**Reihenfolge:** 5 → 4 → 3 → 2 → 6 → 7 → 1 → Abstract. Alles andere verweist auf Abschnitt 5,
+nicht umgekehrt: die Introduction muss wissen, was herauskam, und die Kernaussagen sind aus dem
+Hauptteil destilliert.
 
 ## Fortschritt
 
-- [ ] Vorarbeit: `main.typ` auf Englisch, `savefig` in 07/08, Figuren exportiert
-- [ ] 5 Reading versus steering
-- [ ] 4 Choosing the question
-- [ ] 3 Exploration
-- [ ] 2 Background
-- [ ] 6 What I take from this · 7 Working method
-- [ ] 1 Introduction · 0 Abstract
-- [ ] Gesamtlesung, Korrektur, Tag `v1.0-submission`, Links prüfen
+Wird im Dashboard geführt, **Phase 7 in `docs/fahrplan/index.html`** — ein Schritt pro Abschnitt
+in Schreibreihenfolge, je mit Inhalt und den Konzepten, die Henry dafür verstehen muss (Marker
+⬜ / 🟡 / ✅ wie im Lerndokument). Grund für den Umzug: Henry priorisiert mit dem Blick auf das
+Dashboard, und eine zweite Checkliste hier wäre die Stelle, die als Erstes veraltet.
 
 ## Offen
 

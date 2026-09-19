@@ -46,6 +46,9 @@
   li .num{color:var(--muted); font-variant-numeric:tabular-nums}
   li .tag{font-size:12px; color:var(--muted); white-space:nowrap}
   li .note{grid-column:3 / span 2; color:var(--muted); font-size:13px}
+  li .learn{grid-column:3 / span 2; font-size:13px; margin-top:2px}
+  li .learn b{color:var(--accent); font-weight:600; font-size:12px;
+              text-transform:uppercase; letter-spacing:.04em}
   li.done{color:var(--muted)} li.done .icon{color:var(--done)}
   li.done .title{text-decoration:line-through; text-decoration-color:var(--grey)}
   li.current{background:var(--accent-soft); border-color:var(--accent)}
@@ -79,7 +82,8 @@
 </main>
 
 <script>
-// Maintenance: flip a step's status (done | current | open | optional), set STAND. That is all.
+// Maintenance: flip a step's status (done | current | open | optional), set STAND, and flip a
+// concept marker in `learn` (0 unlearned, 1 skimmed, 2 understood) when Henry says so. That is all.
 const STAND = "2026-09-19";
 const STEPS = [
   {n:1,  phase:"1 · Einarbeitung", status:"done",
@@ -118,14 +122,61 @@ const STEPS = [
    title:"Das eigene Experiment mit Kontrolle durchführen, reproduzierbar machen",
    note:"2026-09-19 · 08_direction_sources.ipynb, vier Quellen bei gleicher Wirkung"},
 
-  {n:14, phase:"6 · Abhandlung", status:"current",
-   title:"Struktur und Kernaussagen der Abhandlung abstimmen"},
-  {n:15, phase:"6 · Abhandlung", status:"open",
-   title:"Abhandlung schreiben: Typst, Englisch", note:"Vortrag entfällt, Zwischenpräsi deckt ihn ab"},
+  {n:14, phase:"6 · Abhandlung", status:"done",
+   title:"Struktur und Kernaussagen der Abhandlung abstimmen",
+   note:"2026-09-19 · plans/abhandlung.md, Kernaussagen werden beim Schreiben bestätigt"},
+
+  {n:15, phase:"7 · Schreiben", status:"done",
+   title:"Vorarbeit: Typst auf Englisch, Figuren als Vektor exportieren",
+   note:"2026-09-19 · main.typ englisch und neu gegliedert, refs.bib angelegt, 07/08 neu gelaufen"},
+  {n:16, phase:"7 · Schreiben", status:"current",
+   title:"Abschnitt 5 · Reading versus steering — der Hauptteil",
+   note:"Design · Anker-Reproduktion (Grafik 07) · Richtungsquellen bei gleicher Wirkung (Grafik 08, Dosis-Tabelle) · Diskussion · Grenzen",
+   learn:[[0,"A_lin: Logit Lens als Vorhersage, nicht als Beschreibung"],
+          [0,"Lesen ist nicht Steuern (continent: überall lesbar, nirgends steuerbar)"],
+          [0,"relative Dosis und die Dosis-Konfundierung des Ankers"],
+          [0,"Vergleich bei gleichem KL statt bei gleicher Dosis"],
+          [0,"Kontrollen: Zufallsboden als Bestes aus fünf, Bodenfälle parity/continent"],
+          [0,"erklärte Varianz ist blind für das Konzept (Rekonstruktionsfehler)"]]},
+  {n:17, phase:"7 · Schreiben", status:"open",
+   title:"Abschnitt 4 · Choosing the question",
+   note:"Landkarte in einem Absatz · Kandidat D und warum · Anker Billa · zweite Arbeit Tiwari · die zwei Lücken",
+   learn:[[0,"Billas Kernaussage und seine Go/No-Go-Schwelle"],
+          [0,"Tiwaris Substrat-Argument und warum es bei uns kein Gate ist"],
+          [0,"warum Kandidat D gegen A–F gewann"]]},
+  {n:18, phase:"7 · Schreiben", status:"open",
+   title:"Abschnitt 3 · Exploration: one station per method",
+   note:"Tabelle Station → Notebook → Frage → Befund → Lehre · was ins Hauptexperiment floss · Modellwahl",
+   learn:[[0,"Activation Patching: Clean/Corrupt und Restoration"],
+          [0,"Steering über die Mittelwertdifferenz, Dosis-Sweep"],
+          [0,"Probing und die Control Task"],
+          [0,"SAE-Feature als Richtung (Encoder sucht, Decoder steuert)"],
+          [0,"warum GPT-2 small und nicht Gemma-2-2B"]]},
+  {n:19, phase:"7 · Schreiben", status:"open",
+   title:"Abschnitt 2 · Background: four ways to look inside",
+   note:"Residual Stream als Arbeitsraum (Grafik) · LRH in drei Sätzen · vier Methoden als Tabelle: misst was, setzt voraus, scheitert woran",
+   learn:[[0,"Residual Stream als gemeinsamer Arbeitsraum"],
+          [0,"Linear Representation Hypothesis (offener Punkt aus PROJECT)"],
+          [0,"Unembedding und Logit Lens"],
+          [0,"Sparse Autoencoder: was die Sparsity kaufen soll"]]},
+  {n:20, phase:"7 · Schreiben", status:"open",
+   title:"Abschnitte 6 und 7 · Fazit und Arbeitsweise",
+   note:"vier, fünf methodische Punkte · Regeln der Zusammenarbeit, wo der Agent-Kontext liegt",
+   learn:[[0,"Interpretationsdisziplin: gemessen gegen gedeutet trennen"]]},
+  {n:21, phase:"7 · Schreiben", status:"open",
+   title:"Abschnitt 1 · Introduction, danach Abstract",
+   note:"XAI modellagnostisch gegen Blick ins Modell · Haltung: das Messinstrument prägt den Befund · ein Satz zur KI-Nutzung · Lesehinweis",
+   learn:[[0,"XAI-Landschaft: post-hoc und modellagnostisch gegen mechanistisch"]]},
+  {n:22, phase:"7 · Schreiben", status:"open",
+   title:"Gesamtlesung: Verständnis für Abschnitt 5 nachschärfen, glätten, abgeben",
+   note:"alles gemeinsam lesen · Tag v1.0-submission setzen · Selbstzitat-Links prüfen",
+   learn:[[0,"die fünf Kernaussagen frei erklären können"]]},
 ];
 const ASIDE = [
   "Grokking-Beispiel (Nanda, Addition mod 113) durcharbeiten, fürs Verständnis",
 ];
+
+const LEARN = ["\u2b1c", "\ud83d\udfe1", "\u2705"];  // unlearned, skimmed, understood -- as in learning.md
 
 const STATUS = {
   done:     {icon:"✓", label:"erledigt"},
@@ -159,7 +210,9 @@ for (const phase of [...new Set(STEPS.map(s => s.phase))]) {
     li.className = s.status;
     li.innerHTML = `<span class="icon">${st.icon}</span><span class="num">${s.n}</span>` +
       `<span class="title">${s.title}</span><span class="tag">${st.label}</span>` +
-      (s.note ? `<span class="note">${s.note}</span>` : "");
+      (s.note ? `<span class="note">${s.note}</span>` : "") +
+      (s.learn ? `<span class="learn"><b>verstehen</b> ` +
+        s.learn.map(([m, c]) => `${LEARN[m]} ${c}`).join(" · ") + `</span>` : "");
     ol.appendChild(li);
   }
   box.append(h, ol);

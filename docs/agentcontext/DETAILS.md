@@ -305,8 +305,10 @@ Prompts.
   dort ab L6 (0,64) und am Ende 0,99.
 - **Die Probe kann keine Schicht wählen.** Bei `continent` liegt sie held-out in *jeder* Schicht
   L0–L11 bei 1,00, während `A_lin` mit 0,04 gipfelt und Steering nichts bewegt: überall lesbar,
-  nirgends steuerbar. ρ(Probe, ΔP) wechselt familär das Vorzeichen (+0,74 bis −0,39), ρ(`A_lin`,
-  ΔP) liegt bei +0,48 bis +0,90 und damit in seinem Band (+0,63 bis +0,92).
+  nirgends steuerbar. Schärfer als „schwacher Prädiktor": bei `continent` **und** `pronoun` ist sie
+  über alle zwölf Schichten konstant 1,00, ρ(Probe, ΔP) ist dort also nicht klein, sondern
+  undefiniert; wo sie definiert ist, wechselt sie das Vorzeichen (+0,74 `daynight` bis −0,39
+  `size`). ρ(`A_lin`, ΔP) liegt bei +0,48 bis +0,90 und damit in seinem Band (+0,63 bis +0,92).
 - **Mittlere Schicht verliert, wo `A_lin` es ansagt:** `temperature` +0,092 in L11 gegen +0,008 in
   L6, `daynight` +0,035 gegen +0,007. Wo `A_lin` mittig schon hoch ist (`pronoun`), funktioniert
   die Heuristik — das ist seine Erklärung, kein Gegenbeispiel.
@@ -362,8 +364,9 @@ SAE, und dort liegt bei allen vier tragenden Familien die `A_lin`-Spitze.**
 - **Dieselbe Richtung, doppelte Wirkung.** `pronoun` erreicht mit der Mittelwertdifferenz ΔP +0,495
   bei Dosis 0,2, in 07 waren es +0,246. Die ungenannte Dosis des Ankers ist nicht nur unberichtet,
   sie ist auch nicht die beste.
-- **Erklärte Varianz ist blind für das Konzept.** Die SAE-Rekonstruktion erklärt 93–99 % der
-  Varianz, während **35–99 % der Konzept-Trennung im Rekonstruktionsfehler** liegen (Tiwaris 74 %
+- **Erklärte Varianz ist blind für das Konzept.** Die SAE-Rekonstruktion erklärt 92–99 % der
+  Varianz, während **35–99 % der Konzept-Trennung im Rekonstruktionsfehler** liegen (Anteil entlang
+  der Probe-Richtung; entlang der Mittelwertdifferenz 35–94 %, gleiches Bild) (Tiwaris 74 %
   reproduzieren sich mittig, auf anderem Modell, anderem SAE, anderen Konzepten). Der Anteil sinkt
   mit der Tiefe. Ersetzt man eine Schicht durch ihre eigene Rekonstruktion, verliert das Modell die
   Antwort: `temperature` 0,68 → 0,35, `size` 0,25 → 0,07, `daynight` 0,31 → 0,09 (`pronoun` hält).
@@ -377,8 +380,11 @@ SAE, und dort liegt bei allen vier tragenden Familien die `A_lin`-Spitze.**
   „SAE-Feature bringt wenig": bei `pronoun` stimmt das (+0,285 gegen +0,306), bei `temperature` in
   L10 gewinnt die SAE-Richtung klar (+0,175 gegen +0,130).
 - **Die Feature-Suche scheitert in der Mittelschicht.** Mit vorab fixiertem Kriterium findet sie in
-  L6 bei vier von sechs Familien nichts (Notlösungen AUROC 0,38–0,79), in L10 dagegen 0,88–1,00 für
-  vier Familien. Die SAE-Richtung ist in L6 fast orthogonal zur Mittelwertdifferenz (cos 0,04–0,09).
+  L6 bei vier von sechs Familien nichts — `temperature`, `size`, `parity`, `daynight`, Notlösungen
+  AUROC 0,38–0,79, zwei davon unter Zufall. In L10 greift das Kriterium überall außer bei `parity`,
+  mit AUROC 0,88–1,00 bei fünf Familien; `daynight` ist dort die Ausnahme mit 0,40. Die
+  SAE-Richtung steht in L6 bei fünf von sechs Familien fast quer zur Mittelwertdifferenz
+  (cos 0,04–0,31), nur bei `pronoun` liegt sie mit 0,67 nah dran.
 - **Gefittete Lesemaße lesen in L0 das Token, nicht das Konzept:** AUROC 1,00 bei `size`, `parity`,
   `continent` in der Schicht, die nur Embedding plus Position ist. Bei `parity` steht dem ein
   `A_lin` von exakt 0 in allen Schichten gegenüber.
