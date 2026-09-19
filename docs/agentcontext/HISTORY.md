@@ -81,3 +81,8 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
   Activation Patching und Probing per Subagent neu recherchiert, alle 55 arXiv-IDs über die arXiv-API
   verifiziert, die gewachsene DETAILS-Sektion dorthin ausgelagert | Entscheidungsgrundlage für Phase 4.
   Kernbefund quer über alle vier Felder: das Messinstrument bestimmt das Ergebnis mit.
+- **2026-09-19** | Phase 4 entschieden: Kandidat D, „Lesen gegen Steuern" — drei Richtungsquellen
+  (Mittelwertdifferenz, Probe, SAE-Feature) auf zwei Achsen, Lesegüte gegen Steuerwirkung; Anker ist
+  Billa (arXiv:2604.15557). Blockwoche als veraltet gestrichen, es hängt kein Abgabetermin daran |
+  D nutzt die Stationen 2, 3 und 5 wieder und braucht kein neues Tooling; Kandidat C ist als
+  Kontrollaufgabe darin enthalten, B fiel wegen Bauaufwand weg. → `plans/lesen-vs-steuern.md`.

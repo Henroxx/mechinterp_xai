@@ -45,7 +45,9 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
   small". Station Gemma-2-2B-Tour erledigt (2026-09-18) → DETAILS „Gemma-2-2B — Befunde aus der Tour".
   Station SAE-Blick erledigt (2026-09-18) → DETAILS „SAE — Befund GPT-2 small"; **Schnuppertour damit
   abgeschlossen**. Forschungsstand als Landkarte gemappt (2026-09-18) →
-  `details/forschungsstand.md`. Aktuell: Phase 4, Entscheidung — Henry wählt *eine* Sache.
+  `details/forschungsstand.md`. **Entscheidung gefallen (Henry, 2026-09-19): Kandidat D, „Lesen
+  gegen Steuern"** → `plans/lesen-vs-steuern.md`. Aktuell: Phase 5, Vertiefung — erst der Volltext
+  der Anker-Arbeit, dann der ausgearbeitete Plan.
 
 ---
 # To-Dos & offene Entscheidungen
@@ -61,9 +63,10 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
       3. **Forschungsstand mappen** — erledigt 2026-09-18 → `details/forschungsstand.md`:
          Tabelle über vier Methoden, dazu Patching und Probing neu recherchiert. Volltext erst
          für die gewählte Sache.
-      4. **Entscheidung** ← *hier stehen wir* — Kandidaten gegen Kriterien, *eine* Sache: Methode,
-         Modell, Frage, Kontrolle, Anker. Bis dahin sind Lücken und Ideen Kandidaten, kein Zuschnitt.
-      5. **Vertiefung** — die Papers dazu im Volltext, Plan, Anker reproduzieren, eigenes Experiment.
+      4. **Entscheidung** — erledigt 2026-09-19: Kandidat D, „Lesen gegen Steuern"
+         → `plans/lesen-vs-steuern.md`.
+      5. **Vertiefung** ← *hier stehen wir* — die Papers dazu im Volltext, Plan, Anker reproduzieren,
+         eigenes Experiment.
       6. **Abhandlung** — Struktur abstimmen, Typst auf Englisch. Kein Vortrag mehr nötig.
       Schnuppern vor Lesen ist Claudes Vorschlag (bei Henry bleibt Gemachtes hängen, Gelesenes
       weniger), von Henry mit dem Dashboard angenommen.
@@ -78,10 +81,15 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
       → DETAILS „Umgebung & Tooling"
 - [x] **Web-Recherche 2026-08-24** (Steering, SAE) und **2026-09-18** (Patching, Probing)
       → `details/forschungsstand.md`; dazu DETAILS „Tooling-Realität", „Lehrmaterial"
-- [ ] **Beitrag neu zuschneiden** (Henry) — die Grundform „Refusal-Steering anwenden und
-      Nebenwirkungen messen" ist publiziert (SteeringSafety, arXiv:2509.13450, auf genau
-      Gemma-2-2B). Offene Lücken auf Metrik-, Dosis- und Kontroll-Ebene →
-      `details/forschungsstand.md`, Sektion „Steering-Nebeneffekte"
+- [x] **Beitrag zugeschnitten: Kandidat D, „Lesen gegen Steuern"** (Henry, 2026-09-19).
+      Drei Richtungsquellen (Mittelwertdifferenz, Probe, SAE-Feature) auf beiden Achsen messen:
+      Lesegüte gegen Steuerwirkung. Grund für D gegen die Alternativen: zieht die Stationen 2, 3
+      und 5 zusammen, braucht kein neues Tooling und keinen fremden Benchmark-Code, hat mit
+      Billa (arXiv:2604.15557) einen Anker zum Reproduzieren, und sitzt auf der Kernfrage der
+      Landkarte. Kandidat C (Control Task) ist als Schritt 3 darin enthalten; Kandidat B
+      (Steering-Dosisachse mit Benchmarks) wurde wegen Bauaufwand verworfen, nicht wegen
+      Laufzeit. Umfang bewusst klein gehalten — Uni-Projekt, keine Masterarbeit.
+      → `plans/lesen-vs-steuern.md`
 - [x] **TransformerLens bleibt auf 3.5.1** (Henry, 2026-09-18). Grund: der Gemma-2-Pfad ist bis
       3.9.0 bis auf einen für uns wirkungslosen Sliding-Window-Fix unverändert, ein Upgrade
       kostete Neu-Verifikation und Deprecation-Warnungen. `enable_compatibility_mode()` betrifft

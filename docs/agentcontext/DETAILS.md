@@ -5,7 +5,7 @@ Chats nicht verloren gehen soll. Kompakt halten — Substanz, kein Aufblähen.
 
 ---
 
-## Themen-Kandidaten & Ranking (Stand 2026-07-10, VORSCHLAG — Henrys Entscheidung steht aus)
+## Themen-Kandidaten & Ranking (Stand 2026-07-10, überholt durch die Entscheidung vom 2026-09-19)
 
 Destilliert aus der Themen-Landkarte (Chat 2026-07-10). Kriterien: Passung zu Henrys
 Pitch (Steering-Nebeneffekte, methodenkritisch) > Machbarkeit > Methodenkritik-Wert.
@@ -322,9 +322,17 @@ reproduziert).
   results", Issue #1178) — die Warnung hängt an der torch-Version, nicht an einer Messung,
   und ist durch `verify_mps.py` widerlegt (→ Numerik-Policy). `TRANSFORMERLENS_ALLOW_MPS=1`
   würde sie unterdrücken; bewusst stehen gelassen.
+- **Was Messungen teuer macht, ist Generierung, nicht der Benchmark** (abgeschätzt 2026-09-19 für
+  Kandidat B, nicht gemessen): Vorwärtspass-Metriken (Loss, KL, Multiple-Choice über Logits) kosten
+  auf Gemma-2-2B Minuten für einige hundert Items, freie Generierung liegt bei 2,7 Token/s im
+  Einzelstrom. Über einen Dosis-Sweep multipliziert sich das mit Dosen × Bedingungen (17 × 3 ≈ 50
+  Durchläufe): grob 4–8 h nur mit Vorwärtspässen, mit Generierung ein Vielfaches. Gebündelte
+  Generierung auf MPS ist ungemessen und wäre der erste Hebel.
 
-## Steering — Messprotokoll für Nebeneffekte (Stand 2026-07-11, Planung, Kandidat A/B)
+## Steering — Messprotokoll für Nebeneffekte (Stand 2026-07-11, Planung)
 
+Die Kandidaten A/B sind nicht gewählt worden (2026-09-19). Die Sektion bleibt, weil Dosis-Achse
+und Kontroll-Logik daraus im gewählten Zuschnitt weiterbenutzt werden.
 Im Chat erarbeitet 2026-07-11, noch nicht erprobt. Logik: erst die Zielwirkung
 quantifizieren, dann Nebenwirkungen auf drei Ebenen — jeweils über die Dosis α
 aufgelöst und gegen Kontrollen gerechnet.

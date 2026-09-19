@@ -80,7 +80,7 @@
 
 <script>
 // Maintenance: flip a step's status (done | current | open | optional), set STAND. That is all.
-const STAND = "2026-09-18";
+const STAND = "2026-09-19";
 const STEPS = [
   {n:1,  phase:"1 · Einarbeitung", status:"done",
    title:"GPT-2 small in TransformerLens: Anatomie, Tokenizer, Cache und Hook-Namen", note:"2026-09-05"},
@@ -104,11 +104,13 @@ const STEPS = [
    title:"Eine Seite Landkarte: Methode × Modell × Messung × offene Lücke, aus DETAILS",
    note:"2026-09-18 · details/forschungsstand.md"},
 
-  {n:10, phase:"4 · Entscheidung", status:"current",
-   title:"Kandidaten gegen Kriterien halten, eine Sache wählen: Methode, Modell, Frage, Kontrolle, Anker"},
+  {n:10, phase:"4 · Entscheidung", status:"done",
+   title:"Kandidaten gegen Kriterien halten, eine Sache wählen: Methode, Modell, Frage, Kontrolle, Anker",
+   note:"2026-09-19 · Lesen gegen Steuern"},
 
-  {n:11, phase:"5 · Vertiefung", status:"open",
-   title:"Die ein, zwei Papers zur gewählten Sache im Volltext lesen"},
+  {n:11, phase:"5 · Vertiefung", status:"current",
+   title:"Die ein, zwei Papers zur gewählten Sache im Volltext lesen",
+   note:"Billa arXiv:2604.15557 als Anker"},
   {n:12, phase:"5 · Vertiefung", status:"open",
    title:"Plan schreiben und das bekannte Ergebnis als Anker reproduzieren"},
   {n:13, phase:"5 · Vertiefung", status:"open",
