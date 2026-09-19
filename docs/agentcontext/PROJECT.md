@@ -44,7 +44,8 @@ Abgabe: Ausarbeitung einen Tag vor der Blockwoche. Bewertung 50 % Ausarbeitung /
   Befund GPT-2 small". Station Probing erledigt (2026-09-18) → DETAILS „Probing — Befund GPT-2
   small". Station Gemma-2-2B-Tour erledigt (2026-09-18) → DETAILS „Gemma-2-2B — Befunde aus der Tour".
   Station SAE-Blick erledigt (2026-09-18) → DETAILS „SAE — Befund GPT-2 small"; **Schnuppertour damit
-  abgeschlossen**. Aktuell: Phase 3, Forschungsstand mappen.
+  abgeschlossen**. Forschungsstand als Landkarte gemappt (2026-09-18) →
+  `details/forschungsstand.md`. Aktuell: Phase 4, Entscheidung — Henry wählt *eine* Sache.
 
 ---
 # To-Dos & offene Entscheidungen
@@ -57,10 +58,11 @@ Abgabe: Ausarbeitung einen Tag vor der Blockwoche. Bewertung 50 % Ausarbeitung /
          2026-09-18 → DETAILS „Steering — Befund GPT-2 small"), Probing (erledigt 2026-09-18 → DETAILS „Probing — Befund GPT-2 small"),
          Gemma-2-2B-Tour (erledigt 2026-09-18 → DETAILS „Gemma-2-2B — Befunde aus der Tour"),
          SAE-Blick (erledigt 2026-09-18 → DETAILS „SAE — Befund GPT-2 small"). Tour abgeschlossen.
-      3. **Forschungsstand mappen** ← *hier stehen wir* — eine Seite Methode × Modell × Messung × Lücke, Rohstoff
-         DETAILS „Forschungsstand", „SAE-Kritik". Volltext erst für die gewählte Sache.
-      4. **Entscheidung** — Kandidaten gegen Kriterien, *eine* Sache: Methode, Modell, Frage,
-         Kontrolle, Anker. Bis dahin sind Lücken und Ideen Kandidaten, kein Zuschnitt.
+      3. **Forschungsstand mappen** — erledigt 2026-09-18 → `details/forschungsstand.md`:
+         Tabelle über vier Methoden, dazu Patching und Probing neu recherchiert. Volltext erst
+         für die gewählte Sache.
+      4. **Entscheidung** ← *hier stehen wir* — Kandidaten gegen Kriterien, *eine* Sache: Methode,
+         Modell, Frage, Kontrolle, Anker. Bis dahin sind Lücken und Ideen Kandidaten, kein Zuschnitt.
       5. **Vertiefung** — die Papers dazu im Volltext, Plan, Anker reproduzieren, eigenes Experiment.
       6. **Abhandlung** — Struktur abstimmen, Typst auf Englisch. Kein Vortrag mehr nötig.
       Schnuppern vor Lesen ist Claudes Vorschlag (bei Henry bleibt Gemachtes hängen, Gelesenes
@@ -74,12 +76,12 @@ Abgabe: Ausarbeitung einen Tag vor der Blockwoche. Bewertung 50 % Ausarbeitung /
       Grund: `requirements.txt` pinnte nur die 8 direkten Pakete, die transitiven kamen
       unkontrolliert dazu — erst das Lockfile macht die Messungen reproduzierbar.
       → DETAILS „Umgebung & Tooling"
-- [x] **Web-Recherche 2026-08-24** → DETAILS „Forschungsstand Steering-Nebeneffekte",
-      „SAE-Kritik", „Tooling-Realität", „Lehrmaterial"
+- [x] **Web-Recherche 2026-08-24** (Steering, SAE) und **2026-09-18** (Patching, Probing)
+      → `details/forschungsstand.md`; dazu DETAILS „Tooling-Realität", „Lehrmaterial"
 - [ ] **Beitrag neu zuschneiden** (Henry) — die Grundform „Refusal-Steering anwenden und
       Nebenwirkungen messen" ist publiziert (SteeringSafety, arXiv:2509.13450, auf genau
-      Gemma-2-2B). Offene Lücken auf Metrik-, Dosis- und Kontroll-Ebene → DETAILS
-      „Forschungsstand", Abschnitt „Offene Lücken"
+      Gemma-2-2B). Offene Lücken auf Metrik-, Dosis- und Kontroll-Ebene →
+      `details/forschungsstand.md`, Sektion „Steering-Nebeneffekte"
 - [x] **TransformerLens bleibt auf 3.5.1** (Henry, 2026-09-18). Grund: der Gemma-2-Pfad ist bis
       3.9.0 bis auf einen für uns wirkungslosen Sliding-Window-Fix unverändert, ein Upgrade
       kostete Neu-Verifikation und Deprecation-Warnungen. `enable_compatibility_mode()` betrifft

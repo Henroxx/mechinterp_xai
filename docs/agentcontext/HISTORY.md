@@ -46,10 +46,10 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
 - **2026-08-24** | Literatur- und Tooling-Recherche zum Stand 2025/26 (Subagent) | Befund:
   die Grundform des geplanten Kernexperiments ist publiziert (SteeringSafety, auf genau
   Gemma-2-2B) — der eigene Beitrag muss auf Metrik-, Dosis- und Kontroll-Ebene liegen.
-  → DETAILS „Forschungsstand Steering-Nebeneffekte", „SAE-Kritik", „Tooling-Realität".
+  → `details/forschungsstand.md`, DETAILS „Tooling-Realität".
 - **2026-08-25** | SteeringSafety im Volltext gelesen, Lerndokument `docs/learning/index.html`
-  angelegt | Der Volltext korrigierte mehrere Abstract-basierte Aussagen → DETAILS
-  „Forschungsstand". Lesen aus zweiter Hand reicht für Orientierung, nicht für Aussagen.
+  angelegt | Der Volltext korrigierte mehrere Abstract-basierte Aussagen →
+  `details/forschungsstand.md`. Lesen aus zweiter Hand reicht für Orientierung, nicht für Aussagen.
 - **2026-08-25** | Fahrplan: Einarbeitung (GPT-2) → Forschungsstand → reproduzieren/Lücke →
   2–3 kleine Experimente; Themenwahl erst nach Schritt 2 | Henry will das Feld überblicken,
   bevor er sich festlegt → PROJECT „Fahrplan", CLAUDE.md-Regel „Themenwahl bleibt offen".
@@ -76,4 +76,8 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
   per Encoder über die Minimalpaare selbst gesucht (Neuronpedia nur als Gegenprobe), Decoder-Zeilen im
   Dosis-Sweep neben d und Zufallsvektor; Schnuppertour damit abgeschlossen | → DETAILS „SAE — Befund
   GPT-2 small". Befund gegen die Erwartung: die SAE-Richtung ist bei gleicher Wirkung nicht billiger.
-
+- **2026-09-18** | Phase 3: Forschungsstand als Landkarte (`details/forschungsstand.md`) — Protokoll
+  vorab fixiert (Scoping Map, Ein-/Ausschlusskriterien, Evidenzstufen, Auflösbarkeits-Check),
+  Activation Patching und Probing per Subagent neu recherchiert, alle 55 arXiv-IDs über die arXiv-API
+  verifiziert, die gewachsene DETAILS-Sektion dorthin ausgelagert | Entscheidungsgrundlage für Phase 4.
+  Kernbefund quer über alle vier Felder: das Messinstrument bestimmt das Ergebnis mit.
