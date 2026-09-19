@@ -18,8 +18,11 @@ Struktur und Eckdaten entschieden von Henry am 2026-09-19. Schreiben beginnt ers
 - **Selbstzitate zeigen auf einen Git-Tag** (`v1.0-submission`), nie auf `main`. Grund: Links auf
   einen Branch brechen beim nächsten Push.
 - **Grafiken:** Notebook-Figuren als Vektor per einer `savefig`-Zeile in den Figurenzellen von 07
-  und 08 (einzige Änderung an den Notebooks, danach neu ausführen). Grafiken aus dem Lerndokument
-  sind deutsch beschriftet — bei Wiederverwendung Labels ins Englische.
+  und 08 (einzige Änderung an den Notebooks). Dazu drei eigene: zwei Schemata als handgesetztes
+  SVG in der Bildsprache des Lerndokuments (`residual_stream.svg`, `comparison_modes.svg`) und die
+  Dosis-Konfundierung pro Schicht aus `results/` über `scripts/fig_dose_confound.py` — kein
+  Notebook-Lauf nötig. Lerndokument-Grafiken wurden nicht wiederverwendet (deutsche Labels, anderer
+  Zweck). Grafiken **nicht in Typst zeichnen** — sah mechanisch aus, von Henry verworfen.
 - **Abgabe:** PDF mit Repo-Link (Tag) im Text, Notebooks und `results/` liegen im Repo.
 
 ## Titel
@@ -84,9 +87,22 @@ Dashboard, und eine zweite Checkliste hier wäre die Stelle, die als Erstes vera
 ## Offen
 
 - Endgültige Formulierung des Untertitels.
-- Seitenbudget: Hauptteil liegt nach Abschnitt 6 bei rund 10,5 statt „unter 10". Entschieden wird
-  nach Schritt 21, wenn der Umbruch echt ist; Kürzungskandidaten in dieser Reihenfolge: Tour-Tabelle
-  in 3, die vier „further findings" in 5.4, die Spalte „What it assumes" in Tabelle 1.
 - Literaturverzeichnis: Typsts IEEE-Stil wirft `note`-Felder weg, damit fehlen TransformerLens 3.5.1,
   der Fundort von Blooms SAE-Set und die LessWrong-Herkunft des Logit-Lens-Posts (→ Schritt 22).
-- Welche Lerndokument-Grafiken wiederverwendet werden (entscheidet sich in Abschnitt 2).
+- Eine Zahl unverifiziert: §3 „5 of 23 concepts steerable at 160M" gegen §4 „24 families" — beim
+  Anker nachschlagen, ob die Skalierungstabelle wirklich 23 Familien hat.
+- Henrys Leserunde (Schritt 22): Verständnis zu Abschnitt 5, Sätze in eigene Worte — bewusst nicht
+  von Claude vorweggenommen (Henry, 2026-09-19: „es ist okay, dass das LLM geschrieben ist zu einem
+  gewissen Grad").
+
+## Entschieden im Review-Durchgang (2026-09-19)
+
+- **Nicht gekürzt.** Hauptteil ~10,5 Seiten, davon gut 1,5 Seiten Grafiken; Text ohne Grafiken unter
+  10 — Henrys Regel „Grafiken dürfen darüber hinausschießen" ist damit erfüllt. Die Kürzungskandidaten
+  hätten mehr gekostet als gebracht (Tour-Tabelle = einziger Ort für fünf Notebooks; Spalte „What it
+  assumes" = die Spalte, aus der die These folgt).
+- Redundanzen gestrichen statt Inhalt: Vier-Punkte-Liste der Instrumenten-Settings nur noch in der
+  Einleitung, `A_lin` nur in §2 und §5.1 definiert, „orientation, not statistics" nur in der
+  Tabellen-Caption, „byte for byte" nur im Anhang, Galeone nur in §5.4.
+- Das zweite Readout (KL bei ΔP* = +0,05) aus dem Text gestrichen: war angekündigt, nie berichtet,
+  und liefert nur „never"-Zellen — nichts, was Tabelle 4 nicht sagt.

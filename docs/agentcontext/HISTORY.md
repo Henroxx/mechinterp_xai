@@ -126,3 +126,15 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
   und damit fast vollständig redundant zum Fließtext — jetzt sechs Sätze Ergebnisse plus die zwei
   Fragen, die aus der Arbeit bleiben. Zwei geprüfte Patching-Referenzen ergänzt (Zhang & Nanda,
   Heimersheim & Nanda). Repo-Freigabe geprüft, Ergebnis in PROJECT.
+- **2026-09-19** | Phase 7: **Abschnitt 1 „Introduction", Abstract und Anhangstabelle geschrieben —
+  der Text hat keine TODOs mehr.** Danach auf Henrys Wunsch ein frischer Review-Durchgang über den
+  ganzen Report | Gefunden und behoben: Random-Floor fünf Draws im Scan gegen drei im Sweep (beides
+  richtig, stand nirgends), Explained Variance 92 gegen 93 % (jetzt 93–99 % „auf den vier tragenden
+  Familien"), ein angekündigtes und nie berichtetes Readout gestrichen, „labels carry no
+  information" im Fazit war falsch (`parity` trägt Information, das Modell liest sie nur nicht),
+  §3 behauptete SAEs „for all twelve layers" gegen §5.3 „layers 0 to 10". Redundanzen raus (die
+  These stand vier-, `A_lin` dreimal), Gedankenstriche 58 → 9, Pointen-Enden und „not X but Y"
+  ausgedünnt. Zwei Grafiken neu: Dosis-Konfundierung pro Schicht (`scripts/fig_dose_confound.py`
+  aus `results/`) und Schema der drei Vergleichsarten (`comparison_modes.svg`). Zwei geprüfte
+  XAI-Referenzen (Gilpin 2018, Ribeiro 2016). Hauptteil bleibt ~10,5 Seiten inkl. Grafiken, nicht
+  gekürzt → `plans/abhandlung.md`.

@@ -54,15 +54,16 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
   `notebooks/08_direction_sources.ipynb`. **Phase 5 damit abgeschlossen.** Struktur und Eckdaten der
   Abhandlung entschieden (2026-09-19) → `plans/abhandlung.md`. Aktuell: **Phase 7, Schreiben** —
   Vorarbeit erledigt (`report/main.typ` englisch und neu gegliedert, `refs.bib` angelegt, Figuren
-  als Vektor exportiert) und **die Abschnitte 5, 4, 3, 2 und 6 geschrieben** — 5 „Reading versus steering"
-  (~4,6 Seiten, zwei Figuren, drei Tabellen), 4 „Choosing the question" (~1 Seite, Landkarte mit
-  Suchprotokoll, Anker, die zwei Lücken), 3 „Exploration" (~1,4 Seiten, die Tour als eine Tabelle
-  plus Modellwahl), 2 „Background" (~1,6 Seiten, eigene SVG-Grafik des Residual Streams, LRH, die
-  vier Methoden als Tabelle), 6 „Conclusion" (⅓ Seite Ergebnisse). Der geplante Abschnitt 7 ist
-  gestrichen, die KI-Nutzung steht als Kasten plus Pfadtabelle unter dem Abstract. **Offen: 1
-  „Introduction", dann das Abstract, dann die Gesamtlesung.** Hauptteil projiziert auf ~10,5 Seiten
-  gegen ein Budget von „unter 10" → Kürzungskandidaten stehen in `plans/abhandlung.md`.
-  Fortschritt pro Abschnitt → `docs/fahrplan/index.html`, Phase 7.
+  als Vektor exportiert) und **alle Abschnitte geschrieben, keine TODOs mehr im Text** (2026-09-19):
+  Abstract, 1 „Introduction" (¾ Seite), 2 „Background" (eigene SVG-Grafik, LRH, Methodentabelle),
+  3 „Exploration" (Tour als Tabelle plus Modellwahl), 4 „Choosing the question", 5 „Reading versus
+  steering" (Hauptteil, vier Figuren, drei Tabellen — darunter neu die Dosis-Konfundierung pro
+  Schicht und das Schema der drei Vergleichsarten), 6 „Conclusion", Kasten „Use of AI" mit Pfadtabelle
+  unter dem Abstract, Anhang mit Repo-Link, Tag und Mess-Pfaden. Ein Review-Durchgang ist durch
+  (Zahlen-Inkonsistenzen, Redundanzen, LLM-Klang → HISTORY). Hauptteil ~10,5 Seiten inkl. gut 1,5
+  Seiten Grafiken, **nicht gekürzt** → `plans/abhandlung.md` „Entschieden im Review-Durchgang".
+  **Offen: Henrys Leserunde (Schritt 22), drei Literatureinträge ohne `note`-Feld, „5 of 23" beim
+  Anker prüfen, Untertitel, Tag `v1.0-submission`.** Fortschritt → `docs/fahrplan/index.html`, Phase 7.
 
 ---
 # To-Dos & offene Entscheidungen

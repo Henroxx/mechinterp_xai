@@ -397,6 +397,27 @@ linear lesbar" auf der Probe, und eine scheiternde Probe belegt keine Abwesenhei
 Prompts sagt nichts über Generierungsqualität. Der Zufallsboden ist das Beste aus fünf Ziehungen,
 keine Verteilung.
 
+## Abhandlung — Toolchain und Figuren (Stand 2026-09-19)
+
+- **Typst 0.14.2**, `report/main.typ`, Bau mit `typst compile main.typ` im `report/`-Ordner.
+  Literatur über `refs.bib` im IEEE-Stil.
+- **Der IEEE-Stil wirft `note`-Felder stillschweigend weg.** Was dort steht, fehlt im Druck ohne
+  Fehlermeldung — gefunden nur durch Ansehen der gerenderten Literaturseite. Venue und Vorabdruck
+  gehören deshalb in `journal`/`booktitle`. Offen betroffen: TransformerLens 3.5.1, Blooms SAE-Set,
+  die LessWrong-Herkunft des Logit-Lens-Posts.
+- **Layout nie schätzen, immer ansehen:** `pdftoppm -png -r 80 main.pdf <ziel>` und die Seiten
+  lesen. Seitenzahl und Inhaltsverzeichnis verraten weder Umbruchschäden noch verrutschte Figuren.
+- **Figuren, drei Wege.** Notebook-Ergebnisse als Vektor-PDF per `savefig` aus 07 und 08.
+  Schemata als handgeschriebenes SVG in der Bildsprache von `docs/learning/index.html`, mit
+  `font-family: "Libertinus Serif"` (Typsts Standardschrift) und Pfeilspitzen als `<path>` statt
+  `<marker>` — **nicht in Typst zeichnen**, das sah mechanisch aus und wurde verworfen.
+  Auswertungsgrafiken, die kein Notebook braucht, als Skript über `results/`:
+  `scripts/fig_dose_confound.py` zeichnet die Dosis-Konfundierung aus den beiden JSONs, läuft in
+  einer Sekunde und hängt an keinem Modell-Lauf.
+- Zitierte arXiv-IDs werden vor der Aufnahme gegen `https://export.arxiv.org/api/query?id_list=…`
+  aufgelöst (über `http://` kommt leer zurück). Grund: erfundene Referenzen sind der systematische
+  Fehlermodus der LLM-gestützten Suche, und im Text steht, dass genau das geprüft wurde.
+
 ## Umgebung & Tooling (Stand 2026-09-18)
 
 - Paketverwaltung: **uv** (seit 2026-08-24). `pyproject.toml` deklariert, `uv.lock` pinnt
