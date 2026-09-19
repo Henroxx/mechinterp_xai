@@ -538,7 +538,8 @@ measure like this could be an artifact of scale. It is not. For every family exc
 #Alin is exactly zero in layers 0 to 7 and rises only from layer 8 on, the same shape the anchor
 reports in layers 18 to 24 of a 2B model.
 `pronoun` is the exception and jumps to 0.64 at layer 6. Within families, $rho$(#Alin, $Delta P$)
-across the twelve layers is +0.48 to +0.90, inside the anchor's band of +0.63 to +0.92.
+across the twelve layers is +0.48 to +0.90, which overlaps the anchor's band of +0.63 to +0.92
+and reaches below it.
 
 The probe fails as a layer selector, and "worse than #Alin" understates how. For `continent` and
 `pronoun` the held-out probe reads 1.00 in every one of the twelve layers: it has no variance
@@ -780,6 +781,8 @@ stayed at exactly 0.000 everywhere.
 
 Two questions remain, and I would put them to any steering result including my own: at what dose,
 and compared at equal what?
+
+#pagebreak()
 
 #bibliography("refs.bib", style: "ieee", title: [References])
 
