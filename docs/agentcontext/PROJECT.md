@@ -51,9 +51,12 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
   Modellwahl zu entscheiden. Anker reproduziert (2026-09-19) → DETAILS „Lesen gegen Steuern — Anker-Reproduktion",
   `notebooks/07_reading_vs_steering.ipynb`. Eigenes Experiment durchgeführt (2026-09-19) →
   DETAILS „Lesen gegen Steuern — Richtungsquellen bei gleicher Wirkung",
-  `notebooks/08_direction_sources.ipynb`. **Phase 5 damit abgeschlossen.** Aktuell: Phase 6 —
-  Struktur und Eckdaten der Abhandlung entschieden (2026-09-19) → `plans/abhandlung.md`,
-  Schreiben noch nicht begonnen.
+  `notebooks/08_direction_sources.ipynb`. **Phase 5 damit abgeschlossen.** Struktur und Eckdaten der
+  Abhandlung entschieden (2026-09-19) → `plans/abhandlung.md`. Aktuell: **Phase 7, Schreiben** —
+  Vorarbeit erledigt (`report/main.typ` englisch und neu gegliedert, `refs.bib` angelegt, Figuren
+  als Vektor exportiert) und **Abschnitt 5 „Reading versus steering" geschrieben** (~4,6 Seiten,
+  zwei Figuren, drei Tabellen). Nächster Abschnitt: 4 „Choosing the question". Fortschritt pro
+  Abschnitt → `docs/fahrplan/index.html`, Phase 7.
 
 ---
 # To-Dos & offene Entscheidungen
@@ -73,8 +76,11 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
       5. **Vertiefung** — erledigt 2026-09-19: Volltexte gelesen, Plan geschrieben, Anker
          reproduziert (Schritte 11–12), eigenes Experiment mit
          Kontrolle durchgeführt (Schritt 13 → DETAILS „Richtungsquellen bei gleicher Wirkung").
-      6. **Abhandlung** ← *hier stehen wir* — Struktur abstimmen, Typst auf Englisch. Kein Vortrag
-         mehr nötig.
+      6. **Abhandlung** — erledigt 2026-09-19: Struktur, Seitenbudget und Kernaussagen abgestimmt
+         → `plans/abhandlung.md`.
+      7. **Schreiben** ← *hier stehen wir* — ein Schritt pro Abschnitt in der Schreibreihenfolge
+         5 → 4 → 3 → 2 → 6 → 7 → 1 → Abstract, je mit den Konzepten, die Henry dafür verstehen
+         muss. Sicht darauf: `docs/fahrplan/index.html`, Phase 7. Kein Vortrag mehr nötig.
       Schnuppern vor Lesen ist Claudes Vorschlag (bei Henry bleibt Gemachtes hängen, Gelesenes
       weniger), von Henry mit dem Dashboard angenommen.
 - [x] **Umfang: breit schnuppern, eine Sache vertiefen** (Henry, 2026-09-16). Im Notebook
@@ -108,21 +114,25 @@ war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Au
 - [x] Smoke-Test + MPS-Verifikation (`scripts/smoke_test.py`, `scripts/verify_mps.py`)
 - [x] **Sprache der Abhandlung: Englisch** (2026-08-24). Grund: die gesamte Literatur und
       Terminologie ist englisch, Rückübersetzen von Fachbegriffen erzeugt nur Unschärfe.
-      → `report/main.typ` muss noch umgestellt werden
+      `report/main.typ` am 2026-09-19 umgestellt.
 - [x] **Zuschnitt der Abhandlung entschieden** (Henry, 2026-09-19) → `plans/abhandlung.md`:
       Technical Report auf Englisch, unter 10 Seiten Hauptteil, jeder Abschnitt beginnt mit „was und
       warum" vor dem Detail. Grund für die Skip-Ebene: die Zeit des Dozenten wertschätzen, er soll
       überspringen können, was er nicht braucht. Erste Person für Entscheidungen; KI-Nutzung offen,
       aber als *ein* Satz plus kurzer Abschnitt statt Zuschreibung pro Schritt. Selbstzitate zeigen
       auf den Tag `v1.0-submission`, nicht auf `main` — Branch-Links brechen beim nächsten Push.
-      Schreibreihenfolge 5 → 4 → 3 → 2 → 6 → 7 → 1 → Abstract, pro Abschnitt höchstens fünf
-      Verständnisfragen an Henry, damit der Aufwand planbar bleibt.
+      Schreibreihenfolge 5 → 4 → 3 → 2 → 6 → 7 → 1 → Abstract. **Ablauf pro Abschnitt geändert
+      (Henry, 2026-09-19):** erst schreiben, dann verstehen — die ursprünglich geplanten fünf
+      Lückenfragen vorab setzten Kenntnis voraus, die der Abschnitt erst herstellt, und waren bei
+      Abschnitt 5 unbeantwortbar. Henry liest den fertigen Abschnitt und fragt; am Ende geht es für
+      die Verständnisrunde zu Abschnitt 5 zurück.
 - [ ] **Vertiefung** (Henrys Verständnis, für die Verteidigung):
       Grokking-Beispiel (Nanda, Addition mod 113) durcharbeiten; Linear Representation
       Hypothesis sauber durchsprechen (konnte Henry noch nicht frei erklären; Erklärung
       mit Grafik seit 2026-09-18 im Lerndokument, Abschnitt 6)
 - [x] Format der Abhandlung: **Typst**, Template aus Big-Data-Projekt adaptiert
-      (`report/main.typ`, kompiliert). Umfang und Gliederung noch offen.
+      (`report/main.typ`, kompiliert). Gliederung steht seit 2026-09-19, Literatur in
+      `report/refs.bib` (IEEE), Figuren als Vektor-PDF in `report/figures/`.
 
 ---
 # Referenzen

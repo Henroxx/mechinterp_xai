@@ -105,4 +105,10 @@ Details gehören nach DETAILS, hier steht nur, was wann passiert ist und weshalb
   bei gleichem KL-Budget und gleicher Wirkung | Billas Dosis-Konfundierung ist damit beziffert statt
   vermutet: seine implizite Dosis korreliert mit seinem eigenen Prädiktor bei +0,76 bis +0,91.
   → DETAILS „Richtungsquellen bei gleicher Wirkung".
-
+- **2026-09-19** | Phase 7 begonnen: Abhandlung auf Englisch umgestellt, `refs.bib` angelegt, Figuren
+  aus 07/08 als Vektor exportiert, **Abschnitt 5 „Reading versus steering" geschrieben** (Setup,
+  Anker-Reproduktion, vier Richtungsquellen bei gleicher Nebenwirkung, Diskussion, Grenzen) |
+  Ablauf auf Henrys Ansage gedreht: erst schreiben, dann verstehen — die geplanten Lückenfragen
+  vorab waren bei diesem Abschnitt unbeantwortbar. Beim Nachrechnen der Tabellen drei DETAILS-Sätze
+  auf das Gemessene zurückgeschnitten; alle fünf Kernaussagen hielten. Der Neulauf beider Notebooks
+  reproduzierte `results/` bitgleich.

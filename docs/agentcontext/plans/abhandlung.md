@@ -39,7 +39,9 @@ steering: what a probe cannot tell you about a steering vector*.
 | 7 | Working method and use of AI | ½ | Regeln der Zusammenarbeit, wo der Agent-Kontext liegt. Kurz. |
 | — | References, Anhang | — | Anhang = Tabelle „Pfad im Repo → was liegt dort". |
 
-## Kernaussagen (vorläufig — werden beim Schreiben von Abschnitt 5 bestätigt)
+## Kernaussagen (bestätigt 2026-09-19 beim Schreiben von Abschnitt 5 — alle fünf hielten,
+Nummer 1 wurde schärfer: die Probe ist bei zwei Familien über alle zwölf Schichten konstant
+1,00, ihre Korrelation mit der Steuerwirkung ist also nicht schwach, sondern undefiniert)
 
 1. **Lesen ist nicht Steuern.** Perfekt lesbare Konzepte sind unsteuerbar (`continent`); das
    trainingsfreie `A_lin` sagt Steuerbarkeit vorher, die Probe nicht, weil sie sättigt.

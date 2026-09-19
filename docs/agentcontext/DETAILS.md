@@ -328,7 +328,8 @@ Prompts groß. Genau deshalb braucht der eigene Teil heterogene Prompts.
 
 `notebooks/08_direction_sources.ipynb`, läuft top-to-bottom in ~3:20, Seed 0, Zahlen in
 `results/08_direction_sources.json`. Baut auf 07 auf: gleiche sechs Familien, gleicher Seed,
-gleiche 50 fremden Prompts.
+gleiche 50 fremden Prompts. **Reproduzierbarkeit geprüft (2026-09-19):** ein Neulauf von 07 und 08
+erzeugte beide JSON-Dateien bitgleich — Seed und Lockfile tragen, das ist keine Behauptung mehr.
 
 **Aufbau.** Vier Richtungsquellen auf Einheitsnorm — Mittelwertdifferenz, Probe-Gewichtsvektor,
 SAE-Decoder-Zeile, Zufallsrichtung als Boden (bestes aus fünf Ziehungen, nicht eine). Dosis
