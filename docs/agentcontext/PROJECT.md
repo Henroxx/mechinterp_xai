@@ -18,9 +18,9 @@ Fragen untersuchen, das Ganze dokumentieren.
 
 Modul XAI, FH SWF (F. Neubürger). Einzelprojekt. Keine explizite Forschungsfrage
 nötig (Absprache mit Dozent per Mail). Zwischenpräsentation: 11.07.2026 — damit ist der
-Vortragsanteil abgegolten, ein zweiter Vortrag in der Blockwoche entfällt (Henry, 2026-09-18).
-Abgabe: Ausarbeitung einen Tag vor der Blockwoche. Bewertung 50 % Ausarbeitung /
-50 % Vortrag; der Vortragsteil ist gehalten, offen ist nur noch die Ausarbeitung.
+Vortragsanteil abgegolten (Henry, 2026-09-18). **Eine Blockwoche gibt es nicht** — die Annahme
+war veraltet, es hängt kein Termin daran (Henry, 2026-09-19). Bewertung 50 % Ausarbeitung /
+50 % Vortrag; der Vortragsteil ist gehalten, offen ist nur noch die Ausarbeitung, ohne fixes Datum.
 
 ---
 # Status
@@ -93,8 +93,6 @@ Abgabe: Ausarbeitung einen Tag vor der Blockwoche. Bewertung 50 % Ausarbeitung /
 - [x] **Sprache der Abhandlung: Englisch** (2026-08-24). Grund: die gesamte Literatur und
       Terminologie ist englisch, Rückübersetzen von Fachbegriffen erzeugt nur Unschärfe.
       → `report/main.typ` muss noch umgestellt werden
-- [ ] **Datum der Blockwoche und damit der Abgabe klären** (Henry) — steht nirgends in den Docs,
-      ohne Datum ist die Zeitplanung der Phasen 5–6 offen.
 - [ ] **Vertiefung** (Henrys Verständnis, für die Verteidigung):
       Grokking-Beispiel (Nanda, Addition mod 113) durcharbeiten; Linear Representation
       Hypothesis sauber durchsprechen (konnte Henry noch nicht frei erklären; Erklärung
