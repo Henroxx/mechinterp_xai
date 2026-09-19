@@ -105,15 +105,154 @@
 
 // TODO: written last, five sentences.
 
+#v(0.8cm)
+
+#block(
+  stroke: (left: 2pt + luma(70%)),
+  inset: (left: 9pt, y: 4pt),
+  width: 100%,
+  text(size: 9.5pt)[
+    *Use of AI.* This project was done with an AI coding assistant: literature search, notebook
+    code, figures, drafts of this text, and discussion throughout. I chose the question, designed
+    the experiments and did the interpretation. The working method is part of the deliverable rather
+    than hidden behind it: the rule file, the context directory with project state and long-lived
+    notes, and the plan agreed before each block of work are in the repository and can be inspected
+    in full.
+  ],
+)
+
+#v(0.5cm)
+
+#[
+  #set text(size: 9pt)
+  #set par(justify: false)
+  #table(
+    columns: (4.8cm, 1fr),
+    align: (left, left),
+    inset: (x: 4pt, y: 3.5pt),
+    stroke: none,
+    table.hline(),
+    table.header([*Path in the repository*], [*What is in it*]),
+    table.hline(stroke: 0.5pt),
+    [`CLAUDE.md`],
+    [The rules the collaboration runs under: what I decide, what is delegated, how a finding gets
+     documented, and that a plan I did not approve is not a licence to start.],
+    [`docs/agentcontext/PROJECT.md`],
+    [Project state and the list of decisions, each with the reason it was taken.],
+    [`docs/agentcontext/DETAILS.md`],
+    [Long-lived notes, one section per method, model or finding; the larger ones live beside it in
+     `details/`.],
+    [`docs/agentcontext/plans/`],
+    [The plan agreed before each larger block of work, finished ones moved to `plans/done/`.],
+    [`docs/agentcontext/HISTORY.md`],
+    [Dated chronology of what was done and why.],
+    [`docs/learning/`, `docs/fahrplan/`],
+    [My own explanations of the concepts and the roadmap I worked along --- working documents, in
+     German.],
+    table.hline(),
+  )
+]
+
 #pagebreak()
 
 = Introduction
 
 // TODO
 
-= Background: four ways to look inside
+= Background: four ways to look inside <sec:background>
 
-// TODO
+#lead[
+  *What and why.* The four methods in this report are not four separate tools. They read from or
+  write into the same object, and they rest on the same assumption. This section defines both:
+  the residual stream (@fig:stream), the linear representation hypothesis in three sentences, and
+  @tab:methods, which sets the instruments side by side by what each one measures, what it takes
+  for granted, and where it breaks. A reader who knows the field needs only the last column.
+]
+
+*The workspace.* A transformer of the GPT-2 family keeps one vector per token position --- 768
+numbers in GPT-2 small --- and every block *adds* to it instead of replacing it @elhage2021.
+Attention writes into it, the MLP writes into it, and what was written before stays. The state at
+layer $ell$ is the embedding plus everything the first $ell$ blocks contributed, and two
+consequences of that carry this report. First, the model's own output map is a linear read of
+that state, so it can be applied at any depth rather than only at the end: that is the logit lens
+@nostalgebraist2020, and #Alin in @sec:main is nothing more than how often this early read already
+names the right answer. Second, because the contributions add, a single one can be measured,
+removed or amplified without rebuilding anything --- which is what makes all four methods possible
+in the first place. The stream is not scale-free, though. Measured on GPT-2 small, the mean
+residual norm grows from 76 at layer 0 to 644 at layer 10, a factor of about eight, so adding a
+vector of a given length is a different intervention at every depth. That is why @sec:main states
+every dose relative to its layer.
+
+#figure(
+  image("figures/residual_stream.svg", width: 100%),
+  caption: [Own figure, schematic. Every block reads the whole stream and adds its result back
+    into it, so the state at a layer is the embedding plus everything written into it so far. The
+    four methods of this report are four operations on that one object.],
+) <fig:stream>
+
+*The assumption.* Three sentences hold the rest up. A concept is a direction in that space. Reading
+it is a projection: how much _day versus night_ a state carries is a single number, its dot product
+with the direction. Writing it is an addition: put a multiple of the direction into the stream and
+the model continues as if the text had said so. This is the linear representation hypothesis
+@park2024 --- an assumption with enough support to build tools on, not a theorem. The four methods
+below do not test it; they use it. Where it fails quietly, all four fail with it.
+
+*The four instruments.* @tab:methods is the working definition of each method, and the column that
+matters is the last one. None of those failures is a defect of the method. Each is the method's own
+assumption becoming visible as a number, which is why every one of them is answered by a control
+rather than by a better tool.
+
+#figure(
+  [
+  // Same treatment as @tab:tour: ragged right at this column width, justification opens rivers.
+  #set text(size: 9pt)
+  #set par(justify: false)
+  #table(
+    columns: (2.1cm, 1fr, 0.95fr, 1.3fr),
+    align: (left, left, left, left),
+    inset: (x: 4pt, y: 3.5pt),
+    stroke: none,
+    table.hline(),
+    table.header([*Method*], [*What it measures*], [*What it assumes*], [*Where it breaks*]),
+    table.hline(stroke: 0.5pt),
+
+    [Activation patching],
+    [How much of a behaviour one component causes: replace its activation with the one from a
+     different run and read the change in logit difference @heimersheim2024.],
+    [That the two runs differ only in the intended way, and that a part can be swapped without
+     disturbing what feeds it.],
+    [The ranking depends on the corrupted baseline and the metric as much as on the model
+     @zhang2024, and later components repair what was removed, so necessity reads low.],
+
+    [Probing],
+    [Whether a concept can be read linearly out of one layer: the accuracy of a classifier trained
+     on the activations @alain2017.],
+    [That what is decodable is also what the model uses.],
+    [A probe with enough capacity also fits labels that carry no information --- without a control
+     task the accuracy means nothing @hewitt2019 @belinkov2022.],
+
+    [Steering],
+    [The causal effect of a direction: add a multiple of it to the stream and read what changes in
+     the output @turner2024.],
+    [That the direction is the concept, and that one coefficient means the same at every layer.],
+    [A random vector of the same norm buys much of the same damage, and with the dose unstated the
+     effect of the direction cannot be told from the effect of its size.],
+
+    [Sparse autoencoder],
+    [A sparse decomposition of the state into features, scored by explained variance and by how
+     many features fire @cunningham2023.],
+    [That features are sparse and linear, and that a good reconstruction kept what matters.],
+    [Explained variance is blind to the concept: 93 to 99 % of the state is reconstructed in
+     @sec:main while up to 99 % of the class separation sits in the discarded error.],
+    table.hline(),
+  )],
+  caption: [The four methods as this report uses them. The last column is not a list of bugs --- it
+    is each method's own assumption, stated as the way it fails.],
+) <tab:methods>
+
+The four failure modes are the same failure mode: the setting of the instrument --- the corrupted
+baseline, the control task, the dose, the sparsity level --- co-determines the answer it gives.
+@sec:tour is what that looked like when I ran each of them once.
 
 = Exploration: one station per method <sec:tour>
 
@@ -561,17 +700,25 @@ same way rather than an absolute claim about steerability. It does mean that eve
 section is a statement about GPT-2 small with these six families; the anchor's own result across
 five larger models is the reason to think the pattern is more than that.
 
-= What I take from this
+= Conclusion <sec:conclusion>
 
-// TODO
+The question was whether a training-free predictor beats a trained one at saying where steering
+will work, and whether it matters where the steering direction comes from. The probe cannot answer
+the first one: it saturates, and 1.00 across all twelve layers on two families is not a weak
+predictor but an undefined one, while #Alin ranks the families in the order their steering effects
+arrive. The anchor's correlation is real and inflated at the same time --- the dose it never states
+tracks its own predictor at +0.76 to +0.91, and at a fixed dose its ranking does not weaken but
+inverts. Read at an equal side-effect budget instead, which is the comparison I would defend, the
+predicted order survives with one adjacent swap. On the second question the answer is that the
+derivation matters least: in layer 10 the difference of means, the probe and the sparse-autoencoder
+feature land within 0.03 to 0.05 of one another, while the same source read in layer 6 instead of
+layer 10 moves `temperature` from +0.023 to +0.130. What decided the meaning of all of it were the
+controls --- a random vector of the same norm won one cell outright, and the family whose labels
+carry no information stayed at exactly 0.000 everywhere.
 
-= Working method and use of AI
+Two questions are what I take out of this, and I would put them to any steering result including
+my own: at what dose, and compared at equal what?
 
-// TODO
-
-// ============================================================
-// References
-// ============================================================
 #bibliography("refs.bib", style: "ieee", title: [References])
 
 // ============================================================
@@ -580,6 +727,6 @@ five larger models is the reason to think the pattern is more than that.
 #set heading(numbering: "A.1")
 #counter(heading).update(0)
 
-= Appendix
+= Appendix <sec:appendix>
 
 // TODO: table "path in the repository -> what is there".

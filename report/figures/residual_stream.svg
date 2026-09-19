@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 200" role="img"
+     aria-label="The residual stream as a band running from the embeddings to the unembedding. Attention and MLP of each layer read from it and write back into it. Below it, four methods attached to the same object: read, add, replace, decompose.">
+  <style>
+    text { font-family: "Libertinus Serif", Georgia, serif; fill: #1a1a1a; }
+    .sm   { font-size: 13px; fill: #6b6b66; }
+    .md   { font-size: 14.5px; }
+    .lg   { font-size: 15.5px; }
+    .op   { font-size: 15.5px; font-weight: 600; fill: #0d6e6e; }
+    .meth { font-size: 13px; fill: #6b6b66; }
+  </style>
+
+  <!-- one layer: reads the whole stream, writes back into it -->
+  <rect x="262" y="6" width="272" height="80" rx="6"
+        fill="none" stroke="#c9c9c3" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="398" y="22" class="sm" text-anchor="middle">one of the 12 layers</text>
+
+  <rect x="278" y="32" width="112" height="38" rx="4" fill="#ffffff" stroke="#8a8a84" stroke-width="1"/>
+  <text x="334" y="56" class="md" text-anchor="middle">attention</text>
+  <rect x="408" y="32" width="112" height="38" rx="4" fill="#ffffff" stroke="#8a8a84" stroke-width="1"/>
+  <text x="464" y="56" class="md" text-anchor="middle">MLP</text>
+
+  <!-- reads (dashed, up into the block) -->
+  <line x1="300" y1="100" x2="300" y2="78" stroke="#8a8a84" stroke-width="1" stroke-dasharray="3 3"/>
+  <path d="M296,78 L304,78 L300,70 Z" fill="#8a8a84"/>
+  <line x1="430" y1="100" x2="430" y2="78" stroke="#8a8a84" stroke-width="1" stroke-dasharray="3 3"/>
+  <path d="M426,78 L434,78 L430,70 Z" fill="#8a8a84"/>
+  <!-- writes (solid, down into the stream) -->
+  <line x1="368" y1="70" x2="368" y2="92" stroke="#1a1a1a" stroke-width="1.4"/>
+  <path d="M364,92 L372,92 L368,100 Z" fill="#1a1a1a"/>
+  <line x1="498" y1="70" x2="498" y2="92" stroke="#1a1a1a" stroke-width="1.4"/>
+  <path d="M494,92 L502,92 L498,100 Z" fill="#1a1a1a"/>
+  <text x="252" y="64" class="sm" text-anchor="end">reads</text>
+  <text x="546" y="64" class="sm">writes back</text>
+
+  <!-- the stream -->
+  <rect x="150" y="100" width="490" height="40" rx="5" fill="#f2f2ef" stroke="#e2e2de" stroke-width="1"/>
+  <text x="395" y="125" class="lg" text-anchor="middle">residual stream &#8212; 768 numbers per token position</text>
+
+  <text x="132" y="115" class="sm" text-anchor="end">token + position</text>
+  <text x="132" y="131" class="sm" text-anchor="end">embeddings</text>
+  <line x1="136" y1="120" x2="144" y2="120" stroke="#1a1a1a" stroke-width="1.2"/>
+  <path d="M144,116 L144,124 L152,120 Z" fill="#1a1a1a"/>
+
+  <line x1="642" y1="120" x2="656" y2="120" stroke="#1a1a1a" stroke-width="1.2"/>
+  <path d="M656,116 L656,124 L664,120 Z" fill="#1a1a1a"/>
+  <text x="668" y="115" class="sm">unembedding,</text>
+  <text x="668" y="131" class="sm">logits</text>
+
+  <!-- the four methods, attached to the same object -->
+  <g stroke="#0d6e6e" stroke-width="1.2">
+    <line x1="215" y1="140" x2="215" y2="156"/>
+    <line x1="345" y1="140" x2="345" y2="156"/>
+    <line x1="475" y1="140" x2="475" y2="156"/>
+    <line x1="600" y1="140" x2="600" y2="156"/>
+  </g>
+  <g class="op" text-anchor="middle">
+    <text x="215" y="172">read</text>
+    <text x="345" y="172">add</text>
+    <text x="475" y="172">replace</text>
+    <text x="600" y="172">decompose</text>
+  </g>
+  <g class="meth" text-anchor="middle">
+    <text x="215" y="190">probing, logit lens</text>
+    <text x="345" y="190">steering</text>
+    <text x="475" y="190">patching</text>
+    <text x="600" y="190">sparse autoencoder</text>
+  </g>
+</svg>
