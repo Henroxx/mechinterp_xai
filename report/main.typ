@@ -119,9 +119,70 @@
 
 // TODO
 
-= Choosing the question
+= Choosing the question <sec:question>
 
-// TODO
+#lead[
+  *What and why.* Between the tour and the experiment sits a decision: out of four methods and a
+  large literature, one question had to be small enough to finish and specific enough to come out
+  wrong. This section says how I surveyed the field, which question I picked and why, which paper I
+  use as an anchor, and which two gaps in it became the measurement in @sec:main.
+]
+
+*The map.* Before choosing I surveyed the four methods of the tour and wrote one row per method:
+what the field measures, what counts as settled, and which gap is reachable on a laptop. The
+protocol was fixed before the first search --- arXiv and the main proceedings, emphasis on work
+since 2024, a paper is only included if it reports its own measurement on open weights of at most
+nine billion parameters, and every entry carries an evidence level recording whether I read the
+full text, the abstract, or a secondary description. The last rule exists because the search was
+assisted by a language model, and fabricated references are the systematic failure mode of that:
+each arXiv identifier was resolved against the arXiv API and checked against title and first
+author. About 160 titles were screened, 55 arXiv entries kept. Two things stood out. All four methods have the
+same core question under different names --- the corrupt baseline in patching, the KL filter and
+the integer dose grid in steering, the missing control task in probing @hewitt2019 @belinkov2022,
+the sparsity level in autoencoders @cunningham2023 --- which is to say that the instrument
+co-determines the finding. And the gaps reachable without training anything are control and
+baseline work, not new methods.
+
+*The cut.* Of the candidates that came out of the map I chose the one that asks whether a direction
+which *reads* a concept well also *steers* it well, measured across concepts, layers and sources of
+the direction. Three reasons, in descending weight. It sits on the core question above, because
+reading and steering are two instruments pointed at the same concept and the interesting case is
+the one where they disagree --- a dissociation reported elsewhere as well, for instance a detection
+direction that stands at 83#sym.degree to the refusal direction and still steers after rotation
+@galeone2026. It needs no tooling I did not already have, since probes, difference-of-means
+directions, SAE latents and the steering loop all exist from the tour. And it has an anchor: a
+recent paper with a central claim cheap enough to reproduce before extending it. The candidate I
+dropped last was a dense dose--response study with capability benchmarks, not because the question
+is uninteresting but because most of its work would be harness building. The control-task candidate
+did not have to be dropped at all --- it fits inside this one as a step.
+
+*The anchor.* Billa @billa2026 proposes #Alin and reports that it predicts where steering will
+work: across 24 controlled binary families it correlates with steering effect at $rho$ = +0.86 to
++0.91 and with the choice of layer at +0.63 to +0.92, while the customary "use a middle layer"
+heuristic lands on #Alin = 0 on Gemma-2-2B and does nothing there. The paper is candid about its
+limits: much of that correlation comes from families sitting at the floor, and restricted to
+#Alin > 0.1 it drops to about +0.5 on the smaller models; the tasks are single-token throughout;
+and steering means a difference of means and nothing else. Two things it does *not* settle are what I could reach. It never states the dose at which
+it steers, and it reports $rho$(#box[$||d||$], KL) = +0.96, so its side-effect axis is very nearly
+just the norm of the vector it added. And its expectation that SAE features should help where a
+concept is encoded non-linearly is marked explicitly as untested.
+
+*The second work.* Tiwari et al. @tiwari2026 separate decodability from causality: on Gemma-2-9B-it
+the features geometrically closest to a probe overlap only 11 to 14 per cent with the features that
+gradients mark as behaviourally relevant. They ablate rather than steer, have no difference-of-means
+source, and compare at equal set size rather than at equal effect, so what follows is not a rebuild
+of their study. What I take from them is one check: in their Qwen3-8B experiment 74 per cent of the
+probe's margin lived in the reconstruction error of the SAE, and where that happens an SAE
+intervention mostly measures itself. I report that share per family rather than assume it away.
+
+#claim[
+  The contribution in one sentence: measure the anchor's diagnosis at equal effect and equal side
+  effect instead of at whatever dose the norm of a difference of means happens to produce, and test
+  its own untested prediction about SAE features while doing so.
+]
+
+Both gaps are cheap. They cost a stated dose axis, a random control and two further sources of the
+direction --- not a new method.
 
 = Reading versus steering <sec:main>
 
